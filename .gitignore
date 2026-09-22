@@ -1,0 +1,119 @@
+####### HYBRIS ########
+**/hybris/bin/ext*
+**/hybris/bin/modules/
+**/hybris/bin/platform/
+**/hybris/data/
+**/hybris/temp/
+**/hybris/log/
+**/hybris/sampleconfigurations/
+/licenses
+/core-customize/licenses
+*gensrc
+*hmc.jar
+*.swo
+*.swp
+*.class
+**/hybris/bin/custom/**/build.xml
+ruleset.xml
+extensioninfo.xsd
+hmc.xsd
+beans.xsd
+items.xsd
+platformhome.properties
+*testclasses.xml
+eclipsebin
+**/hybris/config-dev/solr/embedded/solr.xml
+/geb/target/
+VERSION_NUMBER
+**/hybris/config/localextensions-generated.xml
+rebel.xml
+*.springBeans
+*.build.number
+*_bof.jar
+classes/
+gensrc/
+saplicense.properties
+installedSaplicenses.properties
+*owasp*.jar
+**/custom/extra/yacceleratorpatches
+**/hybris/config/my_local.properties
+
+*-webtestclasses.xml
+*-testclasses.xml
+
+**/hybris/bin/custom/**/web/webroot/*cockpit/
+**/hybris/config/solr/embedded/conf/
+
+**/build-tools/*
+**/c4c-integration/*
+**/hybris-Mobile-Apps-SDK/*
+**/hybris-sbg/*
+**/installer/*
+**/localUrls.json
+#  Addon specific copy folders
+**/web/addonsrc
+**/web/addontestsrc
+**/web/webroot/**/addons
+**/web/commonwebsrc/acceleratorstorefrontcommons/*
+**/web/commonwebsrc/
+**/wro_addons.xml
+
+**/generated*.xml
+**/web/webroot/ext/**/*.jsp
+**/web/webroot/ext/**/*.gif
+**/web/webroot/ext/**/*.png
+
+**/web/webroot/cockpit
+**/web/webroot/cmscockpit
+**/web/webroot/cscockpit
+**/web/webroot/productcockpit
+
+# OS-specific files
+.DS_Store
+*~
+
+*.log
+gen
+out/
+
+# Eclipse
+# When importing the git repo into Eclipse, the root project should not be versioned
+.project
+.settings
+HybrisBeanGeneration.launch
+HybrisCodeGeneration.launch
+
+# IntelliJ
+.idea/
+*.iml
+hybris4intellij.propertiess
+# Sonar - files from ant sonarcheck
+**/.sonar/**
+
+# Custom ant tasks
+!/build.xml
+
+# Packed Commerce Suite
+README
+.commerce-temp
+/sources/
+
+# Generated during Hybris build from tsconfig.tpl.json (SmartEdit apps)
+**/cxtranslationssmartedit/apps/*/tsconfig.json
+
+# Node modules
+**/node_modules/
+
+# Angular build cache
+**/.angular/
+
+# ng-packagr / Angular library compiled output
+**/apps/*/dist/
+
+# TypeScript incremental build info
+**/*.tsbuildinfo
+
+# Rush monorepo build artifacts
+**/rush-logs/
+**/.rush/
+

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2023 SAP SE or an SAP affiliate company. All rights reserved.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:c="http://www.springframework.org/schema/c"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+	   default-lazy-init="true">
+
+	<bean name="cxLocalizedLabelCacheRegion" class="de.hybris.platform.regioncache.region.impl.DefaultCacheRegion">
+		<constructor-arg name="name" value="cxLocalizedLabelCacheRegion"/>
+		<constructor-arg name="maxEntries" value="${cxtranslations.cache.cacheSize}"/>
+		<constructor-arg name="exclusiveComputation" value="false"/>
+		<constructor-arg name="statsEnabled" value="true"/>
+		<constructor-arg name="ttlSeconds" value="${cxtranslations.cache.timeToLiveSeconds}"/>
+		<property name="handledTypes">
+			<array>
+				<value>__LOCALIZED_LABEL__</value>
+				<value>__LOCALIZED_BUNDLE__</value>
+			</array>
+		</property>
+	</bean>
+
+	<bean id="cxLocalizedLabelCacheRegionRegistrar" class="de.hybris.platform.regioncache.region.CacheRegionRegistrar"
+		  c:region-ref="cxLocalizedLabelCacheRegion"/>
+</beans>

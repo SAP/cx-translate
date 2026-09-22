@@ -1,0 +1,1211 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  ~ Copyright (c) 2024 SAP SE or an SAP affiliate company. All rights reserved.
+  -->
+<!--
+###################
+Last type code used: 31419
+#################
+-->
+<items xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:noNamespaceSchemaLocation="items.xsd">
+	<collectiontypes>
+		<collectiontype code="CxLocalizedLabelsList" elementtype="CxLocalizedLabel" type="list"/>
+		<collectiontype code="CxProposedTranslationCollection" elementtype="CxProposedTranslation" type="collection"/>
+		<collectiontype code="ComposedTypesList" elementtype="ComposedType" type="list"/>
+		<collectiontype code="AttributeDescriptorsList" elementtype="AttributeDescriptor" type="list"/>
+		<collectiontype code="CxLocalizedObjectCategorySet" elementtype="CxLocalizedObjectCategory" type="set"/>
+		<collectiontype code="CatalogVersionSet" elementtype="CatalogVersion" type="set"/>
+		<collectiontype code="ItemsCollection" elementtype="Item" type="collection"/>
+		<collectiontype code="AttributesSet" elementtype="AttributeDescriptor" type="set"/>
+	</collectiontypes>
+
+	<enumtypes>
+        <enumtype generate="true" code="CxTranslateBackofficeSearchInclusion" autocreate="true">
+            <value code="INCLUDED"/>
+            <value code="EXCLUDED_BY_DEFAULT"/>
+            <value code="EXCLUDED_ALWAYS"/>
+        </enumtype>
+		<enumtype generate="true" code="CxTranslateLocalizedValueTargetType" autocreate="true">
+			<value code="ITEM"/>
+			<value code="ENUM"/>
+			<value code="PRODUCT_FEATURES"/>
+		</enumtype>
+		<enumtype generate="true" code="CxTranslateServiceLoggingLevel" autocreate="true">
+			<value code="ERROR_ONLY"/>
+			<value code="ALWAYS"/>
+			<value code="NEVER"/>
+		</enumtype>
+		<enumtype generate="true" code="CxTranslationStatus" autocreate="true">
+			<value code="PENDING"/>
+			<value code="SUCCESS"/>
+			<value code="MANUAL"/>
+			<value code="ERROR"/>
+			<value code="MISSING_SOURCE_VALUE"/>
+			<value code="NOTHING_TO_TRANSLATE"/>
+		</enumtype>
+
+		<enumtype generate="true" code="CxApprovalTranslationStatus" autocreate="true">
+			<value code="PENDING"/>
+			<value code="SUCCESS"/>
+			<value code="ERROR"/>
+			<value code="NOTHING_TO_APPROVE"/>
+		</enumtype>
+
+		<enumtype generate="true" code="CxMergeMode" autocreate="true">
+			<value code="KEEP_EXISTING"/>
+			<value code="REPLACE"/>
+		</enumtype>
+
+		<enumtype generate="true" code="CxTranslateDeepLModel" autocreate="true" dynamic="true">
+			<value code="LATENCY_OPTIMIZED"/>
+			<value code="QUALITY_OPTIMIZED"/>
+			<value code="PREFER_QUALITY_OPTIMIZED"/>
+		</enumtype>
+
+		<enumtype generate="true" code="CxTranslateDeepLSplitting" autocreate="true">
+			<value code="NO_SPLITTING"/>
+			<value code="QUALITY_OPTIMIZED"/>
+			<value code="PREFER_QUALITY_OPTIMIZED"/>
+		</enumtype>
+
+		<enumtype generate="true" code="CxTranslateDeepLFormality" autocreate="true">
+			<value code="DEFAULT"/>
+			<value code="MORE"/>
+			<value code="LESS"/>
+			<value code="PREFER_MORE"/>
+			<value code="PREFER_LESS"/>
+		</enumtype>
+
+		<enumtype generate="true" code="CxTranslateDeepLTagHandling" autocreate="true">
+			<value code="XML"/>
+			<value code="HTML"/>
+		</enumtype>
+
+		<enumtype generate="true" code="CxSapTranslationHubModel" autocreate="true">
+			<value code="default"/>
+			<value code="llm"/>
+		</enumtype>
+
+		<enumtype generate="true" code="CxTranslateKeyBasedCredentialMode" autocreate="true">
+			<description>Controls how keyName and keyValue are combined into an HTTP header.
+				AUTHORIZATION_PREFIX: injects 'Authorization: {keyName} {keyValue}'
+				STANDALONE_HEADER: injects '{keyName}: {keyValue}'</description>
+			<value code="AUTHORIZATION_PREFIX"/>
+			<value code="STANDALONE_HEADER"/>
+		</enumtype>
+
+		<enumtype generate="true" code="CxAzureTranslatorMode" autocreate="true">
+			<description>Controls which Azure Translator API is used.
+				SYNCHRONOUS: single-file synchronous endpoint, no Blob Storage required.
+				ASYNC_BATCH: asynchronous batch endpoint, requires Blob Storage SAS URL configured via property cxtranslate.integrations.azuretranslator.storage.sas.url.</description>
+			<value code="SYNCHRONOUS"/>
+			<value code="ASYNC_BATCH"/>
+		</enumtype>
+
+	</enumtypes>
+
+	<maptypes>
+		<maptype code="CxTranslateModelToStringMap" argumenttype="CxTranslateAiModel"
+				 returntype="java.lang.String" autocreate="true" generate="false"/>
+        <maptype code="CxTranslateStringToDoubleMap"
+                 argumenttype="java.lang.String"
+                 returntype="java.lang.Double"
+                 autocreate="true"
+                 generate="true"/>
+
+    </maptypes>
+
+
+	<relations>
+		<relation code="CxLocalizedLabel2CxLocalizedBundle" localized="false">
+			<sourceElement type="CxLocalizedLabel" qualifier="labels" cardinality="many">
+				<modifiers read="true" write="true" search="true" optional="true"/>
+			</sourceElement>
+			<targetElement type="CxLocalizedBundle" qualifier="bundle" cardinality="one">
+				<modifiers read="true" write="true" search="true" optional="false"/>
+			</targetElement>
+		</relation>
+
+		<relation code="CxLocalizedObjectConfigs2Categories" localized="false">
+			<description>Allows to categorize Localized Objects</description>
+			<deployment table="CxLocObjectConsf2Categs" typecode="31406"/>
+			<sourceElement type="CxLocalizedObjectConfig" qualifier="configs" cardinality="many"/>
+			<targetElement type="CxLocalizedObjectCategory" qualifier="categories" cardinality="many"
+						   collectiontype="set"/>
+		</relation>
+
+		<relation code="CxStandardLocalizedObjConfigs2Attributes" localized="false">
+			<description>Localized attributes configured for Localized Object</description>
+			<deployment table="CxStdLocObjConf2Attrs" typecode="31407"/>
+			<sourceElement type="CxStandardLocalizedObjectConfig" qualifier="cxLocalizedObjectConfigs"
+						   cardinality="many"/>
+			<targetElement type="AttributeDescriptor" qualifier="localizedAttributes" cardinality="many"
+						   collectiontype="list" ordered="true"/>
+		</relation>
+
+		<relation code="CxStandardLocalizedObjConfigs2CatalogVersions" localized="false">
+			<description>Catalog Versions for filtering cat. aware Localized Values</description>
+			<deployment table="CxStdLocObjConf2CatVers" typecode="31408"/>
+			<sourceElement type="CxStandardLocalizedObjectConfig" qualifier="cxLocalizedObjectConfigs"
+						   cardinality="many"/>
+			<targetElement type="CatalogVersion" qualifier="catalogVersions" cardinality="many" collectiontype="set">
+			</targetElement>
+		</relation>
+
+        <relation code="CxProductFeatureLocObjConfigs2CatalogVersions" localized="false">
+            <description>Product catalog versions for filtering Product Features</description>
+            <deployment table="CxFeatLocObjConf2CatVers" typecode="31415"/>
+            <sourceElement type="CxProductFeatureLocalizedObjectConfig" qualifier="cxLocalizedObjectConfigs"
+                           cardinality="many"/>
+            <targetElement type="CatalogVersion" qualifier="productCatalogVersions" cardinality="many" collectiontype="set">
+            </targetElement>
+        </relation>
+
+		<relation code="CxTranslationCronJob2CxProposedTranslations" localized="false">
+			<sourceElement type="CxTranslationCronJob" qualifier="translationCronJob" cardinality="one">
+				<modifiers read="true" write="true" search="true" initial="true" unique="true"/>
+			</sourceElement>
+			<targetElement type="CxProposedTranslation" qualifier="valuesToTranslate" cardinality="many">
+				<modifiers partof="true"/>
+			</targetElement>
+		</relation>
+
+
+		<relation code="CxTranslationServiceSettings2CxTranslationCronJobs" localized="false">
+			<sourceElement type="CxTranslationServiceSettings" qualifier="translationServiceSettings" cardinality="one"/>
+			<targetElement type="CxTranslationCronJob" qualifier="translationCronJobs" cardinality="many"/>
+		</relation>
+
+		<relation code="CxStandardLocalizedObjConfigsHierarchy" localized="false">
+			<description>Establishes parent-child hierarchy of CxStandardLocalizedObjectConfigs.</description>
+			<sourceElement type="CxStandardLocalizedObjectConfig" qualifier="extends"
+						   cardinality="one"/>
+			<targetElement type="CxStandardLocalizedObjectConfig" qualifier="extendedBy" cardinality="many" collectiontype="set">
+			</targetElement>
+		</relation>
+
+		<relation code="CxApproveTranslationsCronJob2CxProposedTranslations" localized="false">
+			<sourceElement type="CxApproveTranslationsCronJob" qualifier="approveTranslationsCronJob" cardinality="one">
+				<modifiers read="true" write="true" search="true"/>
+			</sourceElement>
+			<targetElement type="CxProposedTranslation" qualifier="translationsToApprove" cardinality="many">
+				<modifiers read="true" write="true" search="true"/>
+			</targetElement>
+		</relation>
+
+		<relation code="CxAzureTranslatorSettings2Glossaries" localized="false">
+			<description>Glossaries assigned to Azure Translator Service Settings</description>
+			<deployment table="CxAzureConf2Glossaries" typecode="31418"/>
+			<sourceElement type="CxAzureTranslatorServiceSettings" qualifier="azureGlossarySettings" cardinality="many"/>
+			<targetElement type="CxTranslateGlossary" qualifier="glossaries" cardinality="many" collectiontype="list"/>
+		</relation>
+
+		<relation code="CxDeepLSettings2Glossaries" localized="false">
+			<description>Glossaries assigned to DeepL Translation Service Settings</description>
+			<deployment table="CxDeepLConf2Glossaries" typecode="31419"/>
+			<sourceElement type="CxDeepLTranslationServiceSettings" qualifier="deepLGlossarySettings" cardinality="many"/>
+			<targetElement type="CxTranslateGlossary" qualifier="glossaries" cardinality="many" collectiontype="list"/>
+		</relation>
+
+	</relations>
+	<itemtypes>
+
+		<itemtype code="CxLocalizedLabel">
+			<deployment table="cxLocalizedLabel" typecode="31401"/>
+			<custom-properties>
+				<property name="catalogItemType">
+					<value>java.lang.Boolean.TRUE</value>
+				</property>
+				<property name="catalogVersionAttributeQualifier">
+					<value>"catalogVersion"</value>
+				</property>
+				<property name="uniqueKeyAttributeQualifier">
+					<value>"key"</value>
+				</property>
+			</custom-properties>
+			<attributes>
+				<attribute qualifier="key" type="java.lang.String">
+					<persistence type="property"/>
+					<modifiers unique="true" initial="true" optional="false"/>
+				</attribute>
+				<attribute qualifier="value" type="localized:java.lang.String">
+					<persistence type="property">
+						<columntype>
+							<value>HYBRIS.LONG_STRING</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="status" type="CMSApprovalStatus">
+					<persistence type="property"/>
+					<modifiers initial="true" optional="false"/>
+					<defaultvalue>em().getEnumerationValue("CmsApprovalStatus","check")</defaultvalue>
+				</attribute>
+				<attribute qualifier="catalogVersion" type="CatalogVersion">
+					<persistence type="property"/>
+					<modifiers unique="true" initial="true" optional="false"/>
+				</attribute>
+				<attribute qualifier="context" type="java.lang.String">
+					<persistence type="property">
+						<columntype>
+							<value>HYBRIS.LONG_STRING</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="forFrontend" type="boolean">
+					<persistence type="property"/>
+					<modifiers optional="false" initial="true"/>
+					<defaultvalue>false</defaultvalue>
+				</attribute>
+				<attribute qualifier="forBackend" type="boolean">
+					<persistence type="property"/>
+					<modifiers optional="false" initial="true"/>
+					<defaultvalue>false</defaultvalue>
+				</attribute>
+				<attribute qualifier="relatedLabels" type="CxLocalizedLabelsList">
+					<persistence type="dynamic" attributeHandler="cxRelatedLabelsAttributeHandler"/>
+					<modifiers optional="true" read="true" write="false"/>
+				</attribute>
+			</attributes>
+			<indexes>
+				<index name="localLabelUniqueIdx" unique="true">
+					<key attribute="key"/>
+					<key attribute="catalogVersion"/>
+				</index>
+			</indexes>
+		</itemtype>
+
+		<itemtype code="CxLocalizedBundle">
+			<deployment table="CxLocalizedBundle" typecode="31402"/>
+			<custom-properties>
+				<property name="catalogItemType">
+					<value>java.lang.Boolean.TRUE</value>
+				</property>
+				<property name="catalogVersionAttributeQualifier">
+					<value>"catalogVersion"</value>
+				</property>
+				<property name="uniqueKeyAttributeQualifier">
+					<value>"code"</value>
+				</property>
+			</custom-properties>
+			<attributes>
+				<attribute qualifier="code" type="java.lang.String">
+					<persistence type="property"/>
+					<modifiers unique="true" initial="true" optional="false"/>
+				</attribute>
+				<attribute qualifier="catalogVersion" type="CatalogVersion">
+					<persistence type="property"/>
+					<modifiers unique="true" initial="true" optional="false"/>
+				</attribute>
+			</attributes>
+			<indexes>
+				<index name="localBundleUniqueIdx" unique="true">
+					<key attribute="code"/>
+					<key attribute="catalogVersion"/>
+				</index>
+			</indexes>
+		</itemtype>
+
+		<itemtype code="CxAbstractLocalizedValue" extends="GenericItem" abstract="true">
+			<description>Abstract item to represents value of localized String attribute for an item</description>
+			<attributes>
+				<attribute qualifier="targetType" type="CxTranslateLocalizedValueTargetType">
+					<description>Decides what kind of target object this value is related to</description>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="target" type="Item">
+					<description>Item from which values is coming</description>
+					<persistence type="dynamic" attributeHandler="cxLocalizedValueTargetAttributeHandler"/>
+				</attribute>
+				<attribute qualifier="itemTarget" type="Item">
+					<description>"Normal" (eg. not enum) Item from which values are coming</description>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="enumTarget" type="EnumerationValue">
+					<description>Enum Item from which values are coming</description>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="key" type="java.lang.String">
+					<description>Unique key of value in form of [loc object configuration code].[object_id].[attribute]
+					</description>
+					<modifiers unique="true"/>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="value" type="localized:java.lang.String">
+					<description>Localized value taken from the target item</description>
+					<persistence type="dynamic" attributeHandler="cxTranslateLocalizedValueAttributeHandler"/>
+				</attribute>
+				<attribute qualifier="config" type="CxLocalizedObjectConfig">
+					<description>Localized Object Type/Configuration</description>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="objectId" type="java.lang.String">
+					<description>Unique id generated for the target object in a catalog version.</description>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="catalogId" type="java.lang.String">
+					<description>Unique id of the catalog version. Part of the KEY</description>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="catalogVersionId" type="java.lang.String">
+					<description>Unique id of the catalog version. Part of the KEY</description>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="objectType" type="java.lang.String">
+					<description>Type of Localized Object</description>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="attribute" type="java.lang.String">
+					<description>Qualifier of attribute</description>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="valueForSearch" type="localized:java.lang.String">
+					<description>Localized value used for backoffice search.</description>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="catalogVersion" type="CatalogVersion">
+					<description>Catalog Version retrieved from target item, if target item is catalog aware</description>
+					<persistence type="dynamic" attributeHandler="cxTranslateLocalizedValueCatalogVersionAttributeHandler"/>
+					<modifiers read="true" write="false"/>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="CxLocalizedValue" extends="CxAbstractLocalizedValue">
+			<description>Virtual (not persisted) item representing a value of localized String attribute for an item</description>
+			<deployment table="CxLocalizedValue" typecode="31403"/>
+			<attributes>
+				<attribute qualifier="proposedTranslations" type="CxProposedTranslationCollection">
+					<description>Proposed translations created for the cxLocalizedValue</description>
+					<persistence type="dynamic" attributeHandler="cxProposedTranslationsAttributeHandler"/>
+					<modifiers read="true" write="false"/>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="CxProposedTranslation" extends="CxAbstractLocalizedValue">
+			<description>Represents proposed translated value of localized String attribute for an item</description>
+			<deployment table="CxProposedTranslations" typecode="31414"/>
+			<attributes>
+				<attribute qualifier="proposedTranslationValue" type="localized:java.lang.String">
+					<description>Proposed translation value</description>
+					<persistence type="property">
+						<columntype>
+							<value>HYBRIS.LONG_STRING</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="manualTranslationValue" type="localized:java.lang.String">
+					<description>Translation value provided manually</description>
+					<persistence type="property">
+						<columntype>
+							<value>HYBRIS.LONG_STRING</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="translationStatus" type="CxTranslationStatus">
+					<description>Status of the translation</description>
+					<modifiers optional="false"/>
+					<persistence type="property"/>
+					<defaultvalue>em().getEnumerationValue("CxTranslationStatus","PENDING")</defaultvalue>
+				</attribute>
+				<attribute qualifier="approvalStatus" type="CxApprovalTranslationStatus">
+					<description>Status of the translation approval</description>
+					<modifiers optional="false"/>
+					<persistence type="property"/>
+					<defaultvalue>em().getEnumerationValue("CxApprovalTranslationStatus","PENDING")</defaultvalue>
+				</attribute>
+				<attribute qualifier="sourceLanguage" type="Language">
+					<description>source language</description>
+					<modifiers read="true" write="false"/>
+					<persistence type="dynamic" attributeHandler="cxSourceLanguageForProposedTranslationAttributeHandler"/>
+				</attribute>
+                <attribute qualifier="initialTargetLanguages" type="LanguageCollection">
+                    <description>Initially requested target languages</description>
+                    <modifiers read="true" write="false"/>
+                    <persistence type="dynamic"
+                                 attributeHandler="cxTargetLanguagesForProposedTranslationAttributeHandler"/>
+                </attribute>
+                <attribute qualifier="filteredTargetLanguages" type="LanguageCollection">
+                    <description>Filtered target languages after applying skip-translated and plural form filters</description>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="automaticPlurals" type="boolean">
+                    <description>Is this value translated using with automatic plural handling</description>
+                    <modifiers read="true" write="true"/>
+                    <persistence type="property"/>
+                    <defaultvalue>false</defaultvalue>
+                </attribute>
+                <attribute qualifier="skipTranslatedRequested" type="boolean">
+                    <description>If skipping of translation of already existing values is selected</description>
+                    <modifiers read="true" write="true"/>
+                    <persistence type="property"/>
+                    <defaultvalue>false</defaultvalue>
+                </attribute>
+				<attribute qualifier="translatedLanguages" type="LanguageCollection">
+					<description>Actually translated languages</description>
+					<modifiers read="true" write="true"/>
+					<persistence type="property"/>
+				</attribute>
+                <attribute qualifier="valueHint" type="java.lang.String">
+                    <description>Additional info about the value to translate that can be used by translators or
+                        translation service, for example to provide context.
+                    </description>
+                    <modifiers read="true" write="true"/>
+                    <persistence type="property">
+                        <columntype>
+                            <value>HYBRIS.LONG_STRING</value>
+                        </columntype>
+                    </persistence>
+                </attribute>
+                <attribute qualifier="usageInfo" type="CxTranslateStringToDoubleMap">
+                    <description>Usage metrics collected during translation (e.g., input/output tokens)</description>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="totalCost" type="double">
+                    <modifiers write="false"/>
+                    <description>Total estimated cost based on usage metrics and cost per unit settings</description>
+                    <persistence type="dynamic" attributeHandler="cxProposedTranslationCostAttributeHandler"/>
+                </attribute>
+				<attribute qualifier="notes" type="java.lang.String">
+					<persistence type="property">
+						<columntype>
+							<value>HYBRIS.LONG_STRING</value>
+						</columntype>
+					</persistence>
+				</attribute>
+                <attribute qualifier="smartEditTranslation" type="boolean">
+                    <description>Is this translation requested from SmartEdit</description>
+                    <modifiers read="true" write="true"/>
+                    <persistence type="property"/>
+                    <defaultvalue>false</defaultvalue>
+                </attribute>
+			</attributes>
+			<indexes>
+				<index name="translationCronJobIdx">
+					<key attribute="translationCronJob"></key>
+				</index>
+				<index name="approvalCronJobIdx">
+					<key attribute="approveTranslationsCronJob"></key>
+				</index>
+				<index name="keyIdx">
+					<key attribute="key"></key>
+				</index>
+				<index name="keyCronJobIdx" unique="true">
+					<key attribute="key"></key>
+					<key attribute="translationCronJob"></key>
+				</index>
+			</indexes>
+		</itemtype>
+
+		<itemtype code="CxLocalizedObjectCategory" extends="GenericItem">
+			<description>Categories of Localized Object</description>
+			<deployment table="CxLocObjectCategory" typecode="31404"/>
+			<attributes>
+				<attribute qualifier="code" type="java.lang.String">
+					<persistence type="property"/>
+					<modifiers unique="true"/>
+				</attribute>
+				<attribute qualifier="name" type="java.lang.String">
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="translationHint" type="java.lang.String">
+					<persistence type="property">
+						<columntype>
+							<value>HYBRIS.LONG_STRING</value>
+						</columntype>
+					</persistence>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="CxLocalizedObjectConfig" extends="GenericItem" abstract="true">
+			<description>Abstract base for configurations of Localized Types</description>
+			<deployment table="CxLocalizedObjectConfig" typecode="31405"/>
+			<attributes>
+				<attribute qualifier="code" type="java.lang.String">
+					<persistence type="property"/>
+					<modifiers unique="true"/>
+				</attribute>
+				<attribute qualifier="name" type="java.lang.String">
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="translationHint" type="java.lang.String">
+					<persistence type="property">
+						<columntype>
+							<value>HYBRIS.LONG_STRING</value>
+						</columntype>
+					</persistence>
+				</attribute>
+                <attribute qualifier="useInBackofficeSearch" type="CxTranslateBackofficeSearchInclusion">
+                    <persistence type="property"/>
+                    <defaultvalue>em().getEnumerationValue("CxTranslateBackofficeSearchInclusion","INCLUDED")</defaultvalue>
+                </attribute>
+			</attributes>
+			<indexes>
+				<index name="cxLocalConfCodeIdx" unique="true">
+					<key attribute="code"/>
+				</index>
+			</indexes>
+		</itemtype>
+
+		<itemtype code="CxStandardLocalizedObjectConfig" extends="CxLocalizedObjectConfig">
+			<description>Configuration of localized type that should cover most cases</description>
+			<attributes>
+				<attribute qualifier="type" type="ComposedType">
+					<description>Type of target items</description>
+					<persistence type="property"/>
+					<modifiers unique="true" optional="false"/>
+				</attribute>
+				<attribute qualifier="catalogAware" type="boolean">
+					<description>Is target item catalog aware, so the values will be filtered to display only Stage
+						versions
+					</description>
+					<persistence type="property"/>
+					<modifiers/>
+				</attribute>
+				<attribute qualifier="catalogVersionField" type="java.lang.String">
+					<description>Qualifier of catalog version field.
+					</description>
+					<persistence type="property"/>
+					<defaultvalue>catalogVersion</defaultvalue>
+				</attribute>
+				<attribute qualifier="keyFields" type="StringCollection">
+					<description>Qualifiers of unique id fields. May support transitive reference, for example
+						'product.code' for item that has reference to Product used as unique attribute.
+					</description>
+					<persistence type="property"/>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="CxProductFeatureLocalizedObjectConfig" extends="CxLocalizedObjectConfig">
+			<description>Configuration of localized type for Product Features</description>
+		</itemtype>
+
+		<itemtype code="CxTranslateAiModel" autocreate="true" generate="true">
+			<description>Item type for AI Models like 'Chat GPT 4'. Code should match value expected by the service
+				provider.
+			</description>
+			<deployment table="CxTranslateAiModel" typecode="31413"/> <!-- Adjust typecode as necessary -->
+			<attributes>
+				<attribute qualifier="code" type="java.lang.String">
+					<persistence type="property"/>
+					<modifiers optional="false" unique="true"/>
+					<description>Unique code of the AI model, matching the value expected by the service provider e.g.
+						`gpt-4` or `gemini-1.0-pro`
+					</description>
+				</attribute>
+				<attribute qualifier="name" type="java.lang.String">
+					<persistence type="property"/>
+					<description>Name of the AI model</description>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="CxAiDeploymentConfig">
+			<description>Represents connection/deployment configuration to AI service</description>
+			<deployment table="CxAiDeploymentConfig" typecode="31412"/>
+			<attributes>
+				<attribute qualifier="code" type="java.lang.String">
+					<persistence type="property"/>
+					<modifiers optional="false" unique="true"/>
+				</attribute>
+				<attribute qualifier="name" type="java.lang.String">
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="destination" type="ConsumedDestination">
+					<modifiers optional="false"/>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="deployments" type="CxTranslateModelToStringMap">
+					<description>Map of models to their 'deployment id's' that may be needed in URLS</description>
+					<persistence type="property"/>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="CxTranslationServiceApi" abstract="true">
+			<description>Base Type for automatic / AI based translation mechanisms configuration</description>
+			<deployment table="CxTranslationServiceApi" typecode="31409"/>
+			<attributes>
+				<attribute qualifier="code" type="java.lang.String">
+					<modifiers optional="false" unique="true"/>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="name" type="java.lang.String">
+					<persistence type="property"/>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="CxAiTranslationServiceApi" extends="CxTranslationServiceApi">
+			<description>Configuration of AI based translation service. Contains basic configuration related to API that
+				is not changed frequently.
+			</description>
+			<attributes>
+				<attribute qualifier="deploymentConfiguration" type="CxAiDeploymentConfig">
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="endpointUrlSuffix" type="java.lang.String">
+					<description>
+						Part of the url to be combined with the ConsumedDestination URL.
+						Supports placeholders for {deployment} representing the deployment configuration and {model} for
+						the chosen AI model.
+					</description>
+					<modifiers optional="false"/>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="requestTemplate" type="java.lang.String">
+					<description>
+						A request template to be rendered by Groovy's Simple Template Engine supporting the placeholders
+						denoted by specific syntax.
+						The following placeholders are available:
+						{parameters.XXX} -> based on the list of parameters provided by
+						RequestConfigurableParameters${model},
+						${requestJson}, ${responseSchemaJson}.
+						If the request template approach (see CxTranslateSimpleRequestBuilder) is not sufficient a
+						spring bean approach can be used - see the customRequestBuilderBeanId property.
+					</description>
+					<defaultvalue></defaultvalue>
+					<persistence type="property">
+						<columntype>
+							<value>HYBRIS.LONG_STRING</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="responsePath" type="java.lang.String">
+					<description>
+						JSON Path expression used to extract the translation from the response.
+						If the JSON path expression approach is not sufficient a spring bean approach can be used - see
+						the customResponseReaderBeanId property.
+					</description>
+					<persistence type="property">
+						<columntype>
+							<value>HYBRIS.LONG_STRING</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="loggingLevel" type="CxTranslateServiceLoggingLevel">
+					<description>When it should log/save the response -> log level configuration specifying how/when the
+						logs should be stored.
+						Use the ALWAYSs setting only for development and testing phase!
+					</description>
+					<persistence type="property"/>
+					<defaultvalue>em().getEnumerationValue("CxTranslateServiceLoggingLevel","ERROR_ONLY")</defaultvalue>
+				</attribute>
+				<attribute qualifier="configurableParameters" type="StringCollection">
+					<description>List of parameters that can be set on the model</description>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="defaultParameterValues" type="String2StringMapType">
+					<description>Default values for parameters</description>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="customRequestBuilderBeanId" type="java.lang.String">
+					<description>Optional Spring Bean ID implementing CxTranslateRequestBuilder in case requestTemplate
+						approach is not sufficient
+					</description>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="customResponseReaderBeanId" type="java.lang.String">
+					<description>Optional Spring Bean id implementing CxTranslationResponseReader</description>
+					<persistence type="property"/>
+				</attribute>
+                <attribute qualifier="usageMetricsPaths" type="String2StringMapType">
+                    <description>JSON path expressions for extracting usage metrics from response</description>
+                    <persistence type="property"/>
+                </attribute>
+
+
+            </attributes>
+		</itemtype>
+
+		<itemtype code="CxDeepLTranslationServiceApi" extends="CxTranslationServiceApi">
+			<description>Configuration of DeepL based translation service. Contains basic configuration related to API that
+				is not changed frequently.
+			</description>
+			<attributes>
+				<attribute qualifier="destination" type="ConsumedDestination">
+					<modifiers optional="false"/>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="loggingLevel" type="CxTranslateServiceLoggingLevel">
+					<description>When it should log/save the response -> log level configuration specifying how/when the
+						logs should be stored.
+						Use the ALWAYSs setting only for development and testing phase!
+					</description>
+					<persistence type="property"/>
+					<defaultvalue>em().getEnumerationValue("CxTranslateServiceLoggingLevel","ERROR_ONLY")</defaultvalue>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="CxTranslationServiceSettings" abstract="true" extends="GenericItem">
+			<description>Base class for Settings for Translation Service that can be fine-tuned</description>
+			<deployment table="CxRemoteTranslSettings" typecode="31411"/>
+			<attributes>
+				<attribute qualifier="code" type="java.lang.String">
+					<modifiers optional="false" unique="true"/>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="name" type="java.lang.String">
+					<modifiers optional="false"/>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="isDefault" type="java.lang.Boolean">
+					<modifiers optional="false"/>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="globalTranslationHints" type="java.lang.String">
+					<persistence type="property">
+						<columntype>
+							<value>HYBRIS.LONG_STRING</value>
+						</columntype>
+					</persistence>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="CxAiTranslationServiceSettings" extends="CxTranslationServiceSettings">
+			<attributes>
+				<attribute qualifier="aiServiceApi" type="CxAiTranslationServiceApi">
+					<persistence type="property"/>
+					<modifiers optional="false"/>
+				</attribute>
+				<attribute qualifier="aiModel" type="CxTranslateAiModel">
+					<persistence type="property"/>
+					<modifiers optional="false"/>
+				</attribute>
+				<attribute qualifier="maxLanguagesInRequest" type="java.lang.Integer">
+					<persistence type="property"/>
+					<defaultvalue>2</defaultvalue>
+				</attribute>
+                <attribute qualifier="maxCharactersInRequest" type="java.lang.Integer">
+                    <persistence type="property"/>
+                    <defaultvalue>2000</defaultvalue>
+                </attribute>
+                <attribute qualifier="usageMetricsCost" type="CxTranslateStringToDoubleMap">
+                    <description>Cost per unit for usage metrics</description>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="usageInfo" type="CxTranslateStringToDoubleMap">
+                    <description>Usage metrics accumulated from all translation operations</description>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="totalCost" type="double">
+                    <modifiers write="false"/>
+                    <description>Total estimated cost based on usage metrics and cost per unit settings</description>
+                    <persistence type="dynamic" attributeHandler="cxAiServiceCostAttributeHandler"/>
+                </attribute>
+                <attribute qualifier="parameterValues" type="String2StringMapType">
+					<description>Parameters of model with support for using/showing default values.</description>
+					<persistence type="dynamic" attributeHandler="cxTranslateModelParametersHandler"/>
+				</attribute>
+				<attribute qualifier="savedParameterValuesInternal" type="String2StringMapType">
+					<description>underlying storage for 'parameterValues'</description>
+					<persistence type="property"/>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="CxSapTranslationHubServiceApi" extends="CxTranslationServiceApi">
+			<description>Configuration of SAP Translation Hub based translation service API.</description>
+			<attributes>
+				<attribute qualifier="destination" type="ConsumedDestination">
+					<modifiers optional="false"/>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="loggingLevel" type="CxTranslateServiceLoggingLevel">
+					<description>Logging level configuration</description>
+					<persistence type="property"/>
+					<defaultvalue>em().getEnumerationValue("CxTranslateServiceLoggingLevel","ERROR_ONLY")</defaultvalue>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="CxSapTranslationHubServiceSettings" extends="CxTranslationServiceSettings">
+			<attributes>
+				<attribute qualifier="sapTranslationHubServiceApi" type="CxSapTranslationHubServiceApi">
+					<persistence type="property"/>
+					<modifiers optional="false"/>
+				</attribute>
+				<attribute qualifier="model" type="CxSapTranslationHubModel">
+					<description>SAP Translation Hub model to use for translation requests</description>
+					<persistence type="property"/>
+					<defaultvalue>em().getEnumerationValue("CxSapTranslationHubModel","llm")</defaultvalue>
+				</attribute>
+				<attribute qualifier="domain" type="java.lang.String">
+					<description>Optional domain for the translation (e.g. 'SAP_Fiori')</description>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="enableHtmlTagHandling" type="java.lang.Boolean">
+					<description>If true, HTML tags in source values will be XML-escaped before sending to SAP Translation Hub and unescaped in responses</description>
+					<persistence type="property"/>
+					<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
+				</attribute>
+				<attribute qualifier="directTextTranslationThresholdBytes" type="java.lang.Integer">
+					<description>Single source values larger than this UTF-8 size are translated directly as text/html instead of being wrapped in XLIFF</description>
+					<persistence type="property"/>
+					<defaultvalue>1024</defaultvalue>
+				</attribute>
+				<attribute qualifier="maxXliffBatchSizeBytes" type="java.lang.Integer">
+					<description>Maximum UTF-8 size of a generated XLIFF request batch</description>
+					<persistence type="property"/>
+					<defaultvalue>4096</defaultvalue>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="CxDeepLTranslationServiceSettings" extends="CxTranslationServiceSettings">
+			<attributes>
+				<attribute qualifier="deepLServiceApi" type="CxDeepLTranslationServiceApi">
+					<persistence type="property"/>
+					<modifiers optional="false"/>
+				</attribute>
+
+				<attribute qualifier="modelType" type="CxTranslateDeepLModel">
+					<persistence type="property"/>
+				</attribute>
+
+				<attribute qualifier="splitSentences" type="CxTranslateDeepLSplitting">
+					<persistence type="property"/>
+				</attribute>
+
+				<attribute qualifier="preserveFormatting" type="java.lang.Boolean">
+					<persistence type="property"/>
+					<defaultvalue>null</defaultvalue>
+				</attribute>
+
+				<attribute qualifier="formality" type="CxTranslateDeepLFormality">
+					<persistence type="property"/>
+				</attribute>
+
+				<attribute qualifier="tagHandling" type="CxTranslateDeepLTagHandling">
+					<persistence type="property"/>
+				</attribute>
+
+				<attribute qualifier="outlineDetection" type="java.lang.Boolean">
+					<persistence type="property"/>
+					<defaultvalue>null</defaultvalue>
+				</attribute>
+
+				<attribute qualifier="nonSplittingTags" type="java.lang.String">
+					<persistence type="property">
+						<columntype>
+							<value>HYBRIS.LONG_STRING</value>
+						</columntype>
+					</persistence>
+				</attribute>
+
+				<attribute qualifier="splittingTags" type="java.lang.String">
+					<persistence type="property">
+						<columntype>
+							<value>HYBRIS.LONG_STRING</value>
+						</columntype>
+					</persistence>
+				</attribute>
+
+				<attribute qualifier="ignoreTags" type="java.lang.String">
+					<persistence type="property">
+						<columntype>
+							<value>HYBRIS.LONG_STRING</value>
+						</columntype>
+					</persistence>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="CxTranslationJob" extends="ServicelayerJob">
+			<attributes>
+				<attribute qualifier="springId" type="java.lang.String" redeclare="true">
+					<persistence type="property"/>
+					<modifiers read="true" write="true" search="true" initial="true" optional="false"/>
+					<defaultvalue>"cxTranslationJob"</defaultvalue>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="CxApproveTranslationsJob" extends="ServicelayerJob">
+			<attributes>
+				<attribute qualifier="springId" type="java.lang.String" redeclare="true">
+					<persistence type="property"/>
+					<modifiers read="true" write="true" search="true" initial="true" optional="false"/>
+					<defaultvalue>"cxApproveTranslationsJob"</defaultvalue>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="CxTranslationCronJob" extends="CronJob" autocreate="true" generate="true">
+			<attributes>
+				<attribute qualifier="targetLanguages" type="LanguageCollection">
+					<description>Language</description>
+					<modifiers optional="false"/>
+					<persistence type="property"/>
+					<defaultvalue>Collections.EMPTY_LIST</defaultvalue>
+				</attribute>
+				<attribute qualifier="sourceLanguage" type="Language">
+					<description>Language</description>
+					<modifiers optional="false"/>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="hint" type="java.lang.String">
+					<persistence type="property">
+						<columntype>
+							<value>HYBRIS.LONG_STRING</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="saveForApproval" type="java.lang.Boolean">
+					<description>Flag indicating if the translation results should be stored for later approval as CxProposedTranslation or stored directly at target item</description>
+					<modifiers read="true" write="true" search="true" optional="false"/>
+					<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="skipTranslated" type="java.lang.Boolean">
+					<description>Flag indicating if the mechanism should skip already translated values</description>
+					<modifiers read="true" write="true" search="true" optional="false"/>
+					<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="elementsToProcessCount" type="java.lang.Integer">
+					<description>Number of elements to process</description>
+					<modifiers optional="true"/>
+					<persistence type="property"/>
+					<defaultvalue>0</defaultvalue>
+				</attribute>
+				<attribute qualifier="items" type="ItemsCollection">
+					<description>Items to be translated</description>
+					<modifiers optional="true"/>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="attributes" type="AttributesSet">
+					<description>Attributes to be translated for given items</description>
+					<modifiers optional="true"/>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="translateProductFeatures" type="boolean">
+					<description>Should Product Features be translated</description>
+					<modifiers optional="true"/>
+					<persistence type="property"/>
+				</attribute>
+                <attribute qualifier="automaticPlurals" type="boolean">
+                    <description>Should Plurals be handled automatically for Localized Labels</description>
+                    <modifiers optional="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="usageInfo" type="CxTranslateStringToDoubleMap">
+                    <description>Usage metrics collected during translation (e.g., input/output tokens)</description>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="totalCost" type="double">
+                    <modifiers write="false"/>
+                    <description>Total estimated cost based on usage metrics and cost per unit settings</description>
+                    <persistence type="dynamic" attributeHandler="cxTranslationCronJobCostAttributeHandler"/>
+                </attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="CxApproveTranslationsCronJob" extends="CronJob" autocreate="true" generate="true">
+			<attributes>
+				<attribute qualifier="elementsToProcessCount" type="java.lang.Integer">
+					<description>Number of elements to process</description>
+					<modifiers optional="true"/>
+					<persistence type="property"/>
+					<defaultvalue>0</defaultvalue>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="CxLocalizedObjectConfigCronJob" extends="CronJob" autocreate="true" generate="true">
+			<attributes>
+				<attribute qualifier="includedComposedTypes" type="ComposedTypesList">
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="excludedComposedTypes" type="ComposedTypesList">
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="excludedAttributes" type="AttributeDescriptorsList">
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="localizedObjectCategories" type="CxLocalizedObjectCategorySet">
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="mergeMode" type="CxMergeMode">
+					<persistence type="property"/>
+					<defaultvalue>em().getEnumerationValue("CxMergeMode","REPLACE")</defaultvalue>
+				</attribute>
+				<attribute qualifier="alreadyProcessedTypes" type="java.lang.Integer">
+					<modifiers read="true" write="true" optional="true"/>
+					<persistence type="property"/>
+					<defaultvalue>0</defaultvalue>
+				</attribute>
+				<attribute qualifier="failedTypes" type="java.lang.Integer">
+					<modifiers read="true" write="true" optional="true"/>
+					<persistence type="property"/>
+					<defaultvalue>0</defaultvalue>
+				</attribute>
+				<attribute qualifier="addAttributesOnlyWhenDataExists" type="boolean">
+					<persistence type="property"/>
+					<defaultvalue>Boolean.TRUE</defaultvalue>
+				</attribute>
+				<attribute qualifier="catalogVersions" type="CatalogVersionSet">
+					<persistence type="property"/>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="CxLocalizedObjectConfigJob" extends="ServicelayerJob">
+			<attributes>
+				<attribute qualifier="springId" type="java.lang.String" redeclare="true">
+					<persistence type="property"/>
+					<modifiers read="true" write="true" search="true" initial="true" optional="false"/>
+					<defaultvalue>"cxLocalizedObjectConfigJob"</defaultvalue>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+			<itemtype code="CxTranslateKeyBasedCredential" abstract="false" autocreate="true" generate="true" extends="AbstractCredential" jaloclass="de.hybris.platform.apiregistryservices.jalo.CxTranslateKeyBasedCredential">
+			<description>Key based credentials for webservice. Header injected depends on mode:
+				AUTHORIZATION_PREFIX (default): 'Authorization: {keyName} {keyValue}'
+				STANDALONE_HEADER: '{keyName}: {keyValue}'</description>
+			<attributes>
+				<attribute qualifier="keyName" type="java.lang.String">
+					<description>Key name — used as the Authorization scheme prefix (AUTHORIZATION_PREFIX) or as the header name (STANDALONE_HEADER)</description>
+					<modifiers optional="false" />
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="keyValue" type="java.lang.String">
+					<description>Key Value</description>
+					<modifiers optional="false" encrypted="true"/>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="mode" type="CxTranslateKeyBasedCredentialMode">
+					<description>Controls how the header is constructed. Defaults to AUTHORIZATION_PREFIX for backward compatibility.</description>
+					<persistence type="property"/>
+					<defaultvalue>em().getEnumerationValue("CxTranslateKeyBasedCredentialMode","AUTHORIZATION_PREFIX")</defaultvalue>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="CxAzureTranslatorServiceApi" extends="CxTranslationServiceApi">
+			<description>Configuration of Azure Translator document translation service API.</description>
+			<attributes>
+				<attribute qualifier="destination" type="ConsumedDestination">
+					<modifiers optional="false"/>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="loggingLevel" type="CxTranslateServiceLoggingLevel">
+					<description>Logging level configuration</description>
+					<persistence type="property"/>
+					<defaultvalue>em().getEnumerationValue("CxTranslateServiceLoggingLevel","ERROR_ONLY")</defaultvalue>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="CxAzureTranslatorServiceSettings" extends="CxTranslationServiceSettings">
+			<attributes>
+				<attribute qualifier="azureTranslatorServiceApi" type="CxAzureTranslatorServiceApi">
+					<persistence type="property"/>
+					<modifiers optional="false"/>
+				</attribute>
+				<attribute qualifier="translationMode" type="CxAzureTranslatorMode">
+					<description>SYNCHRONOUS uses the single-file sync endpoint (no Blob Storage needed). ASYNC_BATCH uses the batch endpoint with Blob Storage — requires cxtranslate.integrations.azuretranslator.storage.sas.url to be set.</description>
+					<persistence type="property"/>
+					<defaultvalue>em().getEnumerationValue("CxAzureTranslatorMode","SYNCHRONOUS")</defaultvalue>
+				</attribute>
+				<attribute qualifier="category" type="java.lang.String">
+					<description>Optional custom model category ID from Azure Custom Translator. Maps to the 'category' query parameter.</description>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="allowFallback" type="java.lang.Boolean">
+					<description>When true (default), the service falls back to a general neural system if the requested custom category is unavailable.</description>
+					<persistence type="property"/>
+					<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
+				</attribute>
+				<attribute qualifier="enableHtmlTagHandling" type="java.lang.Boolean">
+					<description>If true, HTML tags in source values will be XML-escaped before sending to Azure Translator and unescaped in responses.</description>
+					<persistence type="property"/>
+					<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
+				</attribute>
+				<attribute qualifier="directTextTranslationThresholdBytes" type="java.lang.Integer">
+					<description>Single source values larger than this UTF-8 size are translated directly as text/plain instead of being wrapped in XLIFF. Only applies to SYNCHRONOUS mode.</description>
+					<persistence type="property"/>
+					<defaultvalue>1024</defaultvalue>
+				</attribute>
+				<attribute qualifier="maxXliffBatchSizeBytes" type="java.lang.Integer">
+					<description>Maximum UTF-8 size of a generated XLIFF request batch.</description>
+					<persistence type="property"/>
+					<defaultvalue>4096</defaultvalue>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+
+		<itemtype code="CxTranslateGlossary" autocreate="true" generate="true">
+			<description>Represents a glossary entry for a specific language pair, used by translation services.
+				Either externalGlossaryRef (an API ID or blob URL) or media (a CSV/TSV file) should be provided.
+			</description>
+			<deployment table="CxTranslateGlossary" typecode="31417"/>
+			<attributes>
+				<attribute qualifier="sourceLanguage" type="Language">
+					<description>Source language of the glossary</description>
+					<persistence type="property"/>
+					<modifiers optional="false"/>
+				</attribute>
+				<attribute qualifier="targetLanguage" type="Language">
+					<description>Target language of the glossary</description>
+					<persistence type="property"/>
+					<modifiers optional="false"/>
+				</attribute>
+				<attribute qualifier="externalGlossaryRef" type="java.lang.String">
+					<description>Glossary identifier or URL. For DeepL: the remote glossary API ID. For Azure ASYNC_BATCH: a Blob Storage URL with SAS token. Leave empty to use the media file instead.</description>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="media" type="Media">
+					<description>Optional glossary Media item (CSV or TSV). Used for file-based glossary upload (e.g. Azure SYNCHRONOUS mode).</description>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="glossaryFormat" type="java.lang.String">
+					<description>Optional format hint for the glossary file (e.g. 'tsv', 'csv'). Used by services that require an explicit format declaration.</description>
+					<persistence type="property"/>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="PocLocAttributesChangeLog" autocreate="true" generate="true">
+			<description>POC: logs changed string attributes for specific user sessions.</description>
+			<deployment table="PocLocAttrChangeLog" typecode="31416"/>
+			<attributes>
+				<attribute qualifier="changedItemType" type="java.lang.String">
+					<description>Type code of the changed item (e.g. Product)</description>
+					<modifiers optional="false"/>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="changedItemPk" type="java.lang.String">
+					<description>PK of the changed item</description>
+					<modifiers optional="false"/>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="changedBy" type="java.lang.String">
+					<description>UID of the user who triggered the change</description>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="newItem" type="java.lang.Boolean">
+					<description>True if the item was newly created</description>
+					<persistence type="property"/>
+					<defaultvalue>java.lang.Boolean.FALSE</defaultvalue>
+				</attribute>
+				<attribute qualifier="changes" type="java.lang.String">
+					<description>Comma-separated names of changed string attributes</description>
+					<persistence type="property">
+						<columntype>
+							<value>HYBRIS.LONG_STRING</value>
+						</columntype>
+					</persistence>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+	</itemtypes>
+</items>

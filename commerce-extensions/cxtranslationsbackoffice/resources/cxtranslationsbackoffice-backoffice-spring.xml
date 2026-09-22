@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2024 SAP SE or an SAP affiliate company. All rights reserved.
+  -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:cng="http://www.hybris.com/cockpitng/spring"
+	   xmlns:util="http://www.springframework.org/schema/util"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.hybris.com/cockpitng/spring
+           http://www.hybris.com/cockpitng/spring/cng-spring.xsd
+           http://www.springframework.org/schema/util
+           http://www.springframework.org/schema/util/spring-util.xsd"
+>
+
+	<bean id="cxtranslationsbackofficeLabelLocator" class="com.hybris.cockpitng.util.labels.ResourcesLabelLocator"
+		  scope="singleton" init-method="init" lazy-init="false">
+		<property name="location" value="/cxtranslationsbackoffice-backoffice-labels/"/>
+		<property name="name" value="labels"/>
+	</bean>
+
+	<bean id="cxLocalizedStringInlineEditWidgetComponentRenderer"
+		  class="com.sap.cx.translations.backoffice.renderers.CxLocalizedStringInlineEditWidgetComponentRenderer"
+		  parent="defaultListCellRenderer" abstract="true">
+		<property name="propertyValueService" ref="propertyValueService"/>
+		<property name="cxTranslateCommerceCommonI18NService" ref="cxTranslateCommerceCommonI18NService"/>
+		<property name="objectFacade" ref="objectFacade"/>
+		<property name="notificationService" ref="notificationService"/>
+		<property name="permissionFacade" ref="permissionFacade"/>
+		<property name="modelService" ref="modelService"/>
+		<property name="readonly" value="false"/>
+	</bean>
+
+	<bean id="cxPrimaryLanguageLocalizedStringInlineEditWidgetComponentRenderer"
+		  parent="cxLocalizedStringInlineEditWidgetComponentRenderer">
+		<property name="primaryLanguage" value="true"/>
+		<property name="readonly" value="true"/>
+	</bean>
+
+	<bean id="cxSecondaryLanguageLocalizedStringInlineEditWidgetComponentRenderer"
+		  parent="cxLocalizedStringInlineEditWidgetComponentRenderer">
+		<property name="primaryLanguage" value="false"/>
+		<property name="readonly" value="false"/>
+	</bean>
+
+	<bean id="cxSecondaryLanguageLocalizedStringInlineEditWidgetComponentRendererReadOnly"
+		  parent="cxLocalizedStringInlineEditWidgetComponentRenderer">
+		<property name="primaryLanguage" value="false"/>
+		<property name="readonly" value="true"/>
+	</bean>
+
+	<bean id="cxListViewCollectionBrowserMoldStrategy"
+		  class="com.sap.cx.translations.backoffice.strategy.CxListViewCollectionBrowserMoldStrategy"
+		  scope="prototype" parent="listViewCollectionBrowserMoldStrategy">
+		<property name="commerceCommonI18NService" ref="commerceCommonI18NService"/>
+	</bean>
+
+	<bean id="cxLocalizedValueBackofficeSearchFacadeStrategy"
+		  class="com.sap.cx.translations.backoffice.localizedvalue.CxLocalizedValueBackofficeSearchFacadeStrategy">
+		<property name="localizedValueService" ref="cxLocalizedValueService"/>
+		<property name="notificationService" ref="notificationService"/>
+        <property name="sessionService" ref="sessionService"/>
+	</bean>
+
+	<cng:list-extender id="cxTranslateSearchFacadeExtender"
+					   getter="strategies.orElse(new java.util.ArrayList())"
+					   setter="strategies"
+					   bean="fieldSearchFacadeStrategyRegistry"
+					   sort="true">
+		<cng:add value-type="com.hybris.cockpitng.dataaccess.facades.search.FieldSearchFacadeStrategy">
+			<ref bean="cxLocalizedValueBackofficeSearchFacadeStrategy"/>
+		</cng:add>
+	</cng:list-extender>
+
+	<bean id="cxLocalizedValueObjectFacadeStrategy"
+		  class="com.sap.cx.translations.backoffice.localizedvalue.CxLocalizedValueObjectFacadeStrategy">
+		<property name="modelService" ref="modelService"/>
+	</bean>
+
+	<cng:list-extender id="cxTranslateObjectFacadeExtender"
+					   getter="strategies.orElse(new java.util.ArrayList())"
+					   setter="strategies"
+					   bean="objectFacadeStrategyRegistry"
+					   sort="true">
+		<cng:add value-type="com.hybris.cockpitng.dataaccess.facades.search.FieldSearchFacadeStrategy">
+			<ref bean="cxLocalizedValueObjectFacadeStrategy"/>
+		</cng:add>
+	</cng:list-extender>
+
+	<bean id="cxTranslationsExcelExportHandler" parent="defaultExcelExportHandler" class="com.sap.cx.translations.backoffice.excel.CxTranslationsExcelExportHandler">
+		<property name="exportService" ref="cxTranslationsExcelExportService"/>
+	</bean>
+
+	<bean id="cxTranslationsExcelExportService"
+		  class="com.sap.cx.translations.backoffice.excel.CxTranslationsExcelExportServiceImpl"
+		  parent="defaultExcelExportService">
+	</bean>
+
+	<alias name="cxTranslationsExcelExportDivider" alias="excelExportDivider"/>
+	<bean id="cxTranslationsExcelExportDivider"
+		  class="com.sap.cx.translations.backoffice.excel.CxTranslationsExcelExportDivider"
+		  parent="defaultExcelExportDivider"/>
+
+	<bean id="cxTranslationsSupporterExcelFilter"
+		  class="com.sap.cx.translations.backoffice.excel.CxTranslationsExcelFilter">
+		<property name="attributesForTypeMap">
+			<map key-type="java.lang.String" value-type="java.util.Set&lt;java.lang.String>">
+				<entry key="CxLocalizedValue">
+					<set value-type="java.lang.String">
+						<util:constant
+								static-field="com.sap.cx.translations.model.CxLocalizedValueModel.OBJECTTYPE"/>
+						<util:constant
+								static-field="com.sap.cx.translations.model.CxLocalizedValueModel.ATTRIBUTE"/>
+						<util:constant
+								static-field="com.sap.cx.translations.model.CxLocalizedValueModel.OBJECTID"/>
+						<util:constant
+								static-field="com.sap.cx.translations.model.CxLocalizedValueModel.CATALOGID"/>
+						<util:constant
+								static-field="com.sap.cx.translations.model.CxLocalizedValueModel.CATALOGVERSIONID"/>
+						<util:constant
+								static-field="com.sap.cx.translations.model.CxLocalizedValueModel.KEY"/>
+						<util:constant
+								static-field="com.sap.cx.translations.model.CxLocalizedValueModel.VALUE"/>
+						<util:constant
+								static-field="com.sap.cx.translations.model.CxLocalizedValueModel.CATALOGVERSION"/>
+					</set>
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="cxTranslationsExcelExportRenderer" parent="defaultExcelExportRenderer">
+		<property name="supportedFilters" ref="cxTranslationsAvailableCheckingFilter"/>
+		<property name="attributesChooserRenderer" ref="cxTranslationsAttributesChooserRenderer"/>
+	</bean>
+
+	<bean id="cxTranslationsExcelImportHandler" parent="defaultExcelImportHandler"
+		  class="com.sap.cx.translations.backoffice.excel.CxTranslationsExcelImportHandler">
+		<property name="modelService" ref="modelService"/>
+		<property name="mediaService" ref="mediaService"/>
+		<property name="mediaFolder" value="backofficeexcelimport"/>
+		<property name="clusterService" ref="clusterService"/>
+		<property name="userService" ref="userService"/>
+		<property name="cronJobNodeGroup" value="${cxtranslations.cronjob.nodegroup:backgroundProcessing}"/>
+		<property name="cronJobPriority" value="${cxtranslations.cronjob.priority:4}"/>
+	</bean>
+
+	<bean id="cxTranslationsAvailableCheckingFilter" parent="defaultAvailableCheckingFilter">
+		<property name="filters">
+			<util:list value-type="com.hybris.backoffice.excel.template.filter.ExcelFilter">
+				<bean class="com.hybris.backoffice.excel.template.filter.OrFilter">
+					<property name="excelFilter1" ref="accessibilityCheckingFilter"/>
+					<property name="excelFilter2" ref="notWritableAndUniqueFilter"/>
+				</bean>
+				<ref bean="permissionCheckingFilter"/>
+				<ref bean="translatorAvailabilityCheckingFilter"/>
+				<ref bean="cxTranslationsSupporterExcelFilter"/>
+			</util:list>
+		</property>
+	</bean>
+
+	<bean id="cxTranslationCronJobRenderingStrategy"
+		  class="com.sap.cx.translations.backoffice.strategy.CxTranslationCronJobProgressRenderingStrategy"
+		  parent="defaultProcessItemRenderingStrategy">
+		<property name="modelService" ref="modelService"/>
+	</bean>
+
+	<bean id="cxApproveTranslationCronJobProgressRenderingStrategy"
+		  class="com.sap.cx.translations.backoffice.strategy.CxApproveTranslationCronJobProgressRenderingStrategy"
+		  parent="defaultProcessItemRenderingStrategy">
+		<property name="modelService" ref="modelService"/>
+	</bean>
+
+	<bean id="cxLocalizedValueExcelImportCronJobProgressRenderingStrategy"
+		  class="com.sap.cx.translations.backoffice.strategy.CxLocalizedValueExcelImportCronJobProgressRenderingStrategy"
+		  parent="defaultProcessItemRenderingStrategy">
+	</bean>
+
+	<bean id="cxLocalizedObjectConfigCronJobProgressRenderingStrategy"
+		  class="com.sap.cx.translations.backoffice.strategy.CxLocalizedObjectConfigCronJobProgressRenderingStrategy"
+		  parent="defaultProcessItemRenderingStrategy">
+	</bean>
+
+	<cng:list-extender bean="processItemRenderingStrategyRegistry" getter="strategiesList" setter="strategies">
+		<cng:add value-type="com.hybris.backoffice.widgets.processes.ProcessItemRenderingStrategy">
+			<ref bean="cxTranslationCronJobRenderingStrategy"/>
+			<ref bean="cxApproveTranslationCronJobProgressRenderingStrategy"/>
+			<ref bean="cxLocalizedValueExcelImportCronJobProgressRenderingStrategy"/>
+			<ref bean="cxLocalizedObjectConfigCronJobProgressRenderingStrategy"/>
+		</cng:add>
+	</cng:list-extender>
+
+	<cng:map-extender bean="backofficeCronJobHistoryIncludes">
+		<cng:put key-type="java.lang.String" value-type="de.hybris.platform.servicelayer.cronjob.CronJobHistoryInclude">
+			<entry key="cxTranslationProcesses">
+				<bean class="de.hybris.platform.servicelayer.cronjob.CronJobHistoryInclude">
+					<property name="jobCodes">
+						<set value-type="java.lang.String">
+							<value type="java.lang.String">cxTranslationJob</value>
+							<value type="java.lang.String">cxApproveTranslationsJob</value>
+							<value type="java.lang.String">cxLocalizedValueExcelImportJob</value>
+							<value type="java.lang.String">cxLocalizedObjectConfigJob</value>
+						</set>
+					</property>
+				</bean>
+			</entry>
+		</cng:put>
+	</cng:map-extender>
+
+	<bean id="cxTranslationsAttributesChooserRenderer"
+		  class="com.sap.cx.translations.backoffice.renderers.CxTranslationsAttributeChooserRenderer"
+		  parent="attributesChooserRenderer">
+		<property name="nodeOperationsHandler" ref="cxTranslationsAttributesChooserNodesOperationsHandler"/>
+	</bean>
+
+	<bean id="cxTranslationsAttributesChooserNodesOperationsHandler"
+		  class="com.sap.cx.translations.backoffice.handler.CxTranslationsAttributesChooserNodesOperationsHandler"
+		  parent="defaultAttributesChooserNodesOperationHandler">
+	</bean>
+
+	<bean id="cxFilterLocalizedValuesFilterRenderer"
+		  class="com.sap.cx.translations.backoffice.actions.renderer.CxFilterLocalizedValuesFilterRender"
+		  scope="prototype"/>
+
+	<bean id="cxFilterLocalizedValuesAction"
+		  class="com.sap.cx.translations.backoffice.actions.CxFilterLocalizedValuesAction"
+		  scope="prototype"/>
+
+</beans>

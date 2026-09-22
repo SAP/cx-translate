@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns="http://www.zkoss.org/2005/zul"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
+        width="100%" height="100%">
+
+    <style src="${wr}/retrytranslations.css"/>
+
+    <vbox sclass="yw-modal-cxtranslations-retry cx-modal-content"
+          spacing="16px"
+          align="stretch"
+          pack="start"
+          width="100%"
+          height="100%">
+
+        <!-- Use vflex=min so the footer is not pushed to the bottom with huge whitespace -->
+        <vlayout sclass="cx-modal-body" spacing="16px" vflex="min">
+            <label value="${labels.confirm.context}" sclass="confirmation-context"/>
+
+            <hlayout sclass="count-row" valign="middle">
+                <label value="${labels.items.count}" sclass="field-label"/>
+                <textbox id="count" sclass="count-value" readonly="true"/>
+            </hlayout>
+
+            <hlayout sclass="override-trigger-row" valign="middle">
+                <a id="overrideSettingsLink"
+                   sclass="override-link"
+                   label="${labels.retry.override.settings}"
+                   tooltiptext="${labels.retry.override.settings_info}"
+                   popup="overrideSettingsPopup, position=after_start"/>
+            </hlayout>
+
+            <popup id="overrideSettingsPopup" sclass="override-popup">
+                <vlayout sclass="override-popup-card" spacing="8px">
+                    <label value="${labels.override.context}" sclass="confirmation-context"/>
+
+                    <vlayout spacing="4px" sclass="override-field">
+                        <label value="${labels.retry.override.service}" sclass="field-label"/>
+                        <combobox id="aiSettingsSelector" readonly="false" sclass="field-control">
+                            <template name="model">
+                                <comboitem label="${each.name}" value="${each.code}"/>
+                            </template>
+                        </combobox>
+                    </vlayout>
+
+                    <vlayout spacing="4px" sclass="override-field">
+                        <label value="${labels.retry.override.hint}" sclass="field-label"/>
+                        <textbox id="translationHint"
+                                 sclass="field-control hint-area"
+                                 multiline="true"
+                                 rows="4"/>
+                    </vlayout>
+                </vlayout>
+            </popup>
+        </vlayout>
+
+        <hbox sclass="cx-modal-controls" pack="end">
+            <button id="cancelButton" autodisable="self" label="${labels.button.cancel}"/>
+            <button id="retryButton" sclass="yw-btn-primary" label="${labels.button.retry}"/>
+        </hbox>
+
+    </vbox>
+</widget>

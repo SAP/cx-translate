@@ -1,0 +1,16 @@
+INSERT_UPDATE FlexibleSearchRetentionRule; code[unique = true]                      ; searchQuery                                                                                                                                                                                                                                                     ; actionReference          ; retentionTimeSeconds
+                                         ; cxTranslateCronJobRetentionRule          ; SELECT DISTINCT {cj:pk}, {cj:itemtype} FROM {CxTranslationCronJob AS cj} WHERE {cj:modifiedtime} < ?CALC_RETIREMENT_TIME AND NOT EXISTS (\{{ SELECT {pt:pk} FROM {CxProposedTranslation AS pt} WHERE {pt.translationCronJob} = {cj:pk} }})                 ; basicRemoveCleanupAction ; 172800
+                                         ; cxApproveTranslationCronJobRetentionRule ; SELECT DISTINCT {cj:pk}, {cj:itemtype} FROM {CxApproveTranslationsCronJob AS cj} WHERE {cj:modifiedtime} < ?CALC_RETIREMENT_TIME AND NOT EXISTS (\{{ SELECT {pt:pk} FROM {CxProposedTranslation AS pt} WHERE {pt.approveTranslationsCronJob} = {cj:pk} }}) ; basicRemoveCleanupAction ; 172800
+
+INSERT_UPDATE RetentionJob; code[unique = true]                   ; retentionRule(code)                      ; batchSize
+                          ; cxTranslateCronJobCleanupJob          ; cxTranslateCronJobRetentionRule          ; 100
+                          ; cxApproveTranslationCronJobCleanupJob ; cxApproveTranslationCronJobRetentionRule ; 100
+
+INSERT_UPDATE CronJob; code[unique = true]                        ; job(code)                             ; sessionLanguage(isoCode)[default = en]
+                     ; cxTranslateCronJobCleanupCronJob           ; cxTranslateCronJobCleanupJob          ;
+                     ; cxApproveTranslationsCronJobCleanupCronJob ; cxApproveTranslationCronJobCleanupJob ;
+
+# CronJobs are removed once per day, at midnight.
+INSERT_UPDATE Trigger; cronJob(code)[unique = true]               ; cronExpression
+                     ; cxTranslateCronJobCleanupCronJob           ; 0 0 0 * * ?
+                     ; cxApproveTranslationsCronJobCleanupCronJob ; 0 0 0 * * ?

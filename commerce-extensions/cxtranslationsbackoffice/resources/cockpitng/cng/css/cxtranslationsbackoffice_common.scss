@@ -1,0 +1,62 @@
+/*!
+ * Copyright (c) 2024 SAP SE or an SAP affiliate company. All rights reserved.
+ */
+
+@import "cockpitng-globals.scss";
+
+div.yw-explorerTree .y-tree-icon-cxtranslationsbackoffice_explorer_treenode_cxlocalizedlabel .y-tree-icon {
+	&:before {
+		font-family: var(--bo-content-icon-font-family);
+		content: "\e1b4";
+		color: var(--bo-content-icon-color);
+	}
+}
+
+div.yw-explorerTree .y-tree-icon-cxtranslationsbackoffice_explorer_treenode_cxlocalizedbundle .y-tree-icon {
+	&:before {
+		font-family: var(--bo-content-icon-font-family);
+		content: "\e163";
+		color: var(--bo-content-icon-color);
+	}
+}
+div.yw-explorerTree .y-tree-icon-cxtranslationsbackoffice_explorer_treenode_cxlocalizedvalue .y-tree-icon {
+	&:before {
+		font-family: var(--bo-content-icon-font-family);
+		content: "\e080";
+		color: var(--bo-content-icon-color);
+	}
+}
+
+
+div.yw-explorerTree .y-tree-icon-cxtranslationsbackoffice_explorer_treenode_ai_results .y-tree-icon {
+	&:before {
+		font-family: var(--bo-content-icon-font-family);
+		content: "\e208";
+		color: var(--bo-content-icon-color);
+	}
+}
+
+div.yw-explorerTree .y-tree-icon-cxtranslationsbackoffice_explorer_treenode_configuration .y-tree-icon {
+	&:before {
+		font-family: var(--bo-content-icon-font-family);
+		content: "\e00c";
+		color: var(--bo-content-icon-color);
+	}
+}
+
+div.yw-explorerTree .y-tree-icon-cxtranslationsbackoffice_explorer_treenode_translation_backgroundprocesses .y-tree-icon {
+	&:before {
+		font-family: var(--bo-content-icon-font-family);
+		content: "\e072";
+		color: var(--bo-content-icon-color);
+	}
+}
+
+div.yw-sideNavigation .yw-treeCellInner {
+	@include setSideNavigationIconGlyph("cxtranslationsbackoffice.explorer.treenode.cxlocalizedlabel", "document-text");
+	@include setSideNavigationIconGlyph("cxtranslationsbackoffice.explorer.treenode.cxlocalizedbundle", "group-2");
+	@include setSideNavigationIconGlyph("cxtranslationsbackoffice.explorer.treenode.cxlocalizedvalue", "database");
+	@include setSideNavigationIconGlyph("cxtranslationsbackoffice.explorer.treenode.ai.results", "activate");
+	@include setSideNavigationIconGlyph("cxtranslationsbackoffice.explorer.treenode.configuration", "settings");
+	@include setSideNavigationIconGlyph("cxtranslationsbackoffice.explorer.treenode.translation.backgroundprocesses", "goalseek");
+}

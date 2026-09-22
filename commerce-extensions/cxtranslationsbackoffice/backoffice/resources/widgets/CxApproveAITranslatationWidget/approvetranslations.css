@@ -1,0 +1,53 @@
+/*
+ * Copyright (c) 2024 SAP SE or an SAP affiliate company. All rights reserved
+ */
+.yw-modal-cxtranslations-approve {
+
+	height: 100%;
+	word-break: normal;
+
+	.cx-modal-content {
+		margin: auto;
+		position: relative;
+		padding: 12px 16px;
+		height: 100%;
+	}
+
+	.cx-modal-content-layout {
+		height: 100%;
+	}
+
+	.z-label {
+		padding: 5px;
+	}
+
+	.cx-modal-content > div {
+		position: static;
+	}
+
+	.cx-modal-content .z-label {
+		margin-bottom: 8px;
+		display: inline-block;
+		line-height: 1.5;
+	}
+
+	.cx-modal-controls {
+		padding-top: 16px;
+		width: 100%;
+		text-align: right;
+		border-top: 1px solid var(--bo-page-footer-border-color);
+	}
+
+	.confirmation-msg, .confirmation-context {
+		font-size: 15px;
+		word-break: normal;
+	}
+
+	.count-wrapper {
+		text-align: center;
+
+		.z-label {
+			margin-bottom: 0px;
+		}
+	}
+}

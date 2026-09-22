@@ -1,0 +1,220 @@
+/* Copyright (c) 2023 SAP SE or an SAP affiliate company. All rights reserved. */
+
+.todo {
+    color: magenta;
+}
+
+.todo::before {
+    content: 'TODO: ';
+    font-weight: bold;
+}
+
+:root {
+    --space: .25em;
+    --space--vertical: .5rem;
+    --padding: 1rem;
+    --toc__number-separator: '.';
+    --color--panel: #666;
+    --color--dont: #f55;
+    --color--do: #6a6;
+    --color--warning: #ed0;
+    --color--danger: #c00;
+    --color--info: #07b;
+    --color--context: #9c9;
+    --icon--warning: '⚠️';
+    --icon--danger: '🛑';
+    --icon--info: 'ℹ️';
+    --background-mix__ratio: 10%;
+    --background-mix__to: transparent;
+    --background-mix__space: in srgb;
+    --font__size--base: 1rem;
+    --font__size--small: .75rem;
+    --font__size--large: 1.5rem;
+    --font__weight--light: 300;
+    --border-width: 1px;
+    --border-offset: 8px;
+    --border-color: #ccc;
+    --border-fill: #fff;
+}
+
+tr {
+    vertical-align: top;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+a[target="_blank"]:after {
+    content: ' ↗️';
+}
+
+.hero {
+    font-size: var(--font__size--large);
+    font-weight: var(--font__weight--light);
+}
+
+code.block {
+    display: block;
+}
+
+.markdown-section table {
+    display: table;
+}
+
+.markdown-section table code {
+    background: transparent;
+}
+
+.message {
+    padding: var(--padding);
+    margin-block-end: var(--padding);
+    border-left: solid 1px var(--_color);
+    background: color-mix(var(--background-mix__space), var(--_color) var(--background-mix__ratio), var(--background-mix__to));
+}
+
+/*
+Allow using markdown inside messages (needed to properly handle links)
+Use with `div` tag
+Line breaks within need to be added with <br>
+ */
+.message--include-markdown p {
+    display: inline;
+    margin: 0;
+}
+
+.message:not(.message--no-icon )::before {
+    content: var(--_icon);
+    margin-inline-end: var(--space);
+}
+
+.message--warning {
+    --_color: var(--color--warning);
+    --_icon: var(--icon--warning);
+}
+
+.message--danger {
+    --_color: var(--color--danger);
+    --_icon: var(--icon--danger);
+}
+
+.message--info {
+    --_color: var(--color--info);
+    --_icon: var(--icon--info);
+}
+
+.message--context {
+    --_color: var(--color--context);
+    --_icon: var(--icon--info);
+}
+
+.structured-content {
+    counter-reset: h2;
+}
+
+.structured-content h2 {
+    counter-increment: h2;
+    counter-reset: h3;
+}
+
+.structured-content h2:before {
+    content: counter(h2) var(--toc__number-separator);
+}
+
+.structured-content h3 {
+    counter-increment: h3;
+    counter-reset: h4;
+}
+
+.structured-content h3:before {
+    content: counter(h2) var(--toc__number-separator) counter(h3) var(--toc__number-separator);
+}
+
+.structured-content h4 {
+    counter-increment: h4;
+}
+
+.structured-content h4:before {
+    content: counter(h2) var(--toc__number-separator) counter(h3) var(--toc__number-separator) counter(h4) var(--toc__number-separator);
+}
+
+.structured-content h1:before,
+.structured-content h2:before,
+.structured-content h3:before,
+.structured-content h4:before {
+    margin-inline-end: var(--space);
+}
+
+.examples .dont,
+.examples .do {
+    color: var(--_color);
+    background: color-mix(var(--background-mix__space), var(--_color) var(--background-mix__ratio), var(--background-mix__to));
+}
+
+.examples .dont {
+    --_color: var(--color--dont);
+}
+
+.examples .do {
+    --_color: var(--color--do);
+}
+
+.examples tr {
+    vertical-align: top;
+}
+
+.examples pre {
+    margin-block: var(--space--vertical);
+    padding-inline: 0;
+}
+
+.examples pre > code {
+    padding: 0;
+    font-size: var(--font__size--small);
+}
+
+.collapsible {
+    display: grid;
+    grid-template-columns: 1fr max-content;
+    margin-block-end: var(--padding);
+    padding: var(--padding);
+    background: color-mix(var(--background-mix__space), var(--color--panel) var(--background-mix__ratio), var(--background-mix__to));
+    border-left: solid 1px var(--color--panel);
+}
+
+.collapsible-heading {
+    margin-block: 0;
+}
+
+.collapsible__content {
+    grid-column: 1/-1;
+    max-height: 0;
+    overflow: hidden;
+}
+
+.collapse-toggle__input:checked ~ .collapsible__content {
+    max-height: none;
+    padding-block-start: var(--padding);
+}
+
+.collapse-toggle__label {
+    cursor: pointer;
+}
+
+.troubleshooting h3 {
+    font-size: var(--font__size--base);
+}
+
+img {
+    padding: var(--border-offset);
+    border: solid var(--border-width) var(--border-color);
+    background: var(--border-fill);
+}

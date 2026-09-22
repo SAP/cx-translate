@@ -1,0 +1,55 @@
+<!--
+  ~ Copyright (c) 2026 SAP SE or an SAP affiliate company. All rights reserved.
+  -->
+
+<div
+  class="modal-dialog modal-dialog-centered"
+  [cxFocus]="focusConfig"
+  (esc)="dismissModal('Escape click')"
+>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">{{ 'translations.upload.confirmation.title' | cxTranslate }}</h3>
+      <button
+        type="button"
+        class="close"
+        data-dismiss="modal"
+        [attr.aria-label]="'translations.close.dialog' | cxTranslate"
+        (click)="dismissModal('Cross click')"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p *ngIf="!isUploading">
+        {{ 'translations.upload.confirmation.message' | cxTranslate }}
+      </p>
+      <div
+        *ngIf="isUploading"
+        class="text-center"
+      >
+        <div class="spinner-border"></div>
+      </div>
+    </div>
+    <div
+      class="modal-footer"
+      *ngIf="!isUploading"
+    >
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="onConfirm()"
+      >
+        {{ 'translations.upload.button' | cxTranslate }}
+      </button>
+      <button
+        type="button"
+        class="btn btn-secondary"
+        data-dismiss="modal"
+        (click)="dismissModal('Cancel')"
+      >
+        {{ 'translations.cancel' | cxTranslate }}
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2024 SAP SE or an SAP affiliate company. All rights reserved.
+  -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:util="http://www.springframework.org/schema/util"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+		   http://www.springframework.org/schema/util
+		   http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<context:annotation-config/>
+
+	<bean id="cxTranslationsFacade" class="com.sap.cx.translations.facades.impl.CxTranslationsFacadeImpl">
+		<property name="translationsService" ref="cxTranslationsService"/>
+		<property name="modelService" ref="modelService"/>
+		<property name="cacheController" ref="cacheController"/>
+		<property name="cxLocalizedLabelCacheKeyProvider" ref="cxLocalizedLabelCacheKeyProvider"/>
+		<property name="configurationService" ref="configurationService"/>
+		<property name="translationsCatalogVersionStrategy" ref="cxTranslationsCatalogVersionStrategy"/>
+		<property name="sessionSearchRestrictionsDisabler" ref="cmsSessionSearchRestrictionsDisabler"/>
+		<property name="setupSyncJobService" ref="setupSyncJobService"/>
+		<property name="cxTranslateCommerceCommonI18NService" ref="cxTranslateCommerceCommonI18NService"/>
+		<property name="userService" ref="userService"/>
+		<property name="sessionService" ref="sessionService"/>
+	</bean>
+
+	<bean id="cxLocalizedLabelDao" class="com.sap.cx.translations.daos.impl.CxLocalizedLabelDaoImpl"/>
+
+	<bean id="cxLocalizedBundleDao" class="com.sap.cx.translations.daos.impl.CxLocalizedBundleDaoImpl"/>
+
+	<bean id="cxProposedTranslationDao" class="com.sap.cx.translations.daos.impl.CxProposedTranslationDaoImpl"/>
+
+	<bean id="cxAiTranslationServiceSettingsDao"
+		  class="com.sap.cx.translations.daos.impl.CxTranslationServiceSettingsDaoImpl"/>
+
+	<bean id="cxTranslationsService"
+		  class="com.sap.cx.translations.services.impl.CxTranslationsServiceImpl">
+		<property name="labelDao" ref="cxLocalizedLabelDao"/>
+		<property name="bundleDao" ref="cxLocalizedBundleDao"/>
+		<property name="modelService" ref="modelService"/>
+		<property name="eventService" ref="eventService"/>
+		<property name="keySuggestionsLimit" value="${cxtranslations.keysuggestions.limit}"/>
+		<property name="userGroupsAllowedForFrontendTranslation" value="${cxtranslations.frontend.usergroups}"/>
+	</bean>
+
+	<bean id="cxLocalizedMessagesService"
+		  class="com.sap.cx.translations.services.impl.CxLocalizedMessagesServiceImpl">
+		<property name="messageSource" ref="cxDatabaseMessageSource"/>
+		<property name="i18NService" ref="i18NService"/>
+	</bean>
+
+	<bean id="cxTranslationsCatalogVersionStrategy"
+		  class="com.sap.cx.translations.strategies.impl.CxTranslationsCatalogVersionStrategyImpl">
+		<property name="cmsSiteService" ref="cmsSiteService"/>
+		<property name="catalogVersionService" ref="catalogVersionService"/>
+		<property name="sessionSearchRestrictionsDisabler" ref="cmsSessionSearchRestrictionsDisabler"/>
+        <property name="catalogService" ref="catalogService"/>
+        <property name="defaultTranslationCatalogId" value="${cxtranslations.default.catalog.id}"/>
+	</bean>
+
+	<bean id="cxAbstractDatabaseMessageSource" class="com.sap.cx.translations.messages.CxDatabaseMessageSource"
+		  abstract="true">
+		<property name="translationsFacade" ref="cxTranslationsFacade"/>
+		<property name="sessionService" ref="sessionService"/>
+		<property name="commerceCommonI18NService" ref="commerceCommonI18NService"/>
+		<property name="commonI18NService" ref="commonI18NService"/>
+	</bean>
+
+	<bean id="cxDatabaseMessageSource" parent="cxAbstractDatabaseMessageSource"/>
+	<aop:config proxy-target-class="true">
+		<aop:aspect ref="cxMessageSourceAspect">
+			<aop:pointcut id="pointCutAround"
+						  expression="target(org.springframework.context.MessageSource) and execution(* getMessage*(..))"/>
+			<aop:around method="delegateToDatabaseMessageSource" pointcut-ref="pointCutAround"/>
+		</aop:aspect>
+	</aop:config>
+	<bean id="cxMessageSourceAspect" class="com.sap.cx.translations.aspects.CxMessageSourceAspect">
+		<constructor-arg name="messageSource" ref="cxDatabaseMessageSource"/>
+        <property name="enabled" value="${cxtranslations.backendTranslations.messageSourceAspect.enabled}"/>
+	</bean>
+
+	<bean id="cxLocalizedLabelCacheKeyProvider"
+		  class="com.sap.cx.translations.cache.impl.CxLocalizedLabelCacheKeyProviderImpl">
+		<property name="commerceCommonI18NService" ref="commerceCommonI18NService"/>
+	</bean>
+
+	<bean id="cxRelatedLabelsAttributeHandler"
+		  class="com.sap.cx.translations.dynamicattributes.CxRelatedLabelsAttributeHandler">
+		<property name="cxLocalizedLabelDao" ref="cxLocalizedLabelDao"/>
+		<property name="i18nextSuffixes" value="${cxtranslations.i18next.suffixes}"/>
+	</bean>
+
+    <bean id="cxLocalizedLabelsPluralsService" class="com.sap.cx.translations.services.impl.plurals.CxLocalizedLabelsPluralsServiceImpl">
+        <constructor-arg name="modelService" ref="modelService"/>
+        <constructor-arg name="commonI18NService" ref="commonI18NService"/>
+        <constructor-arg name="pluralSuffixes" value="${cxtranslations.i18next.suffixes}"/>
+    </bean>
+
+	<bean id="cxClearLabelsCacheEventListener" class="com.sap.cx.translations.events.CxClearLabelsCacheEventListener"
+		  parent="abstractEventListener">
+		<property name="cacheController" ref="cacheController"/>
+		<property name="configurationService" ref="configurationService"/>
+	</bean>
+
+	<!-- Localized Values / Objects	-->
+
+	<bean id="cxStandardLocalizedObjectProviderFactoryStrategy"
+		  class="com.sap.cx.translations.services.localizedobjects.CxStandardLocalizedObjectProviderFactoryStrategy">
+		<property name="flexibleSearchService" ref="flexibleSearchService"/>
+		<property name="typeService" ref="typeService"/>
+		<property name="modelService" ref="modelService"/>
+		<property name="valueSearchLimit" value="${cxtranslations.standardProvider.searchByValueLimit:1000}"/>
+	</bean>
+
+    <bean id="cxProductFeatureLocalizedObjectProviderFactoryStrategy"
+          class="com.sap.cx.translations.services.localizedobjects.CxProductFeatureLocalizedObjectProviderFactoryStrategy">
+        <property name="flexibleSearchService" ref="flexibleSearchService"/>
+        <property name="cxLocalizedClassificationService" ref="cxLocalizedClassificationService"/>
+        <property name="commonI18NService" ref="commonI18NService"/>
+        <property name="valueSearchLimit" value="${cxtranslations.standardProvider.searchByValueLimit:1000}"/>
+    </bean>
+
+	<util:list id="cxProviderFactoryStrategies">
+		<ref bean="cxStandardLocalizedObjectProviderFactoryStrategy"/>
+		<ref bean="cxProductFeatureLocalizedObjectProviderFactoryStrategy"/>
+	</util:list>
+
+	<bean id="cxLocalizedObjectProviderFactory"
+		  class="com.sap.cx.translations.services.impl.localizedobjects.CxLocalizedObjectProviderFactoryImpl">
+		<property name="strategies" ref="cxProviderFactoryStrategies"/>
+	</bean>
+
+	<bean id="cxLocalizedValueConfigService"
+		  class="com.sap.cx.translations.services.config.impl.CxLocalizedValueConfigServiceImpl">
+		<property name="flexibleSearchService" ref="flexibleSearchService"/>
+		<property name="modelService" ref="modelService"/>
+		<property name="cronJobService" ref="cronJobService"/>
+		<property name="userService" ref="defaultUserService"/>
+		<property name="clusterService" ref="clusterService"/>
+		<property name="typeService" ref="typeService"/>
+        <property name="customUniqueKeyFields" value="${cxtranslations.autoconfig.customUniqueFields}"/>
+		<property name="excludedCatalogPatterns" value="${cxtranslations.autoconfig.excluded.catalogPatterns}"/>
+		<property name="excludedTypes" value="${cxtranslations.autoconfig.excluded.types}"/>
+		<property name="defaultExcludedPropertiesMap" value="${cxtranslations.autoconfig.excluded.properties}"/>
+		<property name="defaultMergeMode" value="${cxtranslations.autoconfig.merge.mode}"/>
+		<property name="cronJobNodeGroup" value="${cxtranslations.cronjob.nodegroup:backgroundProcessing}"/>
+		<property name="cronJobPriority" value="${cxtranslations.cronjob.priority:4}"/>
+	</bean>
+
+	<bean id="cxTranslateAiTranslationStrategy" class="com.sap.cx.translations.services.impl.automatictranslation.impl.CxAiTranslationStrategyImpl">
+		<property name="modelService" ref="modelService"/>
+		<property name="i18nService" ref="cxTranslateCommerceCommonI18NService"/>
+		<property name="aiTranslationService" ref="cxAiTranslationService"/>
+	</bean>
+
+	<bean id="cxDeepLTranslationStrategyImpl" class="com.sap.cx.translations.services.impl.automatictranslation.impl.CxDeepLTranslationStrategyImpl">
+		<property name="modelService" ref="modelService"/>
+		<property name="i18nService" ref="cxTranslateCommerceCommonI18NService"/>
+		<property name="interfaceService" ref="cxDeepLTranslationInterfaceService"/>
+		<property name="sourceLanguageMap">
+			<map/>
+		</property>
+		<property name="targetLanguageMap">
+			<map>
+				<entry key="zh_cn" value="ZH_HANS"/>
+				<entry key="zh_tw" value="ZH_HANT"/>
+                <entry key="en" value="EN_US"/>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="cxSapTranslationHubInterfaceService" class="com.sap.cx.translations.serviceinterfaces.saptranslationhub.CxSapTranslationHubInterfaceService"
+		  parent="cxTranslateAbstractRestService">
+		<property name="interfacePropertiesName" value="cxtranslate.integrations.saptranslationhub"/>
+		<property name="integrationRestTemplateFactory" ref="cxTranslateRestTemplateFactory"/>
+	</bean>
+
+	<bean id="cxSapTranslationHubTranslationStrategy" class="com.sap.cx.translations.services.impl.automatictranslation.impl.CxSapTranslationHubTranslationStrategyImpl">
+		<property name="modelService" ref="modelService"/>
+		<property name="i18nService" ref="cxTranslateCommerceCommonI18NService"/>
+		<property name="interfaceService" ref="cxSapTranslationHubInterfaceService"/>
+		<property name="languageMap">
+			<map>
+				<!-- SAP Translation Hub supported hybris isocode to BCP-47 mappings -->
+				<entry key="sq" value="sq-AL"/>
+				<entry key="ar" value="ar-SA"/>
+				<entry key="hy" value="hy-AM"/>
+				<entry key="az" value="az-AZ"/>
+				<entry key="eu" value="eu-ES"/>
+				<entry key="bn" value="bn-BD"/>
+				<entry key="bs" value="bs-Latn-BA"/>
+				<entry key="bs_latn" value="bs-Latn-BA"/>
+				<entry key="bg" value="bg-BG"/>
+				<entry key="ca" value="ca-ES"/>
+				<entry key="zh" value="zh-CN"/>
+				<entry key="zh_cn" value="zh-CN"/>
+				<entry key="zh_tw" value="zh-TW"/>
+				<entry key="hr" value="hr-HR"/>
+				<entry key="cs" value="cs-CZ"/>
+				<entry key="da" value="da-DK"/>
+				<entry key="nl" value="nl-NL"/>
+				<entry key="et" value="et-EE"/>
+				<entry key="en" value="en-US"/>
+				<entry key="en_gb" value="en-GB"/>
+				<entry key="en_us" value="en-US"/>
+				<entry key="fi" value="fi-FI"/>
+				<entry key="fr" value="fr-FR"/>
+				<entry key="fr_ca" value="fr-CA"/>
+				<entry key="fr_fr" value="fr-FR"/>
+				<entry key="ka" value="ka-GE"/>
+				<entry key="de" value="de-DE"/>
+				<entry key="el" value="el-GR"/>
+				<entry key="he" value="he-IL"/>
+				<entry key="hi" value="hi-IN"/>
+				<entry key="hu" value="hu-HU"/>
+				<entry key="id" value="id-ID"/>
+				<entry key="it" value="it-IT"/>
+				<entry key="ja" value="ja-JP"/>
+				<entry key="kk" value="kk-KZ"/>
+				<entry key="km" value="km-KH"/>
+				<entry key="ko" value="ko-KR"/>
+				<entry key="lo" value="lo-LA"/>
+				<entry key="lv" value="lv-LV"/>
+				<entry key="lt" value="lt-LT"/>
+				<entry key="mk" value="mk-MK"/>
+				<entry key="ms" value="ms-MY"/>
+				<entry key="mi" value="mi-NZ"/>
+				<entry key="mn" value="mn-MN"/>
+				<entry key="cnr" value="cnr-ME"/>
+				<entry key="nb" value="nb-NO"/>
+				<entry key="pl" value="pl-PL"/>
+				<entry key="pt" value="pt-BR"/>
+				<entry key="pt_br" value="pt-BR"/>
+				<entry key="pt_pt" value="pt-PT"/>
+				<entry key="ro" value="ro-RO"/>
+				<entry key="ru" value="ru-RU"/>
+				<entry key="sr" value="sr-Latn-RS"/>
+				<entry key="sr_cyrl" value="sr-Cyrl-RS"/>
+				<entry key="sr_cyrl_rs" value="sr-Cyrl-RS"/>
+				<entry key="sr_latn" value="sr-Latn-RS"/>
+				<entry key="sr_latn_rs" value="sr-Latn-RS"/>
+				<entry key="sk" value="sk-SK"/>
+				<entry key="sl" value="sl-SI"/>
+				<entry key="es" value="es-ES"/>
+				<entry key="es_co" value="es-CO"/>
+				<entry key="es_mx" value="es-MX"/>
+				<entry key="es_es" value="es-ES"/>
+				<entry key="sv" value="sv-SE"/>
+				<entry key="th" value="th-TH"/>
+				<entry key="tr" value="tr-TR"/>
+				<entry key="uk" value="uk-UA"/>
+				<entry key="uz" value="uz-Latn-UZ"/>
+				<entry key="uz_latn" value="uz-Latn-UZ"/>
+				<entry key="uz_latn_uz" value="uz-Latn-UZ"/>
+				<entry key="vi" value="vi-VN"/>
+				<entry key="cy" value="cy-GB"/>
+			</map>
+		</property>
+		<property name="pluralSuffixes" value="${cxtranslations.i18next.suffixes}"/>
+	</bean>
+
+	<bean id="cxAzureTranslatorInterfaceService" class="com.sap.cx.translations.serviceinterfaces.azuretranslator.CxAzureTranslatorInterfaceService"
+		  parent="cxTranslateAbstractRestService">
+		<property name="interfacePropertiesName" value="cxtranslate.integrations.azuretranslator"/>
+		<property name="integrationRestTemplateFactory" ref="cxTranslateRestTemplateFactory"/>
+		<property name="mediaService" ref="mediaService"/>
+	</bean>
+
+	<bean id="cxAzureTranslatorTranslationStrategy" class="com.sap.cx.translations.services.impl.automatictranslation.impl.CxAzureTranslatorTranslationStrategyImpl">
+		<property name="modelService" ref="modelService"/>
+		<property name="i18nService" ref="cxTranslateCommerceCommonI18NService"/>
+		<property name="interfaceService" ref="cxAzureTranslatorInterfaceService"/>
+		<property name="languageMap">
+			<map>
+				<!-- Azure Translator BCP-47 overrides for isocodes that don't map trivially.
+				     Azure uses shorter tags than SAP Translation Hub (e.g. "zh-Hans" not "zh-CN").
+				     Full list: https://learn.microsoft.com/en-us/azure/ai-services/translator/language-support -->
+				<entry key="zh" value="zh-Hans"/>
+				<entry key="zh_cn" value="zh-Hans"/>
+				<entry key="zh_tw" value="zh-Hant"/>
+				<entry key="sr" value="sr-Latn"/>
+				<entry key="sr_cyrl" value="sr-Cyrl"/>
+				<entry key="sr_cyrl_rs" value="sr-Cyrl"/>
+				<entry key="sr_latn" value="sr-Latn"/>
+				<entry key="sr_latn_rs" value="sr-Latn"/>
+				<entry key="bs_latn" value="bs-Latn"/>
+				<entry key="uz_latn" value="uz-Latn"/>
+				<entry key="uz_latn_uz" value="uz-Latn"/>
+				<entry key="pt" value="pt-br"/>
+				<entry key="pt_br" value="pt-br"/>
+				<entry key="pt_pt" value="pt-pt"/>
+				<entry key="nb" value="nb"/>
+				<entry key="cnr" value="cnr"/>
+			</map>
+		</property>
+		<property name="pluralSuffixes" value="${cxtranslations.i18next.suffixes}"/>
+	</bean>
+
+	<util:list id="cxAutomaticTranslationStrategies">
+		<ref bean="cxTranslateAiTranslationStrategy"/>
+		<ref bean="cxDeepLTranslationStrategyImpl"/>
+		<ref bean="cxSapTranslationHubTranslationStrategy"/>
+		<ref bean="cxAzureTranslatorTranslationStrategy"/>
+	</util:list>
+
+	<bean id="cxAiTranslationExecutor"
+		  class="com.sap.cx.translations.services.impl.localizedobjects.CxAiTranslationExecutor">
+		<property name="modelService" ref="modelService"/>
+		<property name="cxTranslateCommerceCommonI18NService" ref="cxTranslateCommerceCommonI18NService"/>
+		<property name="aiTranslationStrategies" ref="cxAutomaticTranslationStrategies"/>
+		<property name="pluralsService" ref="cxLocalizedLabelsPluralsService"/>
+		<property name="removeNoTargetLanguages" value="${cxtranslations.proposedtranslation.autoremove.missing.targetlanguages:true}"/>
+		<property name="removeMissingSourceValue" value="${cxtranslations.proposedtranslation.autoremove.missing.sourcevalue:true}"/>
+	</bean>
+
+	<bean id="cxTranslationCronJobOrchestrator"
+		  class="com.sap.cx.translations.services.impl.localizedobjects.CxTranslationCronJobOrchestrator">
+		<property name="modelService" ref="modelService"/>
+		<property name="cronJobService" ref="cronJobService"/>
+		<property name="userService" ref="userService"/>
+		<property name="clusterService" ref="defaultClusterService"/>
+		<property name="cxTranslateCommerceCommonI18NService" ref="cxTranslateCommerceCommonI18NService"/>
+		<property name="pluralsService" ref="cxLocalizedLabelsPluralsService"/>
+		<property name="cronJobNodeGroup" value="${cxtranslations.cronjob.nodegroup:backgroundProcessing}"/>
+		<property name="cronJobPriority" value="${cxtranslations.cronjob.priority:4}"/>
+	</bean>
+
+	<bean id="cxLocalizedValueService"
+		  class="com.sap.cx.translations.services.impl.localizedobjects.CxLocalizedValueServiceImpl">
+		<property name="modelService" ref="modelService"/>
+		<property name="providerFactory" ref="cxLocalizedObjectProviderFactory"/>
+		<property name="localizedValueConfigService" ref="cxLocalizedValueConfigService"/>
+		<property name="aiTranslationExecutor" ref="cxAiTranslationExecutor"/>
+		<property name="cronJobOrchestrator" ref="cxTranslationCronJobOrchestrator"/>
+	</bean>
+
+	<bean id="cxLocalizedClassificationService"
+		  class="com.sap.cx.translations.services.impl.localizedobjects.CxLocalizedClassificationServiceImpl">
+		<property name="modelService" ref="modelService"/>
+		<property name="cxLocalizedValueConfigService" ref="cxLocalizedValueConfigService"/>
+	</bean>
+
+	<bean id="cxTranslateCmsService" class="com.sap.cx.translations.cms.CxTranslateCmsService">
+		<property name="localizedValueService" ref="cxLocalizedValueService"/>
+		<property name="localizedValueConfigService" ref="cxLocalizedValueConfigService"/>
+		<property name="typeService" ref="typeService"/>
+		<property name="modelService" ref="modelService"/>
+		<property name="configurationService" ref="configurationService"/>
+	</bean>
+
+	<bean id="cxTranslateCmsFacade" class="com.sap.cx.translations.cms.impl.CxTranslateCmsFacadeImpl">
+		<property name="cxTranslateCmsService" ref="cxTranslateCmsService"/>
+		<property name="catalogVersionService" ref="catalogVersionService"/>
+		<property name="flexibleSearchService" ref="flexibleSearchService"/>
+		<property name="commonI18NService" ref="commonI18NService"/>
+		<property name="sessionSearchRestrictionsDisabler" ref="cmsSessionSearchRestrictionsDisabler"/>
+		<property name="localizedValueService" ref="cxLocalizedValueService"/>
+		<property name="translationServiceSettingsDao" ref="cxAiTranslationServiceSettingsDao"/>
+        <property name="i18NService" ref="i18NService"/>
+        <property name="modelService" ref="modelService"/>
+        <property name="proposedTranslationDao" ref="cxProposedTranslationDao"/>
+        <property name="cxApproveTranslationsService" ref="cxApproveTranslationsService"/>
+        </bean>
+
+	<bean id="cxLocalizedValueTargetAttributeHandler"
+		  class="com.sap.cx.translations.dynamicattributes.CxLocalizedValueTargetAttributeHandler">
+		<property name="typeService" ref="typeService"/>
+		<property name="enumerationService" ref="enumerationService"/>
+	</bean>
+
+    <bean id="cxProposedTranslationCostAttributeHandler"
+          class="com.sap.cx.translations.dynamicattributes.CxProposedTranslationCostAttributeHandler"/>
+    <bean id="cxAiServiceCostAttributeHandler"
+          class="com.sap.cx.translations.dynamicattributes.CxAiServiceCostAttributeHandler"/>
+    <bean id="cxTranslationCronJobCostAttributeHandler"
+          class="com.sap.cx.translations.dynamicattributes.CxTranslationCronJobCostAttributeHandler"/>
+
+	<bean id="cxTranslateLocalizedValueAttributeHandler"
+		  class="com.sap.cx.translations.dynamicattributes.CxTranslateLocalizedValueAttributeHandler">
+		<property name="modelService" ref="modelService"/>
+		<property name="commonI18NService" ref="commonI18NService"/>
+		<property name="cxLocalizedClassificationService" ref="cxLocalizedClassificationService"/>
+	</bean>
+
+	<bean id="cxTranslateLocalizedValueCatalogVersionAttributeHandler"
+		  class="com.sap.cx.translations.dynamicattributes.CxTranslateLocalizedValueCatalogVersionAttributeHandler">
+		<property name="modelService" ref="modelService"/>
+	</bean>
+
+	<bean id="cxProposedTranslationsAttributeHandler"
+		  class="com.sap.cx.translations.dynamicattributes.CxProposedTranslationsAttributeHandler">
+		<property name="cxProposedTranslationDao" ref="cxProposedTranslationDao"/>
+	</bean>
+
+	<bean id="cxTranslateResponseErrorHandler"
+		  class="com.sap.cx.translations.integration.handler.CxTranslateResponseErrorHandler">
+		<property name="ignoredHttpErrorCodes">
+			<list>
+				<value>408</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- AI	-->
+	<bean id="cxTranslateModelParametersHandler"
+		  class="com.sap.cx.translations.dynamicattributes.CxTranslateModelParametersHandler"/>
+
+	<bean id="cxAiTranslationService" class="com.sap.cx.translations.serviceinterfaces.ai.impl.CxAiTranslationServiceImpl"
+		  parent="cxTranslateAbstractRestService">
+		<property name="interfacePropertiesName" value="cxtranslate.integrations.ai"/>
+		<property name="integrationRestTemplateFactory" ref="cxTranslateRestTemplateFactory"/>
+	</bean>
+
+	<bean id="cxDeepLTranslationInterfaceService" class="com.sap.cx.translations.serviceinterfaces.deepl.CxTranslationsDeeplInterfaceService"
+		  parent="cxTranslateAbstractRestService">
+		<property name="interfacePropertiesName" value="cxtranslate.integrations.deepl"/>
+		<property name="integrationRestTemplateFactory" ref="cxTranslateRestTemplateFactory"/>
+	</bean>
+
+	<!-- Integration	-->
+
+    <!-- Custom connection configuration, introduced because default one is global, and we want to increase timeouts
+    for CX Translate calls without affecting other interfaces.
+    Below is a "chain" of custom bean declaration to make the interfaces actually use this config  -->
+    <bean id="cxTranslateOutboundServicesConfiguration" class="com.sap.cx.translations.integration.configuration.CxTranslateOutboundServicesConfiguration" parent="defaultOutboundServicesConfiguration"/>
+
+    <!-- Request factory that uses our custom config    -->
+    <bean id="cxTranslateOutboundClientHttpRequestFactory" parent="defaultOutboundClientHttpRequestFactory">
+        <property  name="configuration" ref="cxTranslateOutboundServicesConfiguration"/>
+    </bean>
+
+    <!-- Oauth2 based template creator that uses our custom Request Factory (to increase timeouts)    -->
+    <bean id="cxTranslateIntegrationOAuth2RestTemplateCreator" parent="defaultIntegrationOAuth2RestTemplateCreator">
+        <property name="clientHttpRequestFactory" ref="cxTranslateOutboundClientHttpRequestFactory"/>
+    </bean>
+
+    <!-- Custom Rest Template creator for Translation Services that require custom Authentication Headers -->
+    <bean id="cxTranslateKeyBasedRestTemplateCreator" parent="abstractRestTemplateCreator"
+          class="com.sap.cx.translations.integration.resttemplate.CxTranslateKeyBasedRestTemplateCreator">
+        <property name="clientHttpRequestFactory" ref="cxTranslateOutboundClientHttpRequestFactory"/>
+    </bean>
+
+    <util:list id="cxTranslateRestTemplateCreators">
+        <ref bean="cxTranslateKeyBasedRestTemplateCreator"/>
+        <ref bean="cxTranslateIntegrationOAuth2RestTemplateCreator"/>
+    </util:list>
+
+    <!-- Combined with default implementation, if there is no custom implementation handling the Destination, some OOTB possibly can do that -->
+    <bean id="cxTranslateCombinedRestTemplateCreators" class="org.apache.commons.collections4.ListUtils" factory-method="sum">
+        <constructor-arg ref="cxTranslateRestTemplateCreators"/>
+        <constructor-arg ref="defaultIntegrationRestTemplateStrategiesList"/>
+    </bean>
+
+    <bean id="cxTranslateRestTemplateFactory" parent="defaultIntegrationRestTemplateFactory">
+        <property name="restTemplateCreators" ref="cxTranslateCombinedRestTemplateCreators"/>
+    </bean>
+
+
+	<bean name="defaultCxTranslateRestErrorStrategy"
+		  class="com.sap.cx.translations.integration.strategy.impl.DefaultCxTranslateRestErrorStrategy"/>
+	<bean id="cxTranslateAbstractRestService" class="com.sap.cx.translations.integration.CxTranslateOutboundAbstractRestService"
+		  abstract="true">
+		<property name="restErrorStrategy" ref="defaultCxTranslateRestErrorStrategy"/>
+		<property name="responseErrorHandler" ref="cxTranslateResponseErrorHandler"/>
+        <property name="integrationRestTemplateFactory" ref="cxTranslateRestTemplateFactory"/>
+	</bean>
+
+
+	<bean id="cxTranslationJob" class="com.sap.cx.translations.jobs.CxTranslationJob" parent="abstractJobPerformable">
+		<property name="cxLocalizedValueService" ref="cxLocalizedValueService"/>
+		<property name="cxApproveTranslationsService" ref="cxApproveTranslationsService"/>
+		<property name="cxLocalizedClassificationService" ref="cxLocalizedClassificationService"/>
+        <property name="commonI18NService" ref="commonI18NService"/>
+        <property name="pluralsService" ref="cxLocalizedLabelsPluralsService"/>
+	</bean>
+
+	<bean id="cxApproveTranslationsJob" class="com.sap.cx.translations.jobs.CxApproveTranslationsJob" parent="abstractJobPerformable">
+		<property name="cxApproveTranslationsService" ref="cxApproveTranslationsService"/>
+	</bean>
+
+	<bean id="cxApproveTranslationsService" class="com.sap.cx.translations.services.impl.CxApproveTranslationsServiceImpl">
+		<property name="modelService" ref="modelService"/>
+		<property name="cronJobService" ref="cronJobService"/>
+		<property name="clusterService" ref="clusterService"/>
+		<property name="cronJobNodeGroup" value="${cxtranslations.cronjob.nodegroup:backgroundProcessing}"/>
+		<property name="cronJobPriority" value="${cxtranslations.cronjob.priority:4}"/>
+		<property name="userService" ref="userService"/>
+		<property name="cxTranslateCommerceCommonI18NService" ref="cxTranslateCommerceCommonI18NService"/>
+		<property name="cxLocalizedClassificationService" ref="cxLocalizedClassificationService"/>
+	</bean>
+
+	<bean id="cxSourceLanguageForProposedTranslationAttributeHandler"
+		  class="com.sap.cx.translations.dynamicattributes.CxSourceLanguageForProposedTranslationAttributeHandler"/>
+
+	<bean id="cxTargetLanguagesForProposedTranslationAttributeHandler"
+		  class="com.sap.cx.translations.dynamicattributes.CxTargetLanguagesForProposedTranslationAttributeHandler"/>
+
+	<bean id="cxProposedTranslationPrepareInterceptor"
+		  class="com.sap.cx.translations.interceptors.CxProposedTranslationPrepareInterceptor"/>
+
+	<bean class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="cxProposedTranslationPrepareInterceptor"/>
+		<property name="typeCode" value="CxProposedTranslation"/>
+	</bean>
+
+	<bean id="cxTranslateCommerceCommonI18NService" class="com.sap.cx.translations.services.impl.CxTranslateCommerceCommonI18NServiceImpl" parent="defaultCommerceCommonI18NService"/>
+
+	<bean id="cxLocalizedObjectConfigJob" class="com.sap.cx.translations.jobs.CxLocalizedObjectConfigJob" parent="abstractJobPerformable">
+		<property name="cxLocalizedValueConfigService" ref="cxLocalizedValueConfigService"/>
+		<property name="typeService" ref="typeService"/>
+	</bean>
+
+	<bean id="cxLocalizedObjectConfigurationCronJobInitDefaultsInterceptor" class="com.sap.cx.translations.interceptors.CxLocalizedObjectConfigurationCronJobInitDefaultsInterceptor">
+		<property name="cxLocalizedValueConfigService" ref="cxLocalizedValueConfigService"/>
+	</bean>
+
+	<bean class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="cxLocalizedObjectConfigurationCronJobInitDefaultsInterceptor"/>
+		<property name="typeCode" value="CxLocalizedObjectConfigCronJob"/>
+	</bean>
+</beans>

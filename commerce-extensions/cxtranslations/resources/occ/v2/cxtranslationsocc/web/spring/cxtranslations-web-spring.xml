@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (c) 2023 SAP SE or an SAP affiliate company. All rights reserved.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<context:component-scan base-package="com.sap.cx.translations.occ.controllers"/>
+
+	<aop:config proxy-target-class="true">
+		<aop:aspect ref="messageSourceAspect">
+			<aop:pointcut id="pointCutAround"
+						  expression="target(org.springframework.context.MessageSource) and execution(* getMessage*(..))"/>
+			<aop:around method="delegateToDatabaseMessageSource" pointcut-ref="pointCutAround"/>
+		</aop:aspect>
+	</aop:config>
+
+    <bean id="messageSourceAspect" class="com.sap.cx.translations.aspects.CxMessageSourceAspect">
+        <property name="enabled" value="${cxtranslations.backendTranslations.messageSourceAspect.enabled:false}"/>
+    </bean>
+
+    <bean id="labelsPreviewCatalogVersionFilter"
+		  class="com.sap.cx.translations.occ.filters.CxLabelsPreviewCatalogVersionFilter">
+		<property name="regexp" value="^/[^/]+/translations/staged/chunks/.+"/>
+		<property name="translationsCatalogVersionStrategy" ref="cxTranslationsCatalogVersionStrategy"/>
+		<property name="catalogVersionService" ref="catalogVersionService"/>
+	</bean>
+
+	<bean depends-on="commerceWebServicesFilterChainListV2" parent="listMergeDirective">
+		<property name="add" ref="labelsPreviewCatalogVersionFilter"/>
+		<property name="afterBeanNames">
+			<list value-type="java.lang.String">
+				<value>baseSiteMatchingFilter</value>
+			</list>
+		</property>
+	</bean>
+</beans>

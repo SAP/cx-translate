@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2024 SAP SE or an SAP affiliate company. All rights reserved.
+  -->
+
+<widget-definition id="com.sap.cx.translations.backoffice.widgets.aitranslateitems"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:noNamespaceSchemaLocation="http://www.hybris.com/schema/cockpitng/widget-definition.xsd">
+
+	<name>AI Translation Popup for Items</name>
+	<defaultTitle>AI Translation for Items</defaultTitle>
+	<author>hybris</author>
+	<version>0.1</version>
+
+	<sockets>
+		<input id="itemsToTranslate"/>
+		<output id="close"/>
+	</sockets>
+
+	<view src="aitranslateitems.zul"/>
+	<controller class="com.sap.cx.translations.backoffice.widgets.CxAiTranslateItemsWidgetController"/>
+
+</widget-definition>

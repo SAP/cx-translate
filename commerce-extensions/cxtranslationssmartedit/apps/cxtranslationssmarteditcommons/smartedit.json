@@ -1,0 +1,15 @@
+{
+    "name": "cxtranslationssmarteditcommons",
+    "typescript": {
+        "entry": "./src/index.ts",
+        "dist": "./dist/index.js"
+    },
+    "legacy": {
+        "js": ["./src/**/*.js"],
+        "ngTemplates": {
+            "moduleName": "cxtranslationssmarteditCommonTemplates",
+            "includePathInName": false,
+            "files": ["./src/**/*.html"]
+        }
+    }
+}

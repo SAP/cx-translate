@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ Copyright (c) 2022 SAP SE or an SAP affiliate company. All rights reserved.
+--><extensioninfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="extensioninfo.xsd">
+           
+    
+    <extension abstractclassprefix="Generated" classprefix="Cxtranslationssmartedit" managername="CxtranslationssmarteditManager" managersuperclass="de.hybris.platform.jalo.extension.Extension" name="cxtranslationssmartedit">
+                      
+        
+        <!-- you should add all required extensions to this list, except platform extensions which are automatically required -->
+                      
+        
+        <requires-extension name="smartedittools"/>
+                      
+        
+        <requires-extension name="smartedit"/>
+
+
+        <requires-extension name="cxtranslations"/>
+        <requires-extension name="cmssmarteditwebservices"/>
+                      
+        
+        <coremodule generated="true" manager="com.sap.cx.translations.smartedit.jalo.CxtranslationssmarteditManager" packageroot="com.sap.cx.translations.smartedit"/>
+                       
+        
+        <webmodule jspcompile="false" webroot="/cxtranslationssmartedit"/>
+                       
+        
+           
+    
+    </extension>
+              
+
+
+</extensioninfo>

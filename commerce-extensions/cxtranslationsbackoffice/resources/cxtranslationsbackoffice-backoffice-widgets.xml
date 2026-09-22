@@ -1,0 +1,552 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  ~ Copyright (c) 2024 SAP SE or an SAP affiliate company. All rights reserved.
+  -->
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:noNamespaceSchemaLocation="http://www.hybris.com/schema/cockpitng/widgets.xsd">
+
+	<widget-extension widgetId="mainSlot">
+		<widget id="cxtranslations-aitranslateitems-external"
+				widgetDefinitionId="com.sap.cx.translations.backoffice.widgets.aitranslateitems"
+				slotId="cockpitWidgetChildrenInvisible"
+				template="true"
+				title="com.sap.cx.translations.backoffice.widgets.aitranslate">
+			<instance-settings socketEventRoutingMode="LAST_USED">
+				<create onInit="false" reuseExisting="true">
+					<all-incoming-events/>
+				</create>
+				<close>
+					<all-outgoing-events/>
+				</close>
+				<select onInit="false">
+					<all-incoming-events/>
+				</select>
+			</instance-settings>
+			<setting key="_height" type="String">700px</setting>
+			<virtual-sockets>
+				<output id="context" type="java.lang.Object"/>
+			</virtual-sockets>
+		</widget>
+	</widget-extension>
+
+	<widget-extension widgetId="backofficeMainSlot">
+
+		<widget id="cxtranslations-perspective" widgetDefinitionId="com.hybris.cockpitng.borderlayout"
+				slotId="perspectives"
+				template="false" title="cxtranslationsbackoffice.cockpit.perspective"
+				access="cxTranslationsUser">
+
+			<widget id="cxtranslations-navigation-width-extractor"
+					widgetDefinitionId="com.hybris.cockpitng.widgets.common.propextractor"
+					slotId="cockpitWidgetChildrenInvisible" template="false">
+				<setting key="expression" type="String">
+					(#root.iterator().next().equals("cxtranslations-sidenavigation") ? "56px" : "300px")
+				</setting>
+				<setting key="socketDataType_$T" type="String">java.lang.Object</setting>
+				<virtual-sockets/>
+			</widget>
+
+			<widget id="cxtranslations-navigation-collapse-extractor"
+					widgetDefinitionId="com.hybris.cockpitng.widgets.common.propextractor"
+					slotId="cockpitWidgetChildrenInvisible" template="false">
+				<setting key="expression" type="String">
+					(#root ? "cxtranslations-sidenavigation" : "cxtranslations-explorerTree")
+				</setting>
+				<setting key="socketDataType_$T" type="String">java.lang.Object</setting>
+				<virtual-sockets/>
+			</widget>
+
+			<widget id="cxtranslations-navibar-contents" widgetDefinitionId="com.hybris.backoffice.viewswitcher"
+					slotId="leftSlot" template="false">
+				<widget id="cxtranslations-explorerTree"
+						widgetDefinitionId="com.hybris.cockpitng.widgets.common.explorertree"
+						slotId="views" template="false">
+					<widget id="cxtranslations-explorerTreeSelectionProxy"
+							widgetDefinitionId="com.hybris.cockpitng.widgets.common.multiplexer"
+							slotId="cockpitWidgetChildrenInvisible" template="false">
+						<widget id="cxtranslations-typeNodeNameExtractor"
+								widgetDefinitionId="com.hybris.cockpitng.widgets.common.propextractor"
+								slotId="cockpitWidgetChildrenInvisible" template="false">
+							<setting key="expression" type="String">name</setting>
+							<setting key="socketDataType_$T" type="String">java.lang.String</setting>
+							<virtual-sockets/>
+						</widget>
+
+						<setting key="typeNode_expression" type="String">#root instanceof
+							T(com.hybris.cockpitng.tree.node.TypeNode)
+						</setting>
+						<setting key="dashboard_expression" type="String">
+							#root?.id EQ 'cxtranslations-backoffice_dashboard'
+						</setting>
+						<virtual-sockets>
+							<output id="typeNode" type="com.hybris.backoffice.navigation.NavigationNode"/>
+							<output id="dashboard" type="com.hybris.backoffice.navigation.NavigationNode"/>
+						</virtual-sockets>
+					</widget>
+					<setting key="explorerTreeConfigCtx" type="String">cxtranslations-explorer-tree</setting>
+					<setting key="widgetStyleAttribute" type="String"></setting>
+					<setting key="widgetStyleClass" type="String">yw-explorerTree-sideNavigation</setting>
+					<setting key="allowFilteringEntries" type="Boolean">true</setting>
+					<setting key="widgetMold" type="String" value="light"/>
+					<virtual-sockets/>
+				</widget>
+
+				<widget id="cxtranslations-sidenavigation"
+						widgetDefinitionId="com.hybris.cockpitng.widgets.common.sidenavigation"
+						template="false" slotId="views">
+					<setting key="explorerTreeConfigCtx" type="String">cxtranslations-explorer-tree</setting>
+				</widget>
+
+				<setting key="initialView" type="String" value="cxtranslations-explorerTree"/>
+				<setting key="configuration.authority.enabled" type="Boolean">true</setting>
+			</widget>
+
+			<widget id="cxtranslations-collapsibleContainer"
+					widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
+					slotId="centerSlot" template="false">
+
+				<widget id="cxtranslations-translationlanguages"
+						widgetDefinitionId="com.sap.cx.translations.backoffice.widgets.translationlanguages"
+						slotId="cockpitWidgetChildrenInvisible"
+						template="true"
+						title="cxtranslations.backoffice.widgets.translationlanguages.title">
+
+					<instance-settings socketEventRoutingMode="LAST_USED">
+						<create onInit="false" reuseExisting="true">
+							<all-incoming-events/>
+						</create>
+						<close>
+							<all-outgoing-events/>
+						</close>
+						<select onInit="false">
+							<all-incoming-events/>
+						</select>
+					</instance-settings>
+					<virtual-sockets>
+						<output id="context" type="java.lang.Object"/>
+					</virtual-sockets>
+				</widget>
+
+				<widget id="cxtranslations-aitranslatevalues"
+						widgetDefinitionId="com.sap.cx.translations.backoffice.widgets.aitranslatevalues"
+						slotId="cockpitWidgetChildrenInvisible"
+						template="true"
+						title="com.sap.cx.translations.backoffice.widgets.aitranslate">
+					<instance-settings socketEventRoutingMode="LAST_USED">
+						<create onInit="false" reuseExisting="true">
+							<all-incoming-events/>
+						</create>
+						<close>
+							<all-outgoing-events/>
+						</close>
+						<select onInit="false">
+							<all-incoming-events/>
+						</select>
+					</instance-settings>
+					<setting key="_height" type="String">600px</setting>
+					<virtual-sockets>
+						<output id="context" type="java.lang.Object"/>
+					</virtual-sockets>
+				</widget>
+
+				<widget id="cxtranslations-aitranslateitems"
+						widgetDefinitionId="com.sap.cx.translations.backoffice.widgets.aitranslateitems"
+						slotId="cockpitWidgetChildrenInvisible"
+						template="true"
+						title="com.sap.cx.translations.backoffice.widgets.aitranslate">
+					<instance-settings socketEventRoutingMode="LAST_USED">
+						<create onInit="false" reuseExisting="true">
+							<all-incoming-events/>
+						</create>
+						<close>
+							<all-outgoing-events/>
+						</close>
+						<select onInit="false">
+							<all-incoming-events/>
+						</select>
+					</instance-settings>
+					<setting key="_height" type="String">670px</setting>
+					<virtual-sockets>
+						<output id="context" type="java.lang.Object"/>
+					</virtual-sockets>
+				</widget>
+
+
+				<widget id="cxtranslations-approve"
+						widgetDefinitionId="com.sap.cx.translations.backoffice.widgets.approvetranslations"
+						slotId="cockpitWidgetChildrenInvisible"
+						template="true"
+						title="cxtranslations.backoffice.widgets.approvetranslations.title">
+					<instance-settings socketEventRoutingMode="LAST_USED">
+						<create onInit="false" reuseExisting="true">
+							<all-incoming-events/>
+						</create>
+						<close>
+							<all-outgoing-events/>
+						</close>
+						<select onInit="false">
+							<all-incoming-events/>
+						</select>
+					</instance-settings>
+					<setting key="_height" type="String">350px</setting>
+					<virtual-sockets>
+						<output id="context" type="java.lang.Object"/>
+					</virtual-sockets>
+				</widget>
+
+				<widget id="cxtranslations-reject"
+						widgetDefinitionId="com.sap.cx.translations.backoffice.widgets.rejecttranslations"
+						slotId="cockpitWidgetChildrenInvisible"
+						template="true"
+						title="cxtranslations.backoffice.widgets.rejecttranslations.title">
+					<instance-settings socketEventRoutingMode="LAST_USED">
+						<create onInit="false" reuseExisting="true">
+							<all-incoming-events/>
+						</create>
+						<close>
+							<all-outgoing-events/>
+						</close>
+						<select onInit="false">
+							<all-incoming-events/>
+						</select>
+					</instance-settings>
+					<setting key="_height" type="String">350px</setting>
+					<virtual-sockets>
+						<output id="context" type="java.lang.Object"/>
+					</virtual-sockets>
+				</widget>
+
+				<widget id="cxtranslations-retry"
+						widgetDefinitionId="com.sap.cx.translations.backoffice.widgets.retrytranslations"
+						slotId="cockpitWidgetChildrenInvisible"
+						template="true"
+						title="cxtranslations.backoffice.widgets.retrytranslations.title">
+					<instance-settings socketEventRoutingMode="LAST_USED">
+						<create onInit="false" reuseExisting="true">
+							<all-incoming-events/>
+						</create>
+						<close>
+							<all-outgoing-events/>
+						</close>
+						<select onInit="false">
+							<all-incoming-events/>
+						</select>
+					</instance-settings>
+					<setting key="_height" type="String">320px</setting>
+					<virtual-sockets>
+						<output id="context" type="java.lang.Object"/>
+					</virtual-sockets>
+				</widget>
+
+
+				<widget id="cxtranslations-advancedSearch" widgetDefinitionId="com.hybris.cockpitng.advancedsearch"
+						slotId="center" template="false">
+
+					<widget id="cxtranslations-headerTitle"
+							widgetDefinitionId="com.hybris.backoffice.widgets.title"
+							slotId="pageTitle" template="false">
+					</widget>
+
+					<widget id="cxtranslations-advancedSearchEngine"
+							widgetDefinitionId="com.hybris.cockpitng.widgets.common.advancedsearchengine"
+							slotId="cockpitWidgetChildrenInvisible" template="false">
+						<setting key="widgetStyleAttribute" type="String"></setting>
+						<setting key="widgetStyleClass" type="String"></setting>
+						<setting key="defaultPageSize" type="Integer">50</setting>
+						<virtual-sockets/>
+					</widget>
+
+					<widget id="cxtranslations-hmc2list"
+							widgetDefinitionId="com.sap.cx.translations.backoffice.widgets.collectionBrowser"
+							slotId="nestedWidget" template="false">
+						<setting key="listSubtitle" type="String">emptylist</setting>
+						<setting key="socketDataType_$T" type="String">java.lang.Object</setting>
+						<setting key="widgetStyleAttribute" type="String"></setting>
+						<setting key="pageSize" type="Integer">10</setting>
+						<setting key="maxCharsInCell" type="Integer">70</setting>
+						<setting key="actionSlotComponentId" type="String">listviewactions</setting>
+						<setting key="multiSelect" type="Boolean">true</setting>
+						<setting key="colConfigCtxCode" type="String">listview</setting>
+						<setting key="itemRenderer" type="String">listViewRenderer</setting>
+						<setting key="listTitle" type="String"></setting>
+						<setting key="sortableListHeader" type="Boolean">true</setting>
+						<setting key="widgetStyleClass" type="String"></setting>
+						<setting key="asyncLoading" type="Boolean">true</setting>
+						<setting key="sendItemsOnSelect" type="Boolean">false</setting>
+						<setting key="dragAndDropConfigCtx" type="String" value="dragItemsDnDComponent"/>
+						<setting key="widgetStyleClass" type="String">yw-collection-browser-inset</setting>
+					</widget>
+					<setting key="advancedSearchConfigCtxCode" type="String">advanced-search</setting>
+					<setting key="widgetStyleAttribute" type="String"></setting>
+					<setting key="addRowPosition" type="String">Bottom</setting>
+					<setting key="widgetStyleClass" type="String"></setting>
+					<setting key="enableNestedWidgetView" type="Boolean">true</setting>
+					<setting key="isNestedObjectCreationDisabled" type="Boolean">true</setting>
+					<setting key="simpleSearchConfigCtxCode" type="String">simple-search</setting>
+					<setting key="forceSearchForCode" type="String">WorkflowAction</setting>
+					<virtual-sockets/>
+				</widget>
+
+				<widget id="cxtranslations-editorArea"
+						widgetDefinitionId="com.hybris.cockpitng.backoffice.defaultEditorArea"
+						slotId="bottom" template="false">
+					<widget id="cxtranslations-previousItemSelector"
+							widgetDefinitionId="com.hybris.cockpitng.previousItemSelector"
+							slotId="previousItemSelectorSlot" template="false">
+						<setting key="widgetStyleAttribute" type="String"></setting>
+						<setting key="widgetStyleClass" type="String"></setting>
+						<virtual-sockets/>
+					</widget>
+					<widget id="cxtranslations-nextItemSelector"
+							widgetDefinitionId="com.hybris.cockpitng.nextItemSelector"
+							slotId="nextItemSelectorSlot" template="false">
+						<setting key="widgetStyleAttribute" type="String"></setting>
+						<setting key="widgetStyleClass" type="String"></setting>
+						<virtual-sockets/>
+					</widget>
+					<setting key="widgetStyleAttribute" type="String"></setting>
+					<setting key="viewModeBtnVisible" type="Boolean">false</setting>
+					<setting key="widgetStyleClass" type="String"></setting>
+					<setting key="initViewMode" type="String">fluid</setting>
+					<setting key="fluidViewCode" type="String">fluid</setting>
+					<setting key="editorAreaConfigCtx" type="String">editor-area</setting>
+					<setting key="bottomToolbar" type="Boolean">false</setting>
+					<setting key="actionSlotComponentId" type="String">editorareaactions</setting>
+					<virtual-sockets>
+						<output id="com.hybris.cockpitng.action.delete.success" type="java.lang.Object"/>
+						<output id="com.hybris.cockpitng.action.clone.success" type="java.lang.Object"/>
+						<output id="selectivesyncobject" type="java.lang.Object"/>
+					</virtual-sockets>
+				</widget>
+
+				<widget id="cxtranslations-backofficeSpaceManagement"
+						widgetDefinitionId="com.hybris.backoffice.spaceManagement"
+						slotId="cockpitWidgetChildrenInvisible" template="false">
+					<setting key="widgetStyleAttribute" type="String"></setting>
+					<setting key="widgetStyleClass" type="String"></setting>
+					<virtual-sockets/>
+				</widget>
+				<setting key="widgetStyleAttribute" type="String"></setting>
+				<setting key="allowLockingCenterPanel" type="Boolean">false</setting>
+				<setting key="bottomPanelCollapsed" type="Boolean">false</setting>
+				<setting key="topHeight" type="String">33%</setting>
+				<setting key="centerCaption" type="String">List</setting>
+				<setting key="bottomPanelInitiallyLocked" type="Boolean">false</setting>
+				<setting key="centerHeight" type="String">50%</setting>
+				<setting key="topPanelInitiallyLocked" type="Boolean">false</setting>
+				<setting key="thirdSectionDisabled" type="Boolean">true</setting>
+				<setting key="allowLockingBottomPanel" type="Boolean">false</setting>
+				<setting key="bottomCaption" type="String">Edit</setting>
+				<setting key="centerPanelCollapsed" type="Boolean">false</setting>
+				<setting key="widgetStyleClass" type="String">yw-collapsibleContainer-caption-large-font-size
+				</setting>
+				<setting key="topCaption" type="String">Search</setting>
+				<setting key="topPanelCollapsed" type="Boolean">true</setting>
+				<setting key="allowLockingTopPanel" type="Boolean">false</setting>
+				<setting key="centerPanelInitiallyLocked" type="Boolean">true</setting>
+				<virtual-sockets/>
+			</widget>
+
+			<setting key="northHeight" type="String">52px</setting>
+			<setting key="northBorder" type="String">none</setting>
+			<setting key="broadcastHorizontalResize" type="Boolean">true</setting>
+			<setting key="eastDisabled" type="Boolean">true</setting>
+			<setting key="eastBorder" type="String">none</setting>
+			<setting key="westCollapsible" type="Boolean">false</setting>
+			<setting key="northCollapsible" type="Boolean">true</setting>
+			<setting key="border" type="String">none</setting>
+			<setting key="centerBorder" type="String">none</setting>
+			<setting key="westDisabled" type="Boolean">false</setting>
+			<setting key="opaqueBG" type="String">true</setting>
+			<setting key="southHeight" type="String">52px</setting>
+			<setting key="widgetStyleAttribute" type="String"></setting>
+			<setting key="westBorder" type="String">none</setting>
+			<setting key="westSplittable" type="String">false</setting>
+			<setting key="southBorder" type="String">none</setting>
+			<setting key="southDisabled" type="Boolean">true</setting>
+			<setting key="eastWidth" type="String">25%</setting>
+			<setting key="northDisabled" type="Boolean">true</setting>
+			<setting key="widgetStyleClass" type="String" value="yw-borderlayout-opaque"/>
+			<setting key="southCollapsible" type="Boolean">true</setting>
+			<setting key="westWidth" type="String">300px</setting>
+			<setting key="eastCollapsible" type="Boolean">true</setting>
+			<setting key="widgetMold" type="String" value="light"/>
+			<virtual-sockets/>
+		</widget>
+		<setting key="perspectiveImageUrl" value="/cng/images/perspective.png" type="String"/>
+		<setting key="autoCloseInactive" type="Boolean">false</setting>
+		<setting key="perspectiveContainerConfigCtx" type="String" value="perspective-view-switcher"/>
+		<virtual-sockets/>
+
+	</widget-extension>
+
+
+	<!-- Explorer tree selection -->
+	<widget-connection sourceWidgetId="cxtranslations-explorerTree" outputId="dataSelected"
+					   targetWidgetId="cxtranslations-backofficeSpaceManagement"
+					   inputId="navigationTreeSelectedObject"/>
+	<widget-connection sourceWidgetId="cxtranslations-explorerTree" outputId="nodeSelected"
+					   targetWidgetId="cxtranslations-explorerTreeSelectionProxy" inputId="element"/>
+	<widget-connection sourceWidgetId="cxtranslations-explorerTreeSelectionProxy" outputId="typeNode"
+					   targetWidgetId="cxtranslations-headerTitle" inputId="nodeSelected"/>
+	<widget-connection sourceWidgetId="cxtranslations-explorerTreeSelectionProxy" outputId="typeNode"
+					   targetWidgetId="cxtranslations-typeNodeNameExtractor" inputId="genericInput"/>
+	<widget-connection sourceWidgetId="cxtranslations-typeNodeNameExtractor" outputId="genericOutput"
+					   targetWidgetId="cxtranslations-advancedSearch" inputId="type"/>
+
+	<!-- All the rest -->
+	<widget-connection sourceWidgetId="cxtranslations-backofficeSpaceManagement" outputId="collapseState"
+					   targetWidgetId="cxtranslations-collapsibleContainer" inputId="collapseState"/>
+	<widget-connection sourceWidgetId="cxtranslations-hmc2list" outputId="sortData"
+					   targetWidgetId="cxtranslations-advancedSearch" inputId="sortData"/>
+	<widget-connection sourceWidgetId="cxtranslations-collapsibleContainer" outputId="centerPanelLocked"
+					   targetWidgetId="cxtranslations-advancedSearch" inputId="centerPanelLocked"/>
+	<widget-connection sourceWidgetId="STUB_com.hybris.cockpitng.action.searchbytype" outputId="type"
+					   targetWidgetId="cxtranslations-advancedSearch" inputId="type"/>
+	<widget-connection sourceWidgetId="cxtranslations-advancedSearch" outputId="searchData"
+					   targetWidgetId="cxtranslations-advancedSearchEngine" inputId="searchData"/>
+	<widget-connection sourceWidgetId="cxtranslations-advancedSearch" outputId="searchData"
+					   targetWidgetId="cxtranslations-backofficeSpaceManagement" inputId="searchData"/>
+	<widget-connection sourceWidgetId="cxtranslations-advancedSearch" outputId="reset"
+					   targetWidgetId="cxtranslations-hmc2list" inputId="reset"/>
+	<widget-connection sourceWidgetId="cxtranslations-advancedSearch" outputId="autosuggestionQuery"
+					   targetWidgetId="cxtranslations-advancedSearchEngine" inputId="autosuggestionQuery"/>
+	<widget-connection sourceWidgetId="cxtranslations-advancedSearchEngine" outputId="pageable"
+					   targetWidgetId="cxtranslations-hmc2list" inputId="pageable"/>
+	<widget-connection sourceWidgetId="cxtranslations-advancedSearchEngine" outputId="fullTextSearchData"
+					   targetWidgetId="cxtranslations-advancedSearch" inputId="fullTextSearchData"/>
+	<widget-connection sourceWidgetId="cxtranslations-advancedSearchEngine" outputId="autosuggestions"
+					   targetWidgetId="cxtranslations-advancedSearch" inputId="autosuggestions"/>
+	<widget-connection sourceWidgetId="cxtranslations-hmc2list" outputId="focusedItem"
+					   targetWidgetId="cxtranslations-backofficeSpaceManagement" inputId="listSelectedObject"/>
+	<widget-connection sourceWidgetId="cxtranslations-editorArea" outputId="com.hybris.cockpitng.action.delete.success"
+					   targetWidgetId="cxtranslations-backofficeSpaceManagement"
+					   inputId="navigationTreeSelectedObject"/>
+	<widget-connection sourceWidgetId="cxtranslations-editorArea" outputId="selectivesyncobject"
+					   targetWidgetId="selectivesync" inputId="inputObject"/>
+	<widget-connection sourceWidgetId="cxtranslations-editorArea" outputId="com.hybris.cockpitng.action.clone.success"
+					   targetWidgetId="cxtranslations-hmc2list" inputId="focusItem"/>
+	<widget-connection sourceWidgetId="selectivesync" outputId="objectSaved" targetWidgetId="cxtranslations-editorArea"
+					   inputId="inputObject"/>
+
+	<widget-connection sourceWidgetId="cxtranslations-hmc2list" outputId="focusedItem"
+					   targetWidgetId="cxtranslations-editorArea" inputId="inputObject"/>
+	<widget-connection sourceWidgetId="hmc2" outputId="resized" targetWidgetId="cxtranslations-editorArea"
+					   inputId="resize"/>
+
+	<widget-connection sourceWidgetId="cxtranslations-previousItemSelector" outputId="previousItemSelectorInvocation"
+					   targetWidgetId="cxtranslations-hmc2list" inputId="previousItemSelectorInvocation"/>
+	<widget-connection sourceWidgetId="cxtranslations-hmc2list" outputId="previousItemSelectorContext"
+					   targetWidgetId="cxtranslations-previousItemSelector" inputId="previousItemSelectorContext"/>
+	<widget-connection sourceWidgetId="cxtranslations-nextItemSelector" outputId="nextItemSelectorInvocation"
+					   targetWidgetId="cxtranslations-hmc2list" inputId="nextItemSelectorInvocation"/>
+	<widget-connection sourceWidgetId="cxtranslations-hmc2list" outputId="nextItemSelectorContext"
+					   targetWidgetId="cxtranslations-nextItemSelector" inputId="nextItemSelectorContext"/>
+
+	<widget-connection sourceWidgetId="backofficeDeepLink" outputId="navigateExplorerTreeNode"
+					   targetWidgetId="cxtranslations-explorerTree" inputId="nodeIdSelected"/>
+
+	<widget-connection sourceWidgetId="createActionMultiplexer" outputId="cxtranslations-editorArea"
+					   targetWidgetId="cxtranslations-editorArea" inputId="inputObject"/>
+	<widget-connection sourceWidgetId="createActionMultiplexer" outputId="cxtranslations-editorArea"
+					   targetWidgetId="cxtranslations-backofficeSpaceManagement" inputId="listSelectedObject"/>
+
+	<widget-connection sourceWidgetId="STUB_com.sap.cx.translations.backoffice.widgets.actions.translationlanguages"
+					   outputId="openWidget" targetWidgetId="cxtranslations-translationlanguages" inputId="openWidget"/>
+
+	<widget-connection sourceWidgetId="cxtranslations-translationlanguages" outputId="translationLanguages"
+					   targetWidgetId="cxtranslations-hmc2list" inputId="cxTranslationLanguages"/>
+
+	<widget-connection sourceWidgetId="STUB_com.sap.cx.translations.backoffice.widgets.actions.aitranslate"
+					   outputId="itemsToTranslate" targetWidgetId="cxtranslations-aitranslateitems"
+					   inputId="itemsToTranslate"/>
+
+	<widget-connection sourceWidgetId="STUB_com.sap.cx.translations.backoffice.widgets.actions.aitranslate"
+					   outputId="valuesToTranslate" targetWidgetId="cxtranslations-aitranslatevalues"
+					   inputId="itemsToTranslate"/>
+
+	<widget-connection sourceWidgetId="STUB_com.sap.cx.translations.backoffice.widgets.actions.aitranslate.external"
+					   outputId="itemsToTranslate" targetWidgetId="cxtranslations-aitranslateitems-external"
+					   inputId="itemsToTranslate"/>
+
+	<widget-connection
+			sourceWidgetId="STUB_com.sap.cx.translations.backoffice.widgets.actions.listview.approvetranslations"
+			outputId="itemsToApprove" targetWidgetId="cxtranslations-approve" inputId="itemsToApprove"/>
+
+	<widget-connection
+		sourceWidgetId="cxtranslations-approve"
+		outputId="close" targetWidgetId="cxtranslations-advancedSearch" inputId="refreshResults"/>
+
+	<widget-connection
+		sourceWidgetId="cxtranslations-approve"
+		outputId="close" targetWidgetId="cxtranslations-editorArea" inputId="reset"/>
+
+	<widget-connection
+		sourceWidgetId="STUB_com.sap.cx.translations.backoffice.widgets.actions.approvetranslation"
+		outputId="reset" targetWidgetId="cxtranslations-advancedSearch" inputId="refreshResults"/>
+
+	<widget-connection
+		sourceWidgetId="STUB_com.sap.cx.translations.backoffice.widgets.actions.approvetranslation"
+		outputId="reset" targetWidgetId="cxtranslations-editorArea" inputId="reset"/>
+
+	<widget-connection
+		sourceWidgetId="cxtranslations-approve"
+		outputId="close" targetWidgetId="cxtranslations-editorArea" inputId="inputObject"/>
+
+	<widget-connection
+			sourceWidgetId="STUB_com.sap.cx.translations.backoffice.widgets.actions.listview.rejecttranslations"
+			outputId="itemsToReject" targetWidgetId="cxtranslations-reject" inputId="itemsToReject"/>
+
+	<widget-connection
+		sourceWidgetId="cxtranslations-reject"
+		outputId="close" targetWidgetId="cxtranslations-advancedSearch" inputId="refreshResults"/>
+
+	<widget-connection
+		sourceWidgetId="cxtranslations-reject"
+		outputId="close" targetWidgetId="cxtranslations-editorArea" inputId="reset"/>
+
+	<widget-connection
+		sourceWidgetId="cxtranslations-reject"
+		outputId="close" targetWidgetId="cxtranslations-editorArea" inputId="inputObject"/>
+
+	<widget-connection
+			sourceWidgetId="STUB_com.sap.cx.translations.backoffice.widgets.actions.listview.retrytranslations"
+			outputId="itemsToRetry" targetWidgetId="cxtranslations-retry" inputId="itemsToRetry"/>
+
+	<widget-connection
+		sourceWidgetId="cxtranslations-retry"
+		outputId="close" targetWidgetId="cxtranslations-advancedSearch" inputId="refreshResults"/>
+
+	<widget-connection
+		sourceWidgetId="cxtranslations-retry"
+		outputId="close" targetWidgetId="cxtranslations-editorArea" inputId="reset"/>
+
+	<widget-connection
+		sourceWidgetId="cxtranslations-retry"
+		outputId="close" targetWidgetId="cxtranslations-editorArea" inputId="inputObject"/>
+
+	<!-- In order to adjust border layout west size -->
+	<widget-connection sourceWidgetId="cxtranslations-navibar-contents" outputId="selectedViews"
+					   targetWidgetId="cxtranslations-navigation-width-extractor" inputId="genericInput"/>
+	<widget-connection sourceWidgetId="cxtranslations-navigation-width-extractor" outputId="genericOutput"
+					   targetWidgetId="cxtranslations-perspective" inputId="setWestSize"/>
+
+	<!-- In order to be consistent with the selected state of collapsed and expanded -->
+	<widget-connection sourceWidgetId="cxtranslations-sidenavigation" outputId="nodeIdSelected"
+					   targetWidgetId="cxtranslations-explorerTree" inputId="nodeIdSelected"/>
+	<widget-connection sourceWidgetId="cxtranslations-explorerTree" outputId="nodeIdSelected"
+					   targetWidgetId="integrationbackoffice-sidenavigation" inputId="nodeIdSelected"/>
+
+	<!-- In order to control side navigation collapse or expand -->
+	<widget-connection sourceWidgetId="systembarCollapseWidget" outputId="collapseStatus"
+					   targetWidgetId="cxtranslations-navigation-collapse-extractor" inputId="genericInput"/>
+	<widget-connection sourceWidgetId="cxtranslations-navigation-collapse-extractor" outputId="genericOutput"
+					   targetWidgetId="cxtranslations-navibar-contents" inputId="selectViews"/>
+
+	<!-- Deep link -->
+	<widget-connection sourceWidgetId="backofficeDeepLink" outputId="navigateExplorerTreeNode"
+					   targetWidgetId="cxtranslations-explorerTree" inputId="nodeIdSelected"/>
+	<widget-connection sourceWidgetId="backofficeDeepLink" outputId="navigateExplorerTreeNode"
+					   targetWidgetId="cxtranslations-sidenavigation" inputId="nodeIdSelected"/>
+
+</widgets>

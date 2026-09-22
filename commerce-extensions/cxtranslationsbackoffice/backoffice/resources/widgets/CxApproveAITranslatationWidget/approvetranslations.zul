@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2024 SAP SE or an SAP affiliate company. All rights reserved
+  -->
+
+<widget xmlns="http://www.zkoss.org/2005/zul"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
+		width="100%" height="100%">
+
+	<style src="${wr}/approvetranslations.css"/>
+
+	<vbox spacing="20px" sclass="cx-modal-content" align="stretch" pack="center">
+		<vlayout spacing="20px">
+			<label value="${labels.confirm.context}" sclass="confirmation-context"/>
+
+			<hlayout sclass="count-wrapper" valign="middle">
+				<label value="${labels.items.count}" sclass="count-label"/>
+				<textbox id="count" sclass="count-value"/>
+			</hlayout>
+
+			<label value="${labels.confirm.msg}" sclass="confirmation-msg"/>
+		</vlayout>
+
+		<hlayout sclass="cx-modal-controls">
+			<button id="cancelButton" autodisable="self" label="${labels.button.cancel}"/>
+			<button id="approveButton" sclass="yw-btn-primary" label="${labels.button.approve}"/>
+		</hlayout>
+
+	</vbox>
+
+</widget>

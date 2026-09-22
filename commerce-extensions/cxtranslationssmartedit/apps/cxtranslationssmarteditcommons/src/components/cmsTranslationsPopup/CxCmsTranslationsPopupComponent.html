@@ -1,0 +1,434 @@
+<!-- Translations popup -->
+<div
+    *ngIf="showTranslationsPopup"
+    class="cx-cms-translations-popup__backdrop"
+    (click)="closeTranslations($event)"
+>
+    <div class="cx-cms-translations-popup" (click)="onPopupClick($event)">
+        <div class="cx-cms-translations-popup__header">
+            <h3>{{ 'cxtranslationssmartedit.popup.title' | translate }}</h3>
+            <button
+                *ngIf="!loadingTranslations && !translationsError && treeRoot && hasPendingTranslation"
+                type="button"
+                class="cx-btn cx-btn--secondary"
+                [disabled]="refreshing"
+                (click)="refresh()"
+            >
+                {{ (refreshing ? 'cxtranslationssmartedit.popup.refreshing' : 'cxtranslationssmartedit.popup.refresh') | translate }}
+            </button>
+            <button
+                type="button"
+                class="cx-cms-translations-popup__close"
+                (click)="closeTranslations($event)"
+            >
+                &times;
+            </button>
+        </div>
+        <br/>
+        <!-- Toolbar: display language selectors + translation settings trigger + review block -->
+        <div
+            class="cx-cms-translations-popup__toolbar"
+            *ngIf="!loadingTranslations && !translationsError && treeRoot"
+        >
+            <!-- Display / review language selectors -->
+            <div class="cx-toolbar-section">
+                <div class="cx-toolbar-group">
+                    <span class="cx-toolbar-group__label">{{ 'cxtranslationssmartedit.popup.displaylanguage' | translate }}</span>
+                    <select [(ngModel)]="displayLanguage">
+                        <option *ngFor="let lang of availableLanguages" [ngValue]="lang">
+                            {{ getLanguageLabel(lang) }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="cx-toolbar-group" *ngIf="availableTranslatedLanguages.length > 0">
+                    <span class="cx-toolbar-group__label">{{ 'cxtranslationssmartedit.popup.proposallanguage' | translate }}</span>
+                    <select [(ngModel)]="translatedDisplayLanguage">
+                        <option
+                            *ngFor="let lang of availableTranslatedLanguages"
+                            [ngValue]="lang"
+                        >
+                            {{ getLanguageLabel(lang) }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- "Select all/none" + "Display template" toggle above the tree -->
+        <div class="cx-select-all-bar" *ngIf="!loadingTranslations && !translationsError && treeRoot">
+            <button type="button" class="cx-btn" (click)="toggleSelectAll()">
+                {{ (allSelected ? 'cxtranslationssmartedit.popup.selectnone' : 'cxtranslationssmartedit.popup.selectall') | translate }}
+            </button>
+
+            <label
+                class="cx-toggle-label"
+                *ngIf="treeRoot?.itemType && isPageItemType(treeRoot.itemType)"
+                (click)="includeTemplate = !includeTemplate; refresh()"
+            >
+                <span class="cx-check" [attr.data-checked]="includeTemplate ? 'true' : null"></span>
+                {{ 'cxtranslationssmartedit.popup.displaytemplate' | translate }}
+            </label>
+        </div>
+
+        <div class="cx-cms-translations-popup__body">
+            <p *ngIf="loadingTranslations">{{ 'cxtranslationssmartedit.popup.loading' | translate }}</p>
+            <p *ngIf="translationsError" class="cx-cms-translations-popup__error">
+                {{ translationsError }}
+            </p>
+
+            <ng-container *ngIf="!loadingTranslations && !translationsError && treeRoot && isNodeVisible(treeRoot)">
+                <div class="cx-tree-scroll">
+                    <ng-container
+                        *ngTemplateOutlet="nodeTpl; context: { $implicit: treeRoot }"
+                    ></ng-container>
+                </div>
+            </ng-container>
+
+            <p
+                *ngIf="!loadingTranslations && !translationsError && treeRoot && !isNodeVisible(treeRoot)"
+                class="cx-cms-translations-popup__empty"
+            >
+                {{ 'cxtranslationssmartedit.popup.nocontent' | translate }}
+            </p>
+        </div>
+
+        <!-- Persistent status bar: kept outside any proposal-conditional block so approve /
+             reject / translate outcomes stay visible even after the tree reloads. -->
+        <div
+            class="cx-status-bar"
+            [ngClass]="'cx-status-bar--' + statusKind"
+            *ngIf="statusMessage"
+        >
+            {{ statusMessage }}
+        </div>
+
+        <!-- Bottom action bar: approve/reject on the left, translate on the right. -->
+        <div
+            class="cx-cms-translations-popup__footer"
+            *ngIf="!loadingTranslations && !translationsError && treeRoot"
+        >
+            <div class="cx-toolbar-actions" *ngIf="hasAnyTranslation">
+                <button
+                    type="button"
+                    class="cx-btn cx-btn--approve"
+                    [disabled]="!canApprove"
+                    (click)="approveSelected()"
+                >
+                    {{ approving
+                        ? ('cxtranslationssmartedit.popup.approving' | translate)
+                        : ('cxtranslationssmartedit.popup.approve' | translate: { count: selectedApprovableCount }) }}
+                </button>
+                <button
+                    type="button"
+                    class="cx-btn cx-btn--reject"
+                    [disabled]="!canReject"
+                    (click)="rejectSelected()"
+                >
+                    {{ rejecting
+                        ? ('cxtranslationssmartedit.popup.rejecting' | translate)
+                        : ('cxtranslationssmartedit.popup.reject' | translate: { count: selectedTranslatedCount }) }}
+                </button>
+            </div>
+
+            <div class="cx-cms-translations-popup__footer-right">
+                <button
+                    type="button"
+                    class="cx-btn cx-btn--primary"
+                    [disabled]="selectedCount === 0"
+                    (click)="openTranslationSettings($event)"
+                >
+                    {{ 'cxtranslationssmartedit.popup.translate' | translate: { count: selectedCount } }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Translation settings modal: source / target languages + start translation -->
+<div
+    *ngIf="showTranslationSettingsModal"
+    class="cx-cms-translations-popup__backdrop cx-translation-settings-modal"
+    (click)="closeTranslationSettings($event)"
+>
+    <div class="cx-cms-translations-popup" (click)="onPopupClick($event)">
+        <div class="cx-cms-translations-popup__header">
+            <h3>{{ 'cxtranslationssmartedit.settings.title' | translate }}</h3>
+            <button
+                type="button"
+                class="cx-cms-translations-popup__close"
+                (click)="closeTranslationSettings($event)"
+            >
+                &times;
+            </button>
+        </div>
+        <div class="cx-cms-translations-popup__body">
+            <!-- Row 1: language selects + service settings -->
+            <div class="cx-toolbar-section">
+                <div class="cx-toolbar-group">
+                    <span class="cx-toolbar-group__label">{{ 'cxtranslationssmartedit.settings.sourcelanguage' | translate }}</span>
+                    <select
+                        [ngModel]="sourceLanguage"
+                        (ngModelChange)="onSourceLanguageChange($event)"
+                    >
+                        <option *ngFor="let lang of availableLanguages" [ngValue]="lang">
+                            {{ getLanguageLabel(lang) }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="cx-toolbar-group">
+                    <span class="cx-toolbar-group__label">{{ 'cxtranslationssmartedit.settings.targetlanguages' | translate }}</span>
+                    <div class="cx-multiselect" (click)="$event.stopPropagation()">
+                        <div
+                            class="cx-multiselect__control"
+                            (click)="toggleTargetDropdown($event)"
+                        >
+                            <span
+                                *ngIf="targetLanguagesArray.length === 0"
+                                class="cx-multiselect__placeholder"
+                            >
+                                {{ 'cxtranslationssmartedit.settings.selectlanguages' | translate }}
+                            </span>
+                            <span class="cx-chip" *ngFor="let lang of targetLanguagesArray">
+                                {{ getLanguageLabel(lang) }}
+                                <button
+                                    type="button"
+                                    class="cx-chip__remove"
+                                    (click)="removeTarget(lang, $event)"
+                                >
+                                    &times;
+                                </button>
+                            </span>
+                            <span class="cx-multiselect__caret">{{ targetDropdownOpen ? '▲' : '▼' }}</span>
+                        </div>
+
+                        <div class="cx-multiselect__dropdown" *ngIf="targetDropdownOpen">
+                            <input
+                                type="text"
+                                class="cx-multiselect__search"
+                                [placeholder]="'cxtranslationssmartedit.settings.searchlanguages' | translate"
+                                [(ngModel)]="targetSearch"
+                            />
+                            <div class="cx-multiselect__actions">
+                                <button type="button" (click)="selectAllTargets($event)">
+                                    {{ 'cxtranslationssmartedit.settings.selectall' | translate }}
+                                </button>
+                                <button type="button" (click)="clearTargets($event)">
+                                    {{ 'cxtranslationssmartedit.settings.clear' | translate }}
+                                </button>
+                            </div>
+                            <div class="cx-multiselect__options">
+                                <div
+                                    class="cx-option"
+                                    *ngFor="let lang of filteredTargetLanguages"
+                                    (click)="toggleTargetLanguage(lang)"
+                                >
+                                    <span
+                                        class="cx-check"
+                                        [attr.data-checked]="isTargetSelected(lang) ? 'true' : null"
+                                    ></span>
+                                    {{ getLanguageLabel(lang) }}
+                                </div>
+                                <div
+                                    *ngIf="filteredTargetLanguages.length === 0"
+                                    class="cx-multiselect__empty"
+                                >
+                                    {{ 'cxtranslationssmartedit.settings.nolanguages' | translate }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Translation service settings object -->
+                <div class="cx-toolbar-group" *ngIf="availableServiceSettings.length > 0">
+                    <span class="cx-toolbar-group__label">{{ 'cxtranslationssmartedit.settings.translationsettings' | translate }}</span>
+                    <select [(ngModel)]="selectedServiceSettingsCode">
+                        <option [ngValue]="null">{{ 'cxtranslationssmartedit.settings.default' | translate }}</option>
+                        <option
+                            *ngFor="let s of availableServiceSettings"
+                            [ngValue]="s.code"
+                        >
+                            {{ s.name }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Row 2: toggles + translate button -->
+            <div class="cx-settings-options-row">
+                <span class="cx-toggle-label" (click)="skipTranslated = !skipTranslated">
+                    <span class="cx-check" [attr.data-checked]="skipTranslated ? 'true' : null"></span>
+                    {{ 'cxtranslationssmartedit.settings.skiptranslated' | translate }}
+                </span>
+                <span class="cx-toggle-label" (click)="saveForApproval = !saveForApproval">
+                    <span class="cx-check" [attr.data-checked]="saveForApproval ? 'true' : null"></span>
+                    {{ 'cxtranslationssmartedit.settings.saveforapproval' | translate }}
+                </span>
+                <button
+                    type="button"
+                    class="cx-btn cx-btn--primary cx-settings-translate-btn"
+                    [disabled]="!canTranslate"
+                    (click)="translate()"
+                >
+                    {{ translating
+                        ? ('cxtranslationssmartedit.settings.translating' | translate)
+                        : ('cxtranslationssmartedit.settings.translate' | translate: { count: selectedCount }) }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Value view popup for long / rich HTML values -->
+<div
+    *ngIf="viewedValue"
+    class="cx-cms-translations-popup__backdrop cx-value-modal"
+    (click)="closeValueView($event)"
+>
+    <div class="cx-cms-translations-popup" (click)="$event.stopPropagation()">
+        <div class="cx-cms-translations-popup__header">
+            <h3>{{ viewedValue.attribute }} ({{ viewedValue.language }})</h3>
+            <button
+                type="button"
+                class="cx-cms-translations-popup__close"
+                (click)="closeValueView($event)"
+            >
+                &times;
+            </button>
+        </div>
+        <div class="cx-cms-translations-popup__body">
+            <div class="cx-value-modal__content" [innerHTML]="viewedValue.html"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Recursive rendering of a collapsible translation tree node -->
+<ng-template #nodeTpl let-node>
+    <div class="cx-cms-node">
+        <div class="cx-cms-node__header">
+            <span
+                class="cx-check"
+                *ngIf="hasContent(node)"
+                role="checkbox"
+                [attr.aria-checked]="isSubtreeIndeterminate(node) ? 'mixed' : isSubtreeSelected(node)"
+                [attr.aria-label]="'Select subtree ' + node.uid"
+                [attr.data-checked]="isSubtreeSelected(node) ? 'true' : null"
+                [attr.data-indeterminate]="isSubtreeIndeterminate(node) ? 'true' : null"
+                (click)="toggleSelectSubtree(node, $event)"
+            ></span>
+            <span
+                class="cx-check cx-check--placeholder"
+                *ngIf="!hasContent(node)"
+            ></span>
+            <button
+                type="button"
+                class="cx-cms-node__toggle"
+                [style.visibility]="hasContent(node) ? 'visible' : 'hidden'"
+                (click)="toggleNode(node)"
+            >
+                {{ node.expanded ? '▾' : '▸' }}
+            </button>
+            <span class="cx-cms-node__uid">{{ node.uid }}</span>
+            <span class="cx-cms-node__type">{{ node.itemType }}</span>
+        </div>
+
+        <div class="cx-cms-node__content" *ngIf="node.expanded">
+            <!-- Localized values: attribute + smart value -->
+            <div class="cx-value-row" *ngFor="let value of node.values">
+                <span
+                    class="cx-check"
+                    role="checkbox"
+                    [attr.aria-checked]="value.selected"
+                    [attr.aria-label]="'Select ' + value.attribute"
+                    [attr.data-checked]="value.selected ? 'true' : null"
+                    (click)="value.selected = !value.selected"
+                ></span>
+                <span class="cx-value-row__attr">{{ value.attribute }}</span>
+
+                <ng-container *ngIf="getDisplayValue(value) as raw; else emptyValue">
+                    <span
+                        *ngIf="isInline(raw); else longValue"
+                        class="cx-value-row__value"
+                        [innerHTML]="trust(raw)"
+                    ></span>
+
+                    <ng-template #longValue>
+                        <span class="cx-value-row__value">
+                            <span class="cx-value-preview">{{ preview(raw) }}</span>
+                            <button
+                                type="button"
+                                class="cx-value-link"
+                                (click)="openValueView(value, $event)"
+                            >
+                                {{ 'cxtranslationssmartedit.popup.view' | translate }}
+                            </button>
+                        </span>
+                    </ng-template>
+                </ng-container>
+                <ng-template #emptyValue>
+                    <span class="cx-value-row__value cx-value-row__value--empty">
+                        {{ 'cxtranslationssmartedit.popup.novalue' | translate }}
+                    </span>
+                </ng-template>
+
+                <!-- Second column: AI translation proposal (to be reviewed), matched by code -->
+                <ng-container *ngIf="hasAnyTranslation">
+                    <ng-container *ngIf="value.hasTranslation; else noTranslation">
+                        <span
+                            *ngIf="!isTranslationSuccess(value); else translatedValueCol"
+                            class="cx-value-row__translated cx-value-row__status"
+                        >
+                            {{ translatedStatusLabel(value) }}
+                        </span>
+
+                        <ng-template #translatedValueCol>
+                            <ng-container
+                                *ngIf="getTranslatedDisplayValue(value) as traw; else emptyTranslated"
+                            >
+                                <span
+                                    *ngIf="isInline(traw); else longTranslated"
+                                    class="cx-value-row__translated cx-value-row__translated--filled"
+                                    [innerHTML]="trust(traw)"
+                                ></span>
+
+                                <ng-template #longTranslated>
+                                    <span class="cx-value-row__translated cx-value-row__translated--filled">
+                                        <span class="cx-value-preview">{{ preview(traw) }}</span>
+                                        <button
+                                            type="button"
+                                            class="cx-value-link"
+                                            (click)="openTranslatedView(value, $event)"
+                                        >
+                                            {{ 'cxtranslationssmartedit.popup.view' | translate }}
+                                        </button>
+                                    </span>
+                                </ng-template>
+                            </ng-container>
+                            <ng-template #emptyTranslated>
+                                <span
+                                    class="cx-value-row__translated cx-value-row__translated--empty"
+                                >
+                                    {{ 'cxtranslationssmartedit.popup.novalue' | translate }}
+                                </span>
+                            </ng-template>
+                        </ng-template>
+                    </ng-container>
+                    <ng-template #noTranslation>
+                        <span class="cx-value-row__translated cx-value-row__translated--empty">
+                            &mdash;
+                        </span>
+                    </ng-template>
+                </ng-container>
+            </div>
+
+            <!-- Child nodes -->
+            <ng-container *ngFor="let child of visibleChildren(node)">
+                <ng-container
+                    *ngTemplateOutlet="nodeTpl; context: { $implicit: child }"
+                ></ng-container>
+            </ng-container>
+        </div>
+    </div>
+</ng-template>

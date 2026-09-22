@@ -1,0 +1,126 @@
+$defaultPassword = *:1234
+
+$readableCatalogVersions = $contentCatalog:Staged, $contentCatalog:Online, $productCatalog:Staged, $productCatalog:Online, $classificationCatalog:1.0
+$writableCatalogVersions = $contentCatalog:Staged, $productCatalog:Staged, $classificationCatalog:1.0
+
+INSERT_UPDATE UserGroup; UID[unique = true]       ; groups(uid)[mode = append]; locName [lang = en]              ; name                             ; backOfficeLoginDisabled;
+                       ; cxTranslationsBasicGroup ; employeegroup             ; Cx Translations Basic User Group ; Cx Translations Basic User Group ; TRUE                   ;
+
+
+INSERT_UPDATE BackofficeRole; UID[unique = true]          ; authorities[mode = append];
+                            ; backofficeadministratorrole ; cxTranslationsUser        ;
+
+INSERT_UPDATE BackofficeRole; UID[unique = true]                ; groups(uid)[mode = append]; locName [lang = en]                        ; name                                       ; backOfficeLoginDisabled; authorities        ;
+                            ; cxTranslationsConfiguratorGroup   ; cxTranslationsBasicGroup  ; Cx Translations Configurator User Group    ; Cx Translations Configurator User Group    ; FALSE                  ; cxTranslationsUser ;
+                            ; cxTranslationsTranslatorGroup     ; cxTranslationsBasicGroup  ; Cx Translations Translator User Group      ; Cx Translations Translator User Group      ; FALSE                  ; cxTranslationsUser ;
+                            ; cxTranslationsAiConfiguratorGroup ; cxTranslationsBasicGroup  ; Cx Translations AI Configurator User Group ; Cx Translations AI Configurator User Group ; FALSE                  ; cxTranslationsUser ;
+                            ; cxTranslationsAdminGroup          ; cxTranslationsBasicGroup  ; Cx Translations Admin User Group           ; Cx Translations Admin User Group           ; FALSE                  ; cxTranslationsUser ;
+
+UPDATE UserGroup; UID[unique = true]       ; readableCatalogVersions(catalog(id), version); writableCatalogVersions(catalog(id), version);
+                ; cxTranslationsBasicGroup ; $readableCatalogVersions                     ; $writableCatalogVersions                     ;
+
+
+UPDATE CatalogVersionSyncJob; code[unique = true]    ; syncPrincipals(uid)[mode = append]                                ;
+                            ; $contentCatalogSyncJob ; admingroup,cxTranslationsTranslatorGroup,cxTranslationsAdminGroup ;
+
+
+INSERT_UPDATE Employee; UID[unique = true]           ; @password[translator = de.hybris.platform.impex.jalo.translators.UserPasswordTranslator][default = $defaultPassword]; groups(uid)[mode = append]        ; name                            ;
+                      ; cxtranslationsconfigurator   ;                                                                                                                     ; cxTranslationsConfiguratorGroup   ; Cx Translations Configurator    ;
+                      ; cxtranslationstranslator     ;                                                                                                                     ; cxTranslationsTranslatorGroup     ; Cx Translations Translator      ;
+                      ; cxtranslationsaiconfigurator ;                                                                                                                     ; cxTranslationsAiConfiguratorGroup ; Cx Translations AI Configurator ;
+                      ; cxtranslationsadmin          ;                                                                                                                     ; cxTranslationsAdminGroup          ; Cx Translations Admin           ;
+
+
+# Access rights
+
+$START_USERRIGHTS     ;                              ;                                     ;                                   ;                                 ;;;;;
+Type           ; UID                                                ; MemberOfGroups; Password                                           ; Target                                                       ; read                                                        ; change ; create; remove; change_perm
+UserGroup      ; cxTranslationsBasicGroup                           ;               ;                                                    ;                                                              ;                                                             ;        ;       ;       ;
+
+# general items
+# general
+               ;                                                    ;               ;                                                    ; Item                                                         ; +                                                           ;        ;       ;       ;   ;
+               ;                                                    ;               ;                                                    ; ItemSyncTimestamp                                            ; +                                                           ;        ;       ;       ;   ;
+               ;                                                    ;               ;                                                    ; SyncItemJob                                                  ; +                                                           ;        ;       ;       ;   ;
+               ;                                                    ;               ;                                                    ; Type                                                         ; +                                                           ;        ;       ;       ;   ;
+               ;                                                    ;               ;                                                    ; Catalog                                                      ; +                                                           ;        ;       ;       ;   ;
+               ;                                                    ;               ;                                                    ; CatalogVersion                                               ; +                                                           ;        ;       ;       ;   ;
+               ;                                                    ;               ;                                                    ; ContentCatalog                                               ; +                                                           ;        ;       ;       ;   ;
+
+# cx translate items
+               ;                                                    ;               ;                                                    ; CxLocalizedLabel                                             ; +                                                           ;        ;       ;       ;   ;
+               ;                                                    ;               ;                                                    ; CxLocalizedBundle                                            ; +                                                           ;        ;       ;       ;   ;
+               ;                                                    ;               ;                                                    ; CxLocalizedObjectCategory                                    ; +                                                           ;        ;       ;       ;   ;
+               ;                                                    ;               ;                                                    ; CxTranslationStatus                                          ; +                                                           ;        ;       ;       ;   ;
+               ;                                                    ;               ;                                                    ; CxTranslateServiceLoggingLevel                               ; +                                                           ;        ;       ;       ;   ;
+               ;                                                    ;               ;                                                    ; CxApprovalTranslationStatus                                  ; +                                                           ;        ;       ;       ;   ;
+               ;                                                    ;               ;                                                    ; CxMergeMode                                                  ; +                                                           ;        ;       ;       ;   ;
+               ;                                                    ;               ;                                                    ; CxAbstractLocalizedValue                                     ; +                                                           ;        ;       ;       ;   ;
+               ;                                                    ;               ;                                                    ; CxLocalizedValue                                             ; +                                                           ;        ;       ;       ;   ;
+               ;                                                    ;               ;                                                    ; CxProposedTranslation                                        ; +                                                           ;        ;       ;       ;   ;
+               ;                                                    ;               ;                                                    ; CxLocalizedObjectConfig                                      ; +                                                           ;        ;       ;       ;   ;
+               ;                                                    ;               ;                                                    ; CxStandardLocalizedObjectConfig                              ; +                                                           ;        ;       ;       ;   ;
+
+# AI RELATED
+               ;                                                    ;               ;                                                    ; CxTranslateAiModel                                           ; +                                                           ;        ;       ;       ;   ;
+               ;                                                    ;               ;                                                    ; CxAiDeploymentConfig                                         ; +                                                           ;        ;       ;       ;   ;
+               ;                                                    ;               ;                                                    ; CxTranslationServiceApi                                      ; +                                                           ;        ;       ;       ;   ;
+               ;                                                    ;               ;                                                    ; CxAiTranslationServiceApi                                    ; +                                                           ;        ;       ;       ;   ;
+               ;                                                    ;               ;                                                    ; CxTranslationServiceSettings                                 ; +                                                           ;        ;       ;       ;   ;
+               ;                                                    ;               ;                                                    ; CxAiTranslationServiceSettings                               ; +                                                           ;        ;       ;       ;   ;
+
+# JOBS
+               ;                                                    ;               ;                                                    ; CxTranslationJob                                             ; +                                                           ;        ;       ;       ;   ;
+               ;                                                    ;               ;                                                    ; CxApproveTranslationsJob                                     ; +                                                           ;        ;       ;       ;   ;
+               ;                                                    ;               ;                                                    ; CxLocalizedObjectConfigJob                                   ; +                                                           ;        ;       ;       ;   ;
+
+# CRON JOBS
+               ;                                                    ;               ;                                                    ; CxTranslationCronJob                                         ; +                                                           ;        ;       ;       ;   ;
+               ;                                                    ;               ;                                                    ; CxApproveTranslationsCronJob                                 ; +                                                           ;        ;       ;       ;   ;
+               ;                                                    ;               ;                                                    ; CxLocalizedObjectConfigCronJob                               ; +                                                           ;        ;       ;       ;   ;
+
+
+UserGroup      ; cxTranslationsConfiguratorGroup                    ;               ;                                                    ;                                                              ;                                                             ;        ;       ;       ;
+               ;                                                    ;               ;                                                    ; CxLocalizedObjectCategory                                    ; +                                                           ; +      ; +     ; +     ; - ;
+               ;                                                    ;               ;                                                    ; CxLocalizedObjectConfig                                      ; +                                                           ; +      ; +     ; +     ; - ;
+               ;                                                    ;               ;                                                    ; CxStandardLocalizedObjectConfig                              ; +                                                           ; +      ; +     ; +     ; - ;
+               ;                                                    ;               ;                                                    ; CxLocalizedObjectConfigCronJob                               ; +                                                           ; +      ; +     ; +     ; - ;
+
+UserGroup      ; cxTranslationsTranslatorGroup                      ;               ;                                                    ;                                                              ;                                                             ;        ;       ;       ;
+               ;                                                    ;               ;                                                    ; CxLocalizedObjectCategory                                    ; +                                                           ; +      ; +     ; +     ; - ;
+               ;                                                    ;               ;                                                    ; CxLocalizedLabel                                             ; +                                                           ; +      ; +     ; +     ; - ;
+               ;                                                    ;               ;                                                    ; CxLocalizedValue                                             ; +                                                           ; +      ; +     ; +     ; - ;
+               ;                                                    ;               ;                                                    ; CxProposedTranslation                                        ; +                                                           ; +      ; +     ; +     ; - ;
+               ;                                                    ;               ;                                                    ; CxApproveTranslationsCronJob                                 ; +                                                           ; +      ; +     ; +     ; - ;
+               ;                                                    ;               ;                                                    ; CxTranslationCronJob                                         ; +                                                           ; +      ; +     ; +     ; - ;
+
+UserGroup      ; cxTranslationsAiConfiguratorGroup                  ;               ;                                                    ;                                                              ;                                                             ;        ;       ;       ;
+
+               ;                                                    ;               ;                                                    ; CxTranslateAiModel                                           ; +                                                           ; +      ; +     ; +     ; - ;
+               ;                                                    ;               ;                                                    ; CxAiDeploymentConfig                                         ; +                                                           ; +      ; +     ; +     ; - ;
+               ;                                                    ;               ;                                                    ; CxTranslationServiceApi                                      ; +                                                           ; +      ; +     ; +     ; - ;
+               ;                                                    ;               ;                                                    ; CxAiTranslationServiceApi                                    ; +                                                           ; +      ; +     ; +     ; - ;
+               ;                                                    ;               ;                                                    ; CxTranslationServiceSettings                                 ; +                                                           ; +      ; +     ; +     ; - ;
+               ;                                                    ;               ;                                                    ; CxAiTranslationServiceSettings                               ; +                                                           ; +      ; +     ; +     ; - ;
+
+UserGroup      ; cxTranslationsAdminGroup                           ;               ;                                                    ;                                                              ;                                                             ;        ;       ;       ;
+               ;                                                    ;               ;                                                    ; CxLocalizedObjectCategory                                    ; +                                                           ; +      ; +     ; +     ; - ;
+               ;                                                    ;               ;                                                    ; CxProposedTranslation                                        ; +                                                           ; +      ; +     ; +     ; - ;
+               ;                                                    ;               ;                                                    ; CxLocalizedObjectConfig                                      ; +                                                           ; +      ; +     ; +     ; - ;
+               ;                                                    ;               ;                                                    ; CxStandardLocalizedObjectConfig                              ; +                                                           ; +      ; +     ; +     ; - ;
+               ;                                                    ;               ;                                                    ; CxLocalizedObjectConfigCronJob                               ; +                                                           ; +      ; +     ; +     ; - ;
+
+               ;                                                    ;               ;                                                    ; CxLocalizedLabel                                             ; +                                                           ; +      ; +     ; +     ; - ;
+               ;                                                    ;               ;                                                    ; CxLocalizedValue                                             ; +                                                           ; +      ; +     ; +     ; - ;
+               ;                                                    ;               ;                                                    ; CxProposedTranslation                                        ; +                                                           ; +      ; +     ; +     ; - ;
+               ;                                                    ;               ;                                                    ; CxApproveTranslationsCronJob                                 ; +                                                           ; +      ; +     ; +     ; - ;
+               ;                                                    ;               ;                                                    ; CxTranslationCronJob                                         ; +                                                           ; +      ; +     ; +     ; - ;
+
+               ;                                                    ;               ;                                                    ; CxTranslateAiModel                                           ; +                                                           ; +      ; +     ; +     ; - ;
+               ;                                                    ;               ;                                                    ; CxAiDeploymentConfig                                         ; +                                                           ; +      ; +     ; +     ; - ;
+               ;                                                    ;               ;                                                    ; CxTranslationServiceApi                                      ; +                                                           ; +      ; +     ; +     ; - ;
+               ;                                                    ;               ;                                                    ; CxAiTranslationServiceApi                                    ; +                                                           ; +      ; +     ; +     ; - ;
+               ;                                                    ;               ;                                                    ; CxTranslationServiceSettings                                 ; +                                                           ; +      ; +     ; +     ; - ;
+               ;                                                    ;               ;                                                    ; CxAiTranslationServiceSettings                               ; +                                                           ; +      ; +     ; +     ; - ;
+
+$END_USERRIGHTS;                                                    ;               ;                                                    ;                                                              ;

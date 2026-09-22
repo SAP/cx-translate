@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2024 SAP SE or an SAP affiliate company. All rights reserved
+  -->
+
+<widget xmlns="http://www.zkoss.org/2005/zul"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
+		width="100%">
+	<style src="${wr}/selecttranslationlanguages.css"/>
+
+	<vlayout>
+		<div class="cx-modal-content">
+			<vlayout spacing="20px">
+
+				<div>
+					<label value="${labels.primary.language}"/>
+					<combobox id="primaryLanguageSelector" readonly="false">
+						<template name="model">
+							<comboitem label="${each.name}" value="${each.isocode}"/>
+						</template>
+					</combobox>
+				</div>
+
+				<div>
+					<label value="${labels.secondary.language}"/>
+					<combobox id="secondaryLanguageSelector" readonly="false">
+						<template name="model">
+							<comboitem label="${each.name}" value="${each.isocode}"/>
+						</template>
+					</combobox>
+				</div>
+
+				<hlayout sclass="cx-modal-controls">
+					<button id="cancelButton" autodisable="self" label="${labels.button.cancel}"/>
+					<button id="saveButton" sclass="yw-btn-primary" label="${labels.button.save}"/>
+				</hlayout>
+			</vlayout>
+		</div>
+	</vlayout>
+</widget>

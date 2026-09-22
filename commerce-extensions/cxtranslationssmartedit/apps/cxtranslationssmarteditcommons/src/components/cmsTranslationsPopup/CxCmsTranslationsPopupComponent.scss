@@ -1,0 +1,479 @@
+.cx-cms-translations-popup__backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 2147483647;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    isolation: isolate;
+}
+.cx-cms-translations-popup {
+    background: #fff;
+    width: 760px;
+    max-width: 92vw;
+    max-height: 94vh;
+    display: flex;
+    flex-direction: column;
+    border-radius: 4px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    color: #32363a;
+    font-size: 13px;
+}
+.cx-cms-translations-popup__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    border-bottom: 1px solid #e5e5e5;
+}
+.cx-cms-translations-popup__header h3 {
+    margin: 0;
+    font-size: 16px;
+}
+.cx-cms-translations-popup__close {
+    border: none;
+    background: transparent;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+}
+.cx-cms-translations-popup__toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 10px 16px;
+    border-bottom: 1px solid #e5e5e5;
+    background: #f7f7f7;
+}
+/* A group of related controls inside the toolbar (a horizontal, wrapping row). */
+.cx-toolbar-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-end;
+}
+/* A distinct, bordered block within the toolbar (display selectors / review). */
+.cx-toolbar-block {
+    border: 1px solid #dcdcdc;
+    border-radius: 4px;
+    background: #fff;
+    overflow: hidden;
+}
+.cx-toolbar-block__header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    padding: 6px 10px;
+    background: #eef1f3;
+    border: none;
+    text-align: left;
+    font: inherit;
+}
+.cx-toolbar-block__title {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #32363a;
+}
+.cx-toolbar-block__content {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+/* Nested modal (opened from within the translations popup) must stack above it.
+   Since the backdrop is already at INT_MAX, nesting modals use isolation instead. */
+.cx-translation-settings-modal {
+    z-index: 2147483647;
+    isolation: isolate;
+}
+/* Bar holding the "select all/none" action, always visible above the tree. */
+.cx-select-all-bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 8px 16px;
+    border-bottom: 1px solid #e5e5e5;
+    background: #fff;
+}
+.cx-toolbar-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.cx-toolbar-group__label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #6a6d70;
+}
+.cx-multiselect {
+    position: relative;
+    width: 300px;
+}
+.cx-multiselect__control {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    min-height: 28px;
+    padding: 3px 6px;
+    border: 1px solid #89919a;
+    border-radius: 4px;
+    background: #fff;
+    cursor: pointer;
+}
+.cx-multiselect__placeholder {
+    color: #89919a;
+    font-size: 12px;
+}
+.cx-multiselect__caret {
+    margin-left: auto;
+    color: #6a6d70;
+    font-size: 10px;
+}
+.cx-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #ebf5ff;
+    border: 1px solid #0a6ed1;
+    color: #0a6ed1;
+    border-radius: 10px;
+    padding: 0 6px;
+    font-size: 11px;
+    line-height: 18px;
+}
+.cx-chip__remove {
+    border: none;
+    background: transparent;
+    color: #0a6ed1;
+    cursor: pointer;
+    padding: 0;
+    font-size: 12px;
+    line-height: 1;
+}
+.cx-multiselect__dropdown {
+    position: absolute;
+    top: calc(100% + 2px);
+    left: 0;
+    right: 0;
+    z-index: 10;
+    background: #fff;
+    border: 1px solid #89919a;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    display: flex;
+    flex-direction: column;
+    max-height: 260px;
+}
+.cx-multiselect__search {
+    margin: 6px;
+    padding: 4px 6px;
+    border: 1px solid #89919a;
+    border-radius: 4px;
+    font-size: 12px;
+}
+.cx-multiselect__actions {
+    display: flex;
+    gap: 8px;
+    padding: 0 8px 6px;
+    border-bottom: 1px solid #ececec;
+}
+.cx-multiselect__actions button {
+    border: none;
+    background: transparent;
+    color: #0a6ed1;
+    cursor: pointer;
+    font-size: 11px;
+    padding: 0;
+}
+.cx-multiselect__options {
+    overflow: auto;
+    padding: 4px 0;
+}
+.cx-option {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-size: 12px;
+}
+.cx-option:hover {
+    background: #f2f7ff;
+}
+.cx-multiselect__empty {
+    padding: 8px 10px;
+    color: #6a6d70;
+    font-size: 12px;
+}
+.cx-check {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    flex: 0 0 14px;
+    border: 1px solid #89919a;
+    border-radius: 3px;
+    background: #fff;
+    position: relative;
+    cursor: pointer;
+}
+.cx-check[data-checked='true'] {
+    background: #0a6ed1;
+    border-color: #0a6ed1;
+}
+.cx-check[data-checked='true']::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 1px;
+    width: 3px;
+    height: 7px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+/* Indeterminate (partial subtree selection): filled box with a horizontal dash. */
+.cx-check[data-indeterminate='true'] {
+    background: #0a6ed1;
+    border-color: #0a6ed1;
+}
+.cx-check[data-indeterminate='true']::after {
+    content: '';
+    position: absolute;
+    left: 2px;
+    right: 2px;
+    top: 5.5px;
+    height: 2px;
+    width: auto;
+    border: none;
+    background: #fff;
+    transform: none;
+}
+/* Invisible spacer keeping node headers aligned when a node has no selectable content. */
+.cx-check--placeholder {
+    visibility: hidden;
+}
+.cx-toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+/* Persistent status bar (translate / approve / reject outcomes), pinned above the footer. */
+.cx-status-bar {
+    flex: 0 0 auto;
+    font-size: 12px;
+    padding: 6px 16px;
+    border-top: 1px solid #e5e5e5;
+}
+.cx-status-bar--info {
+    color: #32363a;
+    background: #eef4fb;
+    border-top-color: #b8d3f0;
+}
+.cx-status-bar--success {
+    color: #256f3a;
+    background: #ebf7ee;
+    border-top-color: #b5dfc0;
+}
+.cx-status-bar--error {
+    color: #bb0000;
+    background: #fdeeee;
+    border-top-color: #f0b8b8;
+}
+/* Bottom action bar: approve/reject on the left, translate on the right. */
+.cx-cms-translations-popup__footer {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 16px;
+    border-top: 1px solid #e5e5e5;
+    background: #f7f7f7;
+}
+.cx-cms-translations-popup__footer-right {
+    margin-left: auto;
+}
+.cx-btn {
+    cursor: pointer;
+    border: 1px solid #0a6ed1;
+    background: #fff;
+    color: #0a6ed1;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-size: 12px;
+}
+.cx-btn--primary {
+    background: #0a6ed1;
+    color: #fff;
+}
+.cx-btn--approve {
+    border-color: #256f3a;
+    background: #256f3a;
+    color: #fff;
+}
+.cx-btn--reject {
+    border-color: #bb0000;
+    background: #fff;
+    color: #bb0000;
+}
+.cx-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.cx-cms-translations-popup__body {
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 8px 16px;
+    overflow: auto;
+}
+/* Owns the horizontal min-width so deeply-indented trees scroll horizontally within the
+   (vertically scrolling) body instead of being clipped or wrapped. */
+.cx-tree-scroll {
+    min-width: max-content;
+}
+/* The settings / value-view popups only ever contain a small amount of content: keep their
+   body overflow visible so absolutely positioned children (e.g. the target-language dropdown)
+   are never clipped. */
+.cx-translation-settings-modal .cx-cms-translations-popup__body,
+.cx-value-modal .cx-cms-translations-popup__body {
+    overflow: visible;
+}
+.cx-cms-translations-popup__error {
+    color: #bb0000;
+}
+.cx-cms-translations-popup__empty {
+    color: #6a6d70;
+    font-style: italic;
+    padding: 12px 0;
+}
+.cx-cms-node {
+    margin: 2px 0;
+}
+.cx-cms-node__header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 0;
+}
+.cx-cms-node__toggle {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    width: 16px;
+    text-align: center;
+    font-size: 12px;
+    color: #6a6d70;
+}
+.cx-cms-node__uid {
+    font-weight: 600;
+}
+.cx-cms-node__type {
+    color: #6a6d70;
+    font-size: 11px;
+}
+.cx-cms-node__content {
+    margin-left: 18px;
+    border-left: 1px dashed #d0d0d0;
+    padding-left: 10px;
+}
+.cx-value-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 3px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+.cx-value-row__attr {
+    width: 140px;
+    flex: 0 0 140px;
+    font-weight: 600;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+.cx-value-row > .cx-check {
+    margin-top: 2px;
+}
+.cx-value-row__value {
+    width: 320px;
+    flex: 0 0 320px;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+.cx-value-row__value--empty {
+    color: #999;
+    font-style: italic;
+}
+.cx-value-link {
+    border: none;
+    background: transparent;
+    color: #0a6ed1;
+    cursor: pointer;
+    padding: 0;
+    font-size: 12px;
+    text-decoration: underline;
+}
+.cx-value-preview {
+    color: #6a6d70;
+}
+.cx-value-modal__content {
+    border: 1px solid #e5e5e5;
+    padding: 10px;
+    border-radius: 4px;
+    max-height: 50vh;
+    overflow: auto;
+}
+
+/* Translated (AI proposal) column */
+.cx-value-row__translated {
+    width: 320px;
+    flex: 0 0 320px;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    border-left: 1px solid #e5e5e5;
+    padding-left: 8px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+.cx-value-row__translated--filled {
+    border-left-color: #c8dff7;
+    background: #f0f7ff;
+    border-radius: 0 3px 3px 0;
+}
+.cx-value-row__translated--empty {
+    color: #999;
+    font-style: italic;
+}
+.cx-value-row__status {
+    color: #bb0000;
+    font-style: italic;
+    font-weight: 600;
+}
+
+/* Second row of translation settings: toggles + action button */
+.cx-settings-options-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid #e5e5e5;
+    overflow: visible;
+}
+.cx-toggle-label {
+    display: inline-flex;
+    align-items: center;
+    column-gap: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+}
+.cx-settings-translate-btn {
+    margin-left: auto;
+}

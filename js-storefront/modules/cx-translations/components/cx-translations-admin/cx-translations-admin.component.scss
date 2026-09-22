@@ -1,0 +1,156 @@
+//
+// Copyright (c) 2026 SAP SE or an SAP affiliate company. All rights reserved.
+//
+
+@import '@spartacus/styles/vendor/bootstrap/scss/functions';
+@import '@spartacus/styles/vendor/bootstrap/scss/mixins';
+@import '@spartacus/styles/vendor/bootstrap/scss/variables';
+
+$translation-background: var(--cx-color-secondary); //#C8CBD0;
+$translation-border: 1px solid #f6f7f8;
+$translation-warning-color: #ffd300;
+$translation-padding: 1rem;
+$translation-margin: -2rem;
+$translation-gap: 1rem;
+$translation-gap-small: 0.5rem;
+$translation-vertical-gap: 2rem;
+$translation-z-index: 200;
+
+:host {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  z-index: $translation-z-index;
+  background-color: $translation-background;
+  border-top: $translation-border;
+
+  .position-toggle {
+    margin-top: $translation-margin;
+  }
+
+  .btn-block {
+    width: initial;
+
+    + .btn-block {
+      margin-top: initial;
+    }
+  }
+
+  .panel-wrapper {
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: row;
+    align-self: stretch;
+    padding: $translation-padding;
+    align-items: center;
+    justify-content: space-between;
+    gap: $translation-vertical-gap;
+
+    @media (max-width: 992px) {
+      flex-direction: column;
+    }
+  }
+
+  .translation-edit-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: $translation-gap;
+    align-self: flex-end;
+
+    span.warning {
+      cx-icon {
+        color: $translation-warning-color;
+      }
+    }
+  }
+
+  .action-buttons {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    align-self: flex-start;
+    flex-wrap: wrap;
+    flex-direction: column;
+    gap: $translation-gap-small;
+    text-wrap: none;
+    flex-shrink: 0;
+    flex-basis: 20%;
+
+    button {
+      width: 100%;
+    }
+
+    @media (max-width: 992px) {
+      width: 100%;
+    }
+  }
+
+  .edit-form {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    align-self: baseline;
+    align-items: stretch;
+    gap: $translation-gap;
+    width: 100%;
+
+    .inputs-wrapper {
+      display: flex;
+      flex-direction: row;
+      gap: $translation-gap;
+      align-items: stretch;
+
+      @media (max-width: 992px) {
+        flex-direction: column;
+      }
+
+      label {
+        margin-bottom: 0;
+
+        &:first-child {
+          width: 150px;
+        }
+
+        &:last-child {
+          flex-grow: 2;
+        }
+      }
+    }
+
+    label {
+      flex-grow: 1;
+
+      .label-content {
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+    }
+
+    button {
+      flex-grow: 0;
+      align-self: flex-start;
+    }
+
+    .action-buttons {
+      align-self: end;
+    }
+
+    textarea {
+      height: calc(($input-height * 2));
+      resize: none;
+    }
+  }
+
+  .suggestions-container {
+    z-index: 1050; /* Ensure it appears above other elements */
+    position: fixed !important;
+  }
+}

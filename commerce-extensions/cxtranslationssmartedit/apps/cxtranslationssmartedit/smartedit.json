@@ -1,0 +1,8 @@
+{
+    "name": "cxtranslationssmartedit",
+    "extension": {
+        "type": "inner",
+        "angularApp": "cxtranslationssmartedit",
+        "seEntryModule": "CxtranslationssmarteditModule"
+    }
+}

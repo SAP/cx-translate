@@ -1,0 +1,26 @@
+- [Overview]()
+- [Introduction](introduction.md)
+- **Installation & Configuration**
+  - [Adding CX Translate](addingCXTranslate.md)
+  - [Commerce Extensions](installation/commerce-extensions.md)
+  - [Storefront Module](installation/storefront-module.md)
+  - [System Setup — ImpEx & Scripts](installation/system-setup.md)
+  - [Basic Configuration](installation/basic-configuration.md)
+  - [Frontend Admin Component](installation/frontend-admin-component.md)
+- **Translation Providers**
+  - [SAP AI Core on BTP](installation/provider-sap-ai-core.md)
+  - [SAP Translation Hub](installation/provider-sap-translation-hub.md)
+  - [DeepL](installation/provider-deepl.md)
+  - [Azure Translator](installation/provider-azure.md)
+- **Features**
+  - [Backoffice Perspective](backofficePerspective.md)
+  - [Localised Labels](localizedLabels.md)
+    - [Manage labels on the Storefront](localisedLabels/localizedLabels_storefront.md)
+    - [Manage labels in Backoffice](localisedLabels/localizedLabels_backoffice.md)
+    - [Labels Configuration](localisedLabels/localizedLabels_configuration.md)
+    - [Development Guide for Labels](localisedLabels/localizedLabels_development.md)
+    - [Export Storefront Labels to ImpEx](localisedLabels/localizedLabels_storefront-labels_export.md)
+  - [Localised Values](localizedValues.md)
+  - [AI Powered Translations](aitranslations.md)
+- [Troubleshooting](troubleshooting.md)
+

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ Copyright (c) 2024 SAP SE or an SAP affiliate company. All rights reserved
+  -->
+<extensioninfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="extensioninfo.xsd">
+
+
+	<extension abstractclassprefix="Generated" classprefix="Cxtranslationsbackoffice" name="cxtranslationsbackoffice"
+			   usemaven="false">
+		<requires-extension name="backoffice"/>
+		<requires-extension name="acceleratorbackoffice"/>
+		<requires-extension name="platformbackoffice"/>
+		<requires-extension name="cxtranslations"/>
+
+		<coremodule generated="true" manager="com.sap.cx.translations.backoffice.jalo.CxtranslationsbackofficeManager"
+					packageroot="com.sap.cx.translations.backoffice"/>
+
+		<meta key="backoffice-module" value="true"/>
+
+	</extension>
+
+
+</extensioninfo>

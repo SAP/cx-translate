@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "translations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CxTranslationOutputText"
+      }
+    },
+    "rawMessage": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["Success","Error"]
+    },
+    "usageInfo": {
+      "existingJavaType": "java.util.Map<String,java.lang.Double>",
+      "type": "object"
+    }
+  },
+  "required": ["translations"],
+  "definitions": {
+  "CxTranslationOutputText": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "languageToValueMap": {
+          "existingJavaType" : "java.util.Map<String,String>",
+          "type": "object"
+        },
+        "feedback": {
+          "type": "string"
+        }
+      },
+      "required": ["languageToValueMap"]
+    }
+  }
+}

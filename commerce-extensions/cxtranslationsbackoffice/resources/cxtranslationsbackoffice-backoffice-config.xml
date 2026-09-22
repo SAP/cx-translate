@@ -1,0 +1,1986 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  ~ Copyright (c) 2024 SAP SE or an SAP affiliate company. All rights reserved.
+  -->
+<config
+		xmlns:y="http://www.hybris.com/cockpit/config/hybris"
+		xmlns:pc="http://www.hybris.com/cockpitng/config/perspectiveChooser"
+		xmlns:yc="http://www.hybris.com/cockpitng/config/common"
+		xmlns:vs="http://www.hybris.com/cockpitng/config/viewSwitcher"
+		xmlns:editorArea="http://www.hybris.com/cockpitng/component/editorArea"
+		xmlns:listView="http://www.hybris.com/cockpitng/component/listView"
+		xmlns:simpleSearch="http://www.hybris.com/cockpitng/config/simplesearch"
+		xmlns:advancedSearch="http://www.hybris.com/cockpitng/config/advancedsearch"
+		xmlns:explorer-tree="http://www.hybris.com/cockpitng/config/explorertree"
+		xmlns:wz="http://www.hybris.com/cockpitng/config/wizard-config"
+		xmlns:collection-browser="http://www.hybris.com/cockpitng/config/collectionbrowser"
+		xmlns="http://www.hybris.com/cockpit/config"
+		xmlns:na="http://www.hybris.com/cockpitng/config/notifications"
+>
+
+	<context component="perspective-chooser"
+			 principal="cxTranslationsConfiguratorGroup,cxTranslationsTranslatorGroup,cxTranslationsAiConfiguratorGroup,cxTranslationsAdminGroup">
+		<pc:perspective-chooser>
+			<pc:defaultPerspective name="cxTranslationsUser"/>
+			<pc:authority name="cxTranslationsUser">
+				<pc:perspective id="cxtranslations-perspective"/>
+			</pc:authority>
+		</pc:perspective-chooser>
+	</context>
+
+	<context component="perspective-view-switcher"
+			 principal="cxTranslationsConfiguratorGroup,cxTranslationsTranslatorGroup,cxTranslationsAiConfiguratorGroup,cxTranslationsAdminGroup">
+		<vs:view-switcher>
+			<vs:authority name="cxTranslationsUser">
+				<vs:view id="cxtranslations-perspective"/>
+			</vs:authority>
+		</vs:view-switcher>
+	</context>
+
+	<context component="notification-area" source="cxtranslations" merge-by="source">
+		<na:notification-area>
+			<na:notifications eventType="cxtranslations.backoffice.notification.notSupportedOperator" level="WARNING">
+				<na:message>cxtranslations.backoffice.notification.notSupportedOperator</na:message>
+				<na:references linksEnabled="false">
+					<na:reference placeholder="0"/>
+					<na:reference placeholder="1"/>
+				</na:references>
+			</na:notifications>
+			<na:notifications eventType="cxtranslations.backoffice.notification.byValueThresholdExceeded"
+							  level="WARNING">
+				<na:message>cxtranslations.backoffice.notification.byValueThresholdExceeded</na:message>
+			</na:notifications>
+			<na:notifications eventType="cxtranslations.backoffice.notification.excelImportProcessStarted"
+							  level="SUCCESS">
+				<na:message>cxtranslations.backoffice.notification.excelImportProcessStarted</na:message>
+			</na:notifications>
+		</na:notification-area>
+	</context>
+
+	<context component="cxtranslations-explorer-tree">
+        <explorer-tree:explorer-tree>
+            <explorer-tree:type-node code="CxLocalizedLabel" id="cxtranslationsbackoffice.explorer.treenode.cxlocalizedlabel"/>
+            <explorer-tree:type-node code="CxLocalizedBundle" id="cxtranslationsbackoffice.explorer.treenode.cxlocalizedbundle"/>
+            <explorer-tree:type-node code="CxLocalizedValue" id="cxtranslationsbackoffice.explorer.treenode.cxlocalizedvalue"/>
+            
+            <explorer-tree:type-node code="CxProposedTranslation" id="cxtranslationsbackoffice.explorer.treenode.ai.results"/>
+            <explorer-tree:navigation-node id="cxtranslationsbackoffice.explorer.treenode.configuration">
+                <explorer-tree:type-node code="CxLocalizedObjectConfig" id="CxLocalizedObjectConfig"/>
+                <explorer-tree:type-node code="CxLocalizedObjectCategory" id="CxLocalizedObjectCategory"/>
+            </explorer-tree:navigation-node>
+            <explorer-tree:navigation-node
+                    id="cxtranslationsbackoffice.explorer.treenode.translation.backgroundprocesses">
+                <explorer-tree:type-node code="CxTranslationCronJob" id="CxTranslationCronJob"/>
+                <explorer-tree:type-node code="CxApproveTranslationsCronJob" id="CxApproveTranslationsCronJob"/>
+                <explorer-tree:type-node code="CxLocalizedValueExcelImportCronJob"
+                                         id="CxLocalizedValueExcelImportCronJob"/>
+                <explorer-tree:type-node code="CxLocalizedObjectConfigCronJob"
+                                         id="CxLocalizedObjectConfigCronJob"/>
+            </explorer-tree:navigation-node>
+        </explorer-tree:explorer-tree>
+    </context>
+
+	<context component="cxtranslations-explorer-tree"
+			 principal="backofficeadministratorrole,cxTranslationsAiConfiguratorGroup,cxTranslationsAdminGroup">
+        <explorer-tree:explorer-tree>
+            <explorer-tree:type-node code="CxLocalizedLabel" id="cxtranslationsbackoffice.explorer.treenode.cxlocalizedlabel"/>
+            <explorer-tree:type-node code="CxLocalizedBundle" id="cxtranslationsbackoffice.explorer.treenode.cxlocalizedbundle"/>
+            <explorer-tree:type-node code="CxLocalizedValue" id="cxtranslationsbackoffice.explorer.treenode.cxlocalizedvalue"/>
+
+            <explorer-tree:type-node code="CxProposedTranslation" id="cxtranslationsbackoffice.explorer.treenode.ai.results"/>
+            <explorer-tree:navigation-node id="cxtranslationsbackoffice.explorer.treenode.configuration">
+                <explorer-tree:type-node code="CxLocalizedObjectConfig" id="CxLocalizedObjectConfig"/>
+                <explorer-tree:type-node code="CxLocalizedObjectCategory" id="CxLocalizedObjectCategory"/>
+                <explorer-tree:navigation-node id="cxtranslationsbackoffice.explorer.treenode.ai.settings">
+                    <explorer-tree:type-node code="CxTranslateAiModel" id="CxTranslateAiModel"/>
+                    <explorer-tree:type-node code="CxAiDeploymentConfig" id="CxAiDeploymentConfig"/>
+                    <explorer-tree:type-node code="CxTranslationServiceApi" id="CxTranslationServiceApi"/>
+                    <explorer-tree:type-node code="CxTranslationServiceSettings"
+                                             id="CxTranslationServiceSettings"/>
+                    <explorer-tree:type-node code="CxTranslateGlossary" id="CxTranslateGlossary"/>
+                </explorer-tree:navigation-node>
+            </explorer-tree:navigation-node>
+            <explorer-tree:navigation-node
+                    id="cxtranslationsbackoffice.explorer.treenode.translation.backgroundprocesses">
+                <explorer-tree:type-node code="CxTranslationCronJob" id="CxTranslationCronJob"/>
+                <explorer-tree:type-node code="CxApproveTranslationsCronJob" id="CxApproveTranslationsCronJob"/>
+                <explorer-tree:type-node code="CxLocalizedValueExcelImportCronJob"
+                                         id="CxLocalizedValueExcelImportCronJob"/>
+                <explorer-tree:type-node code="CxLocalizedObjectConfigCronJob"
+                                         id="CxLocalizedObjectConfigCronJob"/>
+            </explorer-tree:navigation-node>
+        </explorer-tree:explorer-tree>
+	</context>
+
+	<context type="CxLocalizedLabel">
+		<context component="base">
+			<y:base>
+				<y:labels>
+					<y:label>key + ' - ' + @labelService.getObjectLabel(catalogVersion)</y:label>
+				</y:labels>
+			</y:base>
+		</context>
+		<context component="create-wizard">
+			<wz:flow id="CxLocalizedLabelWizard" title="create.title(ctx.TYPE_CODE)">
+				<wz:prepare id="LocalizedLabelPrepare">
+					<wz:initialize property="newLocalizedLabel" type="ctx.TYPE_CODE"/>
+				</wz:prepare>
+				<wz:step id="step1" label="name.your(ctx.TYPE_CODE)">
+					<wz:content id="step1.content">
+						<wz:property-list root="newLocalizedLabel">
+							<wz:property id="key" qualifier="key"/>
+							<wz:property id="status" qualifier="status"/>
+							<wz:property id="bundle" qualifier="bundle"/>
+							<wz:property id="catalogVersion" qualifier="catalogVersion">
+								<wz:editor-parameter>
+									<wz:name>availableValuesProvider</wz:name>
+									<wz:value>writableCatalogVersionSearchFacade</wz:value>
+								</wz:editor-parameter>
+							</wz:property>
+						</wz:property-list>
+					</wz:content>
+					<wz:navigation id="step1.navigation">
+						<wz:cancel/>
+						<wz:next
+								visible="!#empty(newLocalizedLabel.key) and newLocalizedLabel.catalogVersion != null and newLocalizedLabel.bundle != null"/>
+						<wz:done
+								visible="!#empty(newLocalizedLabel.key) and newLocalizedLabel.catalogVersion != null and newLocalizedLabel.bundle != null">
+							<wz:save property="newLocalizedLabel"/>
+						</wz:done>
+					</wz:navigation>
+				</wz:step>
+				<wz:step id="step2" label="flow.nomandatoryfields">
+					<wz:content id="step2.content">
+						<wz:property-list root="newLocalizedLabel">
+							<wz:property id="value" qualifier="value"/>
+							<wz:property id="context" qualifier="context"/>
+							<wz:property id="forFrontend" qualifier="forFrontend"/>
+							<wz:property id="forBackend" qualifier="forBackend"/>
+						</wz:property-list>
+					</wz:content>
+					<wz:navigation id="step2.navigation">
+						<wz:cancel/>
+						<wz:back/>
+						<wz:done
+								visible="!#empty(newLocalizedLabel.key) and newLocalizedLabel.catalogVersion != null and newLocalizedLabel.bundle != null">
+							<wz:save property="newLocalizedLabel"/>
+						</wz:done>
+					</wz:navigation>
+				</wz:step>
+			</wz:flow>
+		</context>
+		<context component="editorareaactions" merge-by="type">
+			<y:actions>
+				<y:group qualifier="common" position="10">
+					<y:label>actiongroup.common</y:label>
+					<y:action action-id="com.hybris.cockpitng.action.delete" property="currentObject" position="10"/>
+					<y:action action-id="com.hybris.backoffice.widgets.actions.sync" property="currentObject"
+							  position="20"/>
+				</y:group>
+			</y:actions>
+		</context>
+		<context component="listviewactions" merge-by="type">
+			<y:actions>
+				<y:group qualifier="common">
+					<y:action action-id="com.hybris.cockpitng.listview.action.export.csv"
+							  property="exportColumnsAndData" merge-mode="REMOVE"/>
+					<y:action action-id="com.sap.cx.translations.backoffice.widgets.actions.saveall"
+							  property="selectedObjects"
+							  position="50"/>
+
+				</y:group>
+				<y:group qualifier="translate" show-group-header="false" show-separator="true" position="55">
+					<y:action action-id="com.sap.cx.translations.backoffice.widgets.actions.aitranslate"
+							  property="pageable.typeCode"
+							  position="80">
+						<y:parameter>
+							<y:name>max.rows</y:name>
+							<y:value>1000</y:value>
+						</y:parameter>
+						<y:parameter>
+							<y:name>safety.threshold</y:name>
+							<y:value>500</y:value>
+						</y:parameter>
+					</y:action>
+				</y:group>
+				<y:extended-group qualifier="export" show-group-header="false" position="30">
+					<y:action action-id="com.hybris.backoffice.widgets.actions.excel.export"
+							  property="pageable.typeCode"
+							  position="10"/>
+					<y:action action-id="com.hybris.backoffice.widgets.actions.excel.exporttemplate"
+							  property="pageable.typeCode" position="20"/>
+					<y:action action-id="com.hybris.cockpitng.listview.action.export.csv"
+							  property="exportColumnsAndData"
+							  position="30">
+						<y:parameter>
+							<yc:name>actionName</yc:name>
+							<yc:value>label.export.csv</yc:value>
+						</y:parameter>
+					</y:action>
+					<y:extended-action action-id="com.hybris.backoffice.widgets.actions.excel.export" position="40"/>
+				</y:extended-group>
+				<y:group qualifier="import" show-group-header="false" show-separator="false" position="40">
+					<y:action action-id="com.hybris.backoffice.widgets.actions.excel.import"
+							  property="pageable.typeCode"
+							  position="10"/>
+				</y:group>
+				<y:group qualifier="edit" show-group-header="false" show-separator="true" position="50">
+					<y:action action-id="com.hybris.backoffice.widgets.actions.sync" property="selectedObjects"
+							  position="50"/>
+					<y:action action-id="com.sap.cx.translations.backoffice.widgets.actions.labels.clearcache"
+							  property="pageable.typeCode"
+							  position="60"/>
+					<y:action action-id="com.sap.cx.translations.backoffice.widgets.actions.translationlanguages"
+							  property="pageable.typeCode"
+							  position="70"/>
+				</y:group>
+			</y:actions>
+		</context>
+
+		<context component="editor-area" merge-by="type">
+			<editorArea:editorArea>
+				<editorArea:essentials>
+					<editorArea:essentialSection name="hmc.essential">
+						<editorArea:attribute qualifier="key"/>
+						<editorArea:attribute qualifier="value"/>
+						<editorArea:attribute qualifier="context"/>
+						<editorArea:attribute qualifier="bundle"/>
+					</editorArea:essentialSection>
+				</editorArea:essentials>
+				<editorArea:tab name="hmc.properties">
+					<editorArea:section name="hmc.properties">
+						<editorArea:attribute qualifier="status"/>
+						<editorArea:attribute qualifier="catalogVersion"/>
+						<editorArea:attribute qualifier="forFrontend"/>
+						<editorArea:attribute qualifier="forBackend"/>
+						<editorArea:attribute qualifier="relatedLabels"/>
+					</editorArea:section>
+				</editorArea:tab>
+			</editorArea:editorArea>
+		</context>
+		<context component="listview">
+			<listView:list-view>
+				<listView:column qualifier="key"/>
+				<listView:column qualifier="value"
+								 spring-bean="cxPrimaryLanguageLocalizedStringInlineEditWidgetComponentRenderer"
+								 label="cxtranslations.column.label.translatefrom" width="400px"/>
+				<listView:column qualifier="value"
+								 spring-bean="cxSecondaryLanguageLocalizedStringInlineEditWidgetComponentRenderer"
+								 label="cxtranslations.column.label.translateto" width="400px"/>
+				<listView:column qualifier="status"/>
+				<listView:column qualifier="bundle"/>
+				<listView:column qualifier="syncStatus" spring-bean="syncStatusCellRenderer"
+								 label="syncstatus.column.label"/>
+				<listView:column qualifier="catalogVersion"/>
+			</listView:list-view>
+		</context>
+
+		<context component="simple-search">
+			<simpleSearch:simple-search>
+				<simpleSearch:field name="key"/>
+				<simpleSearch:field name="value"/>
+				<simpleSearch:field name="status"/>
+				<simpleSearch:field name="catalogVersion"/>
+			</simpleSearch:simple-search>
+		</context>
+
+		<context component="advanced-search">
+			<advancedSearch:advanced-search>
+				<advancedSearch:field-list>
+					<advancedSearch:field name="key" selected="true"/>
+					<advancedSearch:field name="value" selected="true"/>
+					<advancedSearch:field name="status" selected="true"/>
+					<advancedSearch:field name="bundle" selected="true"/>
+					<advancedSearch:field name="catalogVersion" selected="true"/>
+					<advancedSearch:field name="context" selected="true"/>
+					<advancedSearch:field name="forFrontend" selected="true"/>
+					<advancedSearch:field name="forBackend" selected="true"/>
+				</advancedSearch:field-list>
+			</advancedSearch:advanced-search>
+		</context>
+		<context component="collection-browser">
+			<collection-browser:collection-browser>
+				<collection-browser:available-molds>
+					<collection-browser:mold spring-bean="cxListViewCollectionBrowserMoldStrategy"/>
+				</collection-browser:available-molds>
+			</collection-browser:collection-browser>
+		</context>
+	</context>
+
+	<context type="CxLocalizedBundle">
+		<context component="base">
+			<y:base>
+				<y:labels>
+					<y:label>code + ' - ' + @labelService.getObjectLabel(catalogVersion)</y:label>
+				</y:labels>
+			</y:base>
+		</context>
+		<context component="create-wizard">
+			<wz:flow id="CxLocalizedBundleWizard" title="create.title(ctx.TYPE_CODE)">
+				<wz:prepare id="CxLocalizedBundlePrepare">
+					<wz:initialize property="newCxLocalizedBundle" type="ctx.TYPE_CODE"/>
+				</wz:prepare>
+				<wz:step id="step1" label="name.your(ctx.TYPE_CODE)">
+					<wz:content id="step1.content">
+						<wz:property-list root="newCxLocalizedBundle">
+							<wz:property id="code" qualifier="code"/>
+							<wz:property id="catalogVersion" qualifier="catalogVersion">
+								<wz:editor-parameter>
+									<wz:name>availableValuesProvider</wz:name>
+									<wz:value>writableCatalogVersionSearchFacade</wz:value>
+								</wz:editor-parameter>
+							</wz:property>
+						</wz:property-list>
+					</wz:content>
+					<wz:navigation id="step1.navigation">
+						<wz:cancel/>
+						<wz:done
+								visible="newCxLocalizedBundle.code != null and newCxLocalizedBundle.catalogVersion != null">
+							<wz:save property="newCxLocalizedBundle"/>
+						</wz:done>
+					</wz:navigation>
+				</wz:step>
+			</wz:flow>
+		</context>
+		<context component="editorareaactions" merge-by="type">
+			<y:actions>
+				<y:group qualifier="common" position="10">
+					<y:label>actiongroup.common</y:label>
+					<y:action action-id="com.hybris.cockpitng.action.delete" property="currentObject" position="10"/>
+					<y:action action-id="com.hybris.backoffice.widgets.actions.sync" property="currentObject"
+							  position="20"/>
+				</y:group>
+			</y:actions>
+		</context>
+		<context component="editor-area" merge-by="type">
+			<editorArea:editorArea>
+				<editorArea:essentials>
+					<editorArea:essentialSection name="hmc.essential">
+						<editorArea:attribute qualifier="code"/>
+						<editorArea:attribute qualifier="catalogVersion"/>
+					</editorArea:essentialSection>
+				</editorArea:essentials>
+				<editorArea:tab name="hmc.properties">
+					<editorArea:section name="hmc.properties">
+						<editorArea:attribute qualifier="labels"/>
+					</editorArea:section>
+				</editorArea:tab>
+			</editorArea:editorArea>
+		</context>
+		<context component="listview">
+			<listView:list-view>
+				<listView:column qualifier="code"/>
+				<listView:column qualifier="syncStatus" spring-bean="syncStatusCellRenderer"
+								 label="syncstatus.column.label"/>
+				<listView:column qualifier="catalogVersion"/>
+			</listView:list-view>
+		</context>
+		<context component="simple-search">
+			<simpleSearch:simple-search>
+				<simpleSearch:field name="code"/>
+				<simpleSearch:field name="catalogVersion"/>
+			</simpleSearch:simple-search>
+		</context>
+		<context component="advanced-search">
+			<advancedSearch:advanced-search>
+				<advancedSearch:field-list>
+					<advancedSearch:field name="code" selected="true"/>
+					<advancedSearch:field name="catalogVersion" selected="true"/>
+				</advancedSearch:field-list>
+			</advancedSearch:advanced-search>
+		</context>
+		<context component="collection-browser">
+			<collection-browser:collection-browser>
+				<collection-browser:available-molds>
+					<collection-browser:mold spring-bean="cxListViewCollectionBrowserMoldStrategy"/>
+				</collection-browser:available-molds>
+			</collection-browser:collection-browser>
+		</context>
+	</context>
+
+	<context type="CxLocalizedObjectCategory">
+
+		<context component="simple-search">
+			<simpleSearch:simple-search>
+				<simpleSearch:field name="name"/>
+				<simpleSearch:field name="code"/>
+			</simpleSearch:simple-search>
+		</context>
+
+		<context component="base">
+			<y:base>
+				<y:labels>
+					<y:label>code + " - " + name</y:label>
+				</y:labels>
+			</y:base>
+		</context>
+
+		<context component="listviewactions" merge-by="type">
+			<y:actions>
+				<y:group qualifier="common">
+					<y:action action-id="com.hybris.cockpitng.listview.action.export.csv"
+							  property="exportColumnsAndData" merge-mode="REMOVE"/>
+				</y:group>
+				<y:extended-group qualifier="export" show-group-header="false" position="30">
+					<y:action action-id="com.hybris.backoffice.widgets.actions.excel.export"
+							  property="pageable.typeCode"
+							  position="10"/>
+					<y:action action-id="com.hybris.backoffice.widgets.actions.excel.exporttemplate"
+							  property="pageable.typeCode" position="20"/>
+					<y:action action-id="com.hybris.cockpitng.listview.action.export.csv"
+							  property="exportColumnsAndData"
+							  position="30">
+						<y:parameter>
+							<yc:name>actionName</yc:name>
+							<yc:value>label.export.csv</yc:value>
+						</y:parameter>
+					</y:action>
+					<y:extended-action action-id="com.hybris.backoffice.widgets.actions.excel.export" position="40"/>
+				</y:extended-group>
+				<y:group qualifier="import" show-group-header="false" show-separator="false" position="40">
+					<y:action action-id="com.hybris.backoffice.widgets.actions.excel.import"
+							  property="pageable.typeCode"
+							  position="10"/>
+				</y:group>
+			</y:actions>
+		</context>
+		<context component="editor-area" merge-by="type">
+			<editorArea:editorArea>
+				<editorArea:essentials>
+					<editorArea:essentialSection name="hmc.essential">
+						<editorArea:attribute qualifier="code"/>
+						<editorArea:attribute qualifier="name"/>
+					</editorArea:essentialSection>
+				</editorArea:essentials>
+				<editorArea:tab name="hmc.properties">
+					<editorArea:section name="hmc.properties">
+						<editorArea:attribute qualifier="translationHint"
+											  editor="com.hybris.cockpitng.editor.defaulttext">
+							<editorArea:editor-parameter>
+								<editorArea:name>rows</editorArea:name>
+								<editorArea:value>10</editorArea:value>
+							</editorArea:editor-parameter>
+						</editorArea:attribute>
+						<editorArea:attribute qualifier="creationtime"/>
+						<editorArea:attribute qualifier="modifiedtime"/>
+						<editorArea:attribute qualifier="configs"/>
+					</editorArea:section>
+				</editorArea:tab>
+			</editorArea:editorArea>
+		</context>
+		<context component="listview">
+			<listView:list-view>
+				<listView:column qualifier="code"/>
+				<listView:column qualifier="name"/>
+			</listView:list-view>
+		</context>
+		<context component="advanced-search">
+			<advancedSearch:advanced-search>
+				<advancedSearch:field-list>
+					<advancedSearch:field name="code" selected="true"/>
+					<advancedSearch:field name="name" selected="true"/>
+				</advancedSearch:field-list>
+			</advancedSearch:advanced-search>
+		</context>
+		<context component="collection-browser">
+			<collection-browser:collection-browser>
+				<collection-browser:available-molds>
+					<collection-browser:mold spring-bean="cxListViewCollectionBrowserMoldStrategy"/>
+				</collection-browser:available-molds>
+			</collection-browser:collection-browser>
+		</context>
+	</context>
+
+	<context type="CxLocalizedObjectConfig">
+
+		<context component="simple-search">
+			<simpleSearch:simple-search>
+				<simpleSearch:field name="name"/>
+				<simpleSearch:field name="code"/>
+			</simpleSearch:simple-search>
+		</context>
+
+		<context component="base">
+			<y:base>
+				<y:labels>
+					<y:label>(name ?: '') + '[' + code + ']'</y:label>
+				</y:labels>
+			</y:base>
+		</context>
+
+		<context component="listviewactions" merge-by="type">
+			<y:actions>
+				<y:group qualifier="common">
+					<y:action action-id="com.hybris.cockpitng.listview.action.export.csv"
+							  property="exportColumnsAndData" merge-mode="REMOVE"/>
+				</y:group>
+				<y:extended-group qualifier="export" show-group-header="false" position="30">
+					<y:action action-id="com.hybris.backoffice.widgets.actions.excel.export"
+							  property="pageable.typeCode"
+							  position="10"/>
+					<y:action action-id="com.hybris.backoffice.widgets.actions.excel.exporttemplate"
+							  property="pageable.typeCode" position="20"/>
+					<y:action action-id="com.hybris.cockpitng.listview.action.export.csv"
+							  property="exportColumnsAndData"
+							  position="30">
+						<y:parameter>
+							<yc:name>actionName</yc:name>
+							<yc:value>label.export.csv</yc:value>
+						</y:parameter>
+					</y:action>
+					<y:extended-action action-id="com.hybris.backoffice.widgets.actions.excel.export" position="40"/>
+				</y:extended-group>
+				<y:group qualifier="import" show-group-header="false" show-separator="false" position="40">
+					<y:action action-id="com.hybris.backoffice.widgets.actions.excel.import"
+							  property="pageable.typeCode"
+							  position="10"/>
+				</y:group>
+			</y:actions>
+		</context>
+
+		<context component="editor-area" merge-by="type">
+			<editorArea:editorArea>
+				<editorArea:essentials>
+					<editorArea:essentialSection name="hmc.essential">
+						<editorArea:attribute qualifier="code"/>
+						<editorArea:attribute qualifier="useInBackofficeSearch"/>
+						<editorArea:attribute qualifier="name"/>
+						<editorArea:attribute qualifier="categories"/>
+					</editorArea:essentialSection>
+				</editorArea:essentials>
+				<editorArea:tab name="hmc.properties">
+					<editorArea:section name="hmc.properties">
+						<editorArea:attribute qualifier="translationHint"
+											  editor="com.hybris.cockpitng.editor.defaulttext">
+							<editorArea:editor-parameter>
+								<editorArea:name>rows</editorArea:name>
+								<editorArea:value>10</editorArea:value>
+							</editorArea:editor-parameter>
+						</editorArea:attribute>
+						<editorArea:attribute qualifier="creationtime"/>
+						<editorArea:attribute qualifier="modifiedtime"/>
+					</editorArea:section>
+				</editorArea:tab>
+			</editorArea:editorArea>
+		</context>
+
+		<context component="listview">
+			<listView:list-view>
+				<listView:column qualifier="code"/>
+				<listView:column qualifier="name"/>
+			</listView:list-view>
+		</context>
+
+		<context component="advanced-search">
+			<advancedSearch:advanced-search>
+				<advancedSearch:field-list>
+					<advancedSearch:field name="code" selected="true"/>
+					<advancedSearch:field name="name" selected="true"/>
+				</advancedSearch:field-list>
+			</advancedSearch:advanced-search>
+		</context>
+
+		<context component="collection-browser">
+			<collection-browser:collection-browser>
+				<collection-browser:available-molds>
+					<collection-browser:mold spring-bean="cxListViewCollectionBrowserMoldStrategy"/>
+				</collection-browser:available-molds>
+			</collection-browser:collection-browser>
+		</context>
+
+		<context component="create-wizard">
+			<wz:flow id="CxLocalizedObjectConfigWizard" title="create.title(ctx.TYPE_CODE)">
+				<wz:prepare id="CxLocalizedObjectConfigPrepare">
+					<wz:initialize property="newItem" type="ctx.TYPE_CODE"/>
+				</wz:prepare>
+				<wz:step id="step1" label="name.your(ctx.TYPE_CODE)">
+					<wz:content id="step1.content" merge-mode="REPLACE">
+						<wz:property-list root="newItem">
+							<wz:property qualifier="code"/>
+							<wz:property qualifier="name"/>
+							<wz:property qualifier="categories"/>
+							<wz:property qualifier="translationHint"/>
+						</wz:property-list>
+					</wz:content>
+					<wz:navigation id="step1.navigation">
+						<wz:cancel/>
+						<wz:done visible="!#empty(newItem.code)">
+							<wz:save property="newItem"/>
+						</wz:done>
+					</wz:navigation>
+				</wz:step>
+			</wz:flow>
+		</context>
+	</context>
+    
+
+	<context type="CxStandardLocalizedObjectConfig" parent="CxLocalizedObjectConfig">
+		<context component="simple-search">
+			<simpleSearch:simple-search>
+				<simpleSearch:field name="type"/>
+			</simpleSearch:simple-search>
+		</context>
+
+		<context component="editor-area" merge-by="type">
+			<editorArea:editorArea>
+				<editorArea:essentials>
+					<editorArea:essentialSection name="hmc.essential">
+						<editorArea:attribute qualifier="type"/>
+						<editorArea:attribute qualifier="keyFields"/>
+					</editorArea:essentialSection>
+				</editorArea:essentials>
+				<editorArea:tab name="hmc.properties">
+					<editorArea:section name="hmc.properties">
+						<editorArea:panel name="cxtranslations.config.attributes" colspan="2">
+							<editorArea:attribute xmlns="http://www.hybris.com/cockpitng/component/editorArea"
+												  editor="com.hybris.cockpitng.editor.extendedmultireferenceeditor"
+												  qualifier="localizedAttributes">
+								<editorArea:editor-parameter>
+									<editorArea:name>listConfigContext</editorArea:name>
+									<editorArea:value>attributesListViewForConfig</editorArea:value>
+								</editorArea:editor-parameter>
+							</editorArea:attribute>
+						</editorArea:panel>
+						<editorArea:attribute qualifier="extends"/>
+						<editorArea:attribute qualifier="extendedBy"/>
+						<editorArea:attribute qualifier="catalogAware"/>
+						<editorArea:attribute qualifier="catalogVersionField"/>
+						<editorArea:attribute qualifier="catalogVersions"/>
+					</editorArea:section>
+				</editorArea:tab>
+			</editorArea:editorArea>
+		</context>
+
+		<context component="collection-browser">
+			<collection-browser:collection-browser>
+				<collection-browser:available-molds>
+					<collection-browser:mold spring-bean="cxListViewCollectionBrowserMoldStrategy"/>
+				</collection-browser:available-molds>
+			</collection-browser:collection-browser>
+		</context>
+
+		<context component="create-wizard">
+			<wz:flow id="CxStandardLocalizedObjectConfigWizard" title="create.title(ctx.TYPE_CODE)">
+				<wz:prepare id="CxStandardLocalizedObjectConfigPrepare">
+					<wz:initialize property="newItem" type="ctx.TYPE_CODE"/>
+				</wz:prepare>
+				<wz:step id="step1" label="name.your(ctx.TYPE_CODE)">
+					<wz:content id="step1.content">
+						<wz:property-list root="newItem">
+							<wz:property qualifier="code"/>
+							<wz:property qualifier="name"/>
+							<wz:property qualifier="categories"/>
+							<wz:property qualifier="type"/>
+							<wz:property qualifier="keyFields"/>
+							<wz:property qualifier="catalogAware"/>
+							<wz:property qualifier="catalogVersionField"/>
+							<wz:property qualifier="catalogVersions"/>
+							<wz:property qualifier="extends"/>
+							<wz:property qualifier="extendedBy"/>
+							<wz:property qualifier="localizedAttributes"/>
+						</wz:property-list>
+					</wz:content>
+					<wz:navigation id="step1.navigation">
+						<wz:cancel/>
+						<wz:done visible="!#empty(newItem.code) and newItem.type != null">
+							<wz:save property="newItem"/>
+						</wz:done>
+					</wz:navigation>
+				</wz:step>
+			</wz:flow>
+		</context>
+
+	</context>
+
+
+    <context type="CxProductFeatureLocalizedObjectConfig" parent="CxLocalizedObjectConfig">
+
+        <context component="editor-area" merge-by="type">
+            <editorArea:editorArea>
+                <editorArea:essentials>
+                    <editorArea:essentialSection name="hmc.essential" merge-mode="APPEND">
+                        <editorArea:attribute qualifier="productCatalogVersions"/>
+                    </editorArea:essentialSection>
+                </editorArea:essentials>
+            </editorArea:editorArea>
+        </context>
+        
+    </context>
+
+    <context type="AttributeDescriptor" merge-by="type" component="attributesListViewForConfig">
+		<listView:list-view>
+			<listView:column qualifier="enclosingType"/>
+			<listView:column qualifier="qualifier"/>
+		</listView:list-view>
+	</context>
+
+	<context type="CxAbstractLocalizedValue">
+
+		<context component="base">
+			<y:base>
+				<y:labels>
+					<y:label>key</y:label>
+				</y:labels>
+			</y:base>
+		</context>
+
+		<context component="listviewactions" merge-by="type">
+			<y:actions>
+				<y:group qualifier="bulk" merge-mode="REMOVE"/>
+				<y:group qualifier="common" merge-mode="REPLACE" show-group-header="false">
+					<y:action action-id="com.sap.cx.translations.backoffice.widgets.actions.saveall"
+							  property="selectedObjects"
+							  position="50"/>
+				</y:group>
+				<y:extended-group qualifier="export" show-group-header="false" position="30">
+					<y:action action-id="com.hybris.backoffice.widgets.actions.excel.export"
+							  property="pageable.typeCode"
+							  position="10"/>
+					<y:action action-id="com.hybris.cockpitng.listview.action.export.csv"
+							  property="exportColumnsAndData"
+							  position="20">
+						<y:parameter>
+							<yc:name>actionName</yc:name>
+							<yc:value>label.export.csv</yc:value>
+						</y:parameter>
+					</y:action>
+					<y:extended-action action-id="com.hybris.backoffice.widgets.actions.excel.export" position="40"/>
+				</y:extended-group>
+				<y:group qualifier="import" show-group-header="false" show-separator="false" position="40">
+					<y:action action-id="com.hybris.backoffice.widgets.actions.excel.import"
+							  property="pageable.typeCode"
+							  position="10"/>
+				</y:group>
+				<y:group qualifier="translate" show-group-header="false" show-separator="true" position="50">
+					<y:action action-id="com.sap.cx.translations.backoffice.widgets.actions.translationlanguages"
+							  property="pageable.typeCode"
+							  position="60"/>
+				</y:group>
+			</y:actions>
+		</context>
+
+		<context component="editor-area" merge-by="type">
+			<editorArea:editorArea>
+				<editorArea:essentials>
+					<editorArea:essentialSection name="hmc.essential">
+						<editorArea:attribute qualifier="objectType"/>
+						<editorArea:attribute qualifier="attribute"/>
+						<editorArea:attribute qualifier="objectId"/>
+						<editorArea:attribute qualifier="catalogId"/>
+						<editorArea:attribute qualifier="catalogVersionId"/>
+						<editorArea:attribute qualifier="targetType"/>
+						<editorArea:attribute qualifier="target"/>
+						<editorArea:attribute qualifier="key"/>
+						<editorArea:attribute qualifier="config"/>
+						<editorArea:attribute qualifier="catalogVersion"/>
+					</editorArea:essentialSection>
+				</editorArea:essentials>
+				<editorArea:tab name="hmc.properties">
+					<editorArea:section name="hmc.properties">
+						<editorArea:attribute qualifier="value"
+											  editor="com.hybris.cockpitng.editor.localized(com.hybris.cockpitng.editor.defaulttext)">
+							<editorArea:editor-parameter>
+								<editorArea:name>rows</editorArea:name>
+								<editorArea:value>5</editorArea:value>
+							</editorArea:editor-parameter>
+						</editorArea:attribute>
+						<editorArea:attribute qualifier="creationtime"/>
+						<editorArea:attribute qualifier="modifiedtime"/>
+					</editorArea:section>
+				</editorArea:tab>
+			</editorArea:editorArea>
+		</context>
+
+		<context component="collection-browser">
+			<collection-browser:collection-browser>
+				<collection-browser:available-molds>
+					<collection-browser:mold spring-bean="cxListViewCollectionBrowserMoldStrategy"/>
+				</collection-browser:available-molds>
+			</collection-browser:collection-browser>
+		</context>
+
+	</context>
+
+	<context type="CxLocalizedValue" parent="CxAbstractLocalizedValue" merge-by="type">
+
+		<context component="advanced-search">
+			<advancedSearch:advanced-search disable-simple-search="true">
+				<advancedSearch:field-list disable-subtypes-checkbox="true" includeSubtypes="false">
+					<advancedSearch:field name="objectType" selected="true"/>
+					<advancedSearch:field name="objectId" selected="true"/>
+					<advancedSearch:field name="attribute" selected="true"/>
+					<advancedSearch:field name="catalogId" selected="true"/>
+					<advancedSearch:field name="valueForSearch" selected="true"/>
+					<advancedSearch:field name="key" selected="false"/>
+					<advancedSearch:field name="catalogId" selected="false"/>
+					<advancedSearch:field name="catalogVersionId" selected="false"/>
+					<advancedSearch:field name="modifiedtime" merge-mode="REMOVE"/>
+					<advancedSearch:field name="creationtime" merge-mode="REMOVE"/>
+					<advancedSearch:field name="comments" merge-mode="REMOVE"/>
+					<advancedSearch:field name="pk" merge-mode="REMOVE"/>
+					<advancedSearch:field name="owner" merge-mode="REMOVE"/>
+				</advancedSearch:field-list>
+			</advancedSearch:advanced-search>
+		</context>
+
+		<context component="editor-area" merge-by="type">
+			<editorArea:editorArea>
+				<editorArea:tab name="hmc.properties">
+					<editorArea:section name="hmc.properties">
+						<editorArea:panel name="cxtranslations.localizedvalue.proposedtranslations" colspan="2">
+							<editorArea:attribute xmlns="http://www.hybris.com/cockpitng/component/editorArea"
+												  editor="com.hybris.cockpitng.editor.extendedmultireferenceeditor"
+												  qualifier="proposedTranslations">
+								<editorArea:editor-parameter>
+									<editorArea:name>listConfigContext</editorArea:name>
+									<editorArea:value>proposedTranslationsForLocalizedValueListViewForConfig
+									</editorArea:value>
+								</editorArea:editor-parameter>
+							</editorArea:attribute>
+						</editorArea:panel>
+					</editorArea:section>
+				</editorArea:tab>
+			</editorArea:editorArea>
+		</context>
+
+		<context component="listviewactions" merge-by="type">
+			<y:actions>
+				<y:group qualifier="filter" show-group-header="false" show-separator="true" position="40">
+					<y:action action-id="com.sap.cx.translations.backoffice.widgets.actions.filterlocalizedvalues"
+							  property="selectedObjects"
+							  position="10"/>
+				</y:group>
+				<y:group qualifier="translate" show-group-header="false" show-separator="true" position="50">
+					<y:action action-id="com.sap.cx.translations.backoffice.widgets.actions.aitranslate"
+							  property="pageable.typeCode"
+							  position="80">
+						<y:parameter>
+							<y:name>max.rows</y:name>
+							<y:value>5000</y:value>
+						</y:parameter>
+						<y:parameter>
+							<y:name>safety.threshold</y:name>
+							<y:value>3000</y:value>
+						</y:parameter>
+					</y:action>
+				</y:group>
+			</y:actions>
+		</context>
+
+		<context component="listview">
+			<listView:list-view>
+				<listView:column qualifier="objectType" position="1" width="150px"/>
+				<listView:column qualifier="attribute" position="2" width="150px"/>
+				<listView:column qualifier="objectId" position="3"/>
+				<listView:column qualifier="value"
+								 spring-bean="cxPrimaryLanguageLocalizedStringInlineEditWidgetComponentRenderer"
+								 label="cxtranslations.column.label.translatefrom" width="400px" position="4"/>
+				<listView:column qualifier="value"
+								 spring-bean="cxSecondaryLanguageLocalizedStringInlineEditWidgetComponentRenderer"
+								 label="cxtranslations.column.label.translateto" width="400px" position="5"/>
+				<listView:column qualifier="catalogId" position="6"/>
+				<listView:column qualifier="catalogVersionId" position="7" width="100px"/>
+				<listView:column qualifier="modifiedtime" position="8"/>
+			</listView:list-view>
+		</context>
+
+		<context component="excel-export-wizard" merge-by="type">
+			<wz:flow id="excelExportWizard" title="excel.export.wizard.title" show-breadcrumb="false" size="large">
+				<wz:prepare id="excelExportWizardPrepare">
+					<wz:initialize property="excelForm" template-bean="excelExportWizardForm"/>
+					<wz:initialize property="excelForm.attributesForm" template-bean="attributesForm"/>
+					<wz:assign property="excelForm.pageable" value="ctx.excelExportData"/>
+					<wz:assign property="excelForm.typeCode" value="ctx.TYPE_CODE"/>
+				</wz:prepare>
+				<wz:step id="step1" label="excel.export.wizard.attributes.label"
+						 sublabel="excel.export.wizard.attributes.sublabel">
+					<wz:content id="step1.content">
+						<wz:custom-view lang="zul">
+							<wz:renderer spring-bean="cxTranslationsExcelExportRenderer"/>
+						</wz:custom-view>
+					</wz:content>
+					<wz:navigation id="step1.navigation">
+						<wz:cancel/>
+						<wz:custom label="excel.export.wizard.button.label" handler="cxTranslationsExcelExportHandler"
+								   visible="excelForm.attributesForm.hasSelectedAttributes()">
+							<wz:parameter>
+								<wz:name>excelIncludeClassification</wz:name>
+								<wz:value>false</wz:value>
+							</wz:parameter>
+						</wz:custom>
+					</wz:navigation>
+				</wz:step>
+			</wz:flow>
+		</context>
+
+		<context component="excel-import-wizard">
+			<wz:flow id="excelImportWizard" title="excel.import.wizard.title" show-breadcrumb="false">
+				<wz:prepare id="excelImportWizardPrepare">
+					<wz:initialize property="excelForm" template-bean="excelImportWizardForm"/>
+				</wz:prepare>
+				<wz:step id="step1" label="cxtranslations.excelimport.step1.label">
+					<wz:info label="cxtranslations.excelimport.info1" position="top"/>
+					<wz:content merge-mode="REPLACE">
+						<wz:property qualifier="excelForm.excelFile"
+									 type="com.hybris.cockpitng.editor.defaultfileupload.FileUploadResult"
+									 editor="com.hybris.cockpitng.editor.dndfileupload" validate="false">
+							<wz:editor-parameter>
+								<wz:name>accept</wz:name>
+								<wz:value>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</wz:value>
+							</wz:editor-parameter>
+							<wz:editor-parameter>
+								<wz:name>singleLineMode</wz:name>
+								<wz:value>true</wz:value>
+							</wz:editor-parameter>
+						</wz:property>
+					</wz:content>
+					<wz:navigation id="step1.navigation">
+						<wz:cancel/>
+						<wz:custom label="excel.import.wizard.button.label" handler="cxTranslationsExcelImportHandler"
+								   visible="excelForm.excelFile!=null"/>
+					</wz:navigation>
+				</wz:step>
+				<wz:step id="step2" label="">
+					<wz:info label="cxtranslations.excelimport.info2" position="top"/>
+					<wz:content id="step2.content">
+						<wz:custom-view lang="zul">
+							<wz:renderer spring-bean="excelImportValidationResultRenderer"/>
+						</wz:custom-view>
+					</wz:content>
+					<wz:navigation id="step2.navigation">
+						<wz:back/>
+						<wz:cancel/>
+						<wz:custom label="excel.import.ignore.wizard.button.label"
+								   handler="excelWithoutValidationImportHandler" visible="!excelHasValidationErrors"/>
+					</wz:navigation>
+				</wz:step>
+			</wz:flow>
+		</context>
+
+	</context>
+
+	<context type="CxProposedTranslation" parent="CxAbstractLocalizedValue" merge-by="type">
+
+		<context component="simple-search">
+			<simpleSearch:simple-search>
+				<simpleSearch:field name="key"/>
+				<simpleSearch:field name="proposedTranslationValue"/>
+				<simpleSearch:field name="objectId"/>
+				<simpleSearch:field name="objectType"/>
+				<simpleSearch:field name="catalogVersionId"/>
+				<simpleSearch:field name="catalogId"/>
+			</simpleSearch:simple-search>
+		</context>
+
+		<context component="listviewactions" merge-by="type">
+			<y:actions>
+				<y:group qualifier="common" show-group-header="false">
+					<y:action action-id="com.hybris.cockpitng.action.delete" property="selectedObjects"/>
+				</y:group>
+				<y:group qualifier="translate" show-group-header="false" show-separator="true" position="50">
+					<y:action
+							action-id="com.sap.cx.translations.backoffice.widgets.actions.listview.approvetranslations"
+							property="pageable.typeCode"
+							position="80">
+						<y:parameter>
+							<y:name>max.rows</y:name>
+							<y:value>5000</y:value>
+						</y:parameter>
+						<y:parameter>
+							<y:name>safety.threshold</y:name>
+							<y:value>3000</y:value>
+						</y:parameter>
+					</y:action>
+					<y:action
+							action-id="com.sap.cx.translations.backoffice.widgets.actions.listview.rejecttranslations"
+							property="pageable.typeCode"
+							position="90">
+						<y:parameter>
+							<y:name>max.rows</y:name>
+							<y:value>5000</y:value>
+						</y:parameter>
+						<y:parameter>
+							<y:name>safety.threshold</y:name>
+							<y:value>3000</y:value>
+						</y:parameter>
+					</y:action>
+					<y:action
+							action-id="com.sap.cx.translations.backoffice.widgets.actions.listview.retrytranslations"
+							property="pageable.typeCode"
+							position="100">
+						<y:parameter>
+							<y:name>max.rows</y:name>
+							<y:value>5000</y:value>
+						</y:parameter>
+						<y:parameter>
+							<y:name>safety.threshold</y:name>
+							<y:value>3000</y:value>
+						</y:parameter>
+					</y:action>
+				</y:group>
+			</y:actions>
+		</context>
+
+		<context component="editor-area">
+			<editorArea:editorArea>
+				<editorArea:essentials>
+					<editorArea:essentialSection name="hmc.essential">
+						<editorArea:attribute qualifier="value" readonly="true" merge-mode="REMOVE"/>
+						<editorArea:attribute qualifier="translationStatus"/>
+						<editorArea:attribute qualifier="approvalStatus"/>
+					</editorArea:essentialSection>
+				</editorArea:essentials>
+				<editorArea:tab name="hmc.properties">
+					<editorArea:section name="hmc.properties">
+						<editorArea:attribute qualifier="sourceLanguage" readonly="true"/>
+                        <editorArea:attribute qualifier="initialTargetLanguages"
+                                              editor="com.hybris.cockpitng.editor.defaultmultireferenceeditor"
+                                              readonly="true"/>
+                        <editorArea:attribute qualifier="filteredTargetLanguages"
+											  editor="com.hybris.cockpitng.editor.defaultmultireferenceeditor"
+											  readonly="true"/>
+						<editorArea:attribute qualifier="translatedLanguages"
+											  editor="com.hybris.cockpitng.editor.defaultmultireferenceeditor"
+											  readonly="true"/>
+						<editorArea:attribute qualifier="translationCronJob"/>
+						<editorArea:attribute qualifier="approveTranslationsCronJob"/>
+					</editorArea:section>
+					<editorArea:section name="cxtranslations.values.section">
+						<editorArea:attribute qualifier="value" readonly="true"
+											  editor="com.hybris.cockpitng.editor.localized(com.hybris.cockpitng.editor.defaulttext)">
+							<editorArea:editor-parameter>
+								<editorArea:name>rows</editorArea:name>
+								<editorArea:value>5</editorArea:value>
+							</editorArea:editor-parameter>
+						</editorArea:attribute>
+						<editorArea:attribute qualifier="proposedTranslationValue" readonly="true"
+											  editor="com.hybris.cockpitng.editor.localized(com.hybris.cockpitng.editor.defaulttext)">
+							<editorArea:editor-parameter>
+								<editorArea:name>rows</editorArea:name>
+								<editorArea:value>5</editorArea:value>
+							</editorArea:editor-parameter>
+						</editorArea:attribute>
+						<editorArea:attribute qualifier="manualTranslationValue"
+											  editor="com.hybris.cockpitng.editor.localized(com.hybris.cockpitng.editor.defaulttext)">
+							<editorArea:editor-parameter>
+								<editorArea:name>rows</editorArea:name>
+								<editorArea:value>5</editorArea:value>
+							</editorArea:editor-parameter>
+						</editorArea:attribute>
+					</editorArea:section>
+					<editorArea:section name="cxtranslations.notes.section">
+						<editorArea:panel colspan="2" name="panel.proddescription" rowspan="2">
+							<editorArea:attribute qualifier="notes"
+												  editor="com.hybris.cockpitng.editor.defaulttext">
+								<editorArea:editor-parameter>
+									<editorArea:name>rows</editorArea:name>
+									<editorArea:value>10</editorArea:value>
+								</editorArea:editor-parameter>
+							</editorArea:attribute>
+						</editorArea:panel>
+					</editorArea:section>
+                    <editorArea:section name="cxtranslations.usage.section">
+                        <editorArea:attribute qualifier="usageInfo" readonly="true"/>
+                        <editorArea:attribute qualifier="totalCost" readonly="true"/>
+                    </editorArea:section>
+				</editorArea:tab>
+			</editorArea:editorArea>
+		</context>
+
+		<context component="editorareaactions">
+			<y:actions>
+				<y:group qualifier="common">
+					<y:action action-id="com.sap.cx.translations.backoffice.widgets.actions.approvetranslation"
+							  property="currentObject"/>
+					<y:action action-id="com.hybris.cockpitng.action.delete" property="currentObject"/>
+				</y:group>
+			</y:actions>
+		</context>
+
+		<context component="collectioneditorareaactions">
+			<y:actions>
+				<y:group qualifier="common">
+					<y:action action-id="com.sap.cx.translations.backoffice.widgets.actions.approvetranslation"
+							  property="currentObject"/>
+					<y:action action-id="com.hybris.cockpitng.action.delete" property="currentObject"/>
+				</y:group>
+			</y:actions>
+		</context>
+
+		<context component="listview">
+			<listView:list-view>
+				<listView:column qualifier="translationStatus" width="130px"/>
+				<listView:column qualifier="approvalStatus" width="130px"/>
+				<listView:column qualifier="objectType" width="150px"/>
+				<listView:column qualifier="attribute" width="150px"/>
+				<listView:column qualifier="objectId"/>
+				<listView:column qualifier="value"
+								 spring-bean="cxPrimaryLanguageLocalizedStringInlineEditWidgetComponentRenderer"
+								 label="cxtranslations.column.label.translatefrom" width="400px"/>
+				<listView:column qualifier="proposedTranslationValue"
+								 spring-bean="cxSecondaryLanguageLocalizedStringInlineEditWidgetComponentRendererReadOnly"
+								 label="cxtranslations.column.label.proposedTranslationValue" width="400px"/>
+				<listView:column qualifier="manualTranslationValue"
+								 spring-bean="cxSecondaryLanguageLocalizedStringInlineEditWidgetComponentRenderer"
+								 label="cxtranslations.column.label.manualTranslation" width="400px"/>
+				<listView:column qualifier="sourceLanguage"/>
+                <listView:column qualifier="initialTargetLanguages"/>
+				<listView:column qualifier="translatedLanguages"/>
+				<listView:column qualifier="catalogId"/>
+				<listView:column qualifier="catalogVersionId" width="100px"/>
+			</listView:list-view>
+		</context>
+
+		<context component="proposedTranslationsForLocalizedValueListViewForConfig">
+			<listView:list-view>
+				<listView:column qualifier="translationStatus"/>
+				<listView:column qualifier="approvalStatus"/>
+				<listView:column qualifier="sourceLanguage"/>
+                <listView:column qualifier="initialTargetLanguages"/>
+				<listView:column qualifier="translationCronJob"/>
+				<listView:column qualifier="approveTranslationsCronJob"/>
+			</listView:list-view>
+		</context>
+
+		<context component="advanced-search">
+			<advancedSearch:advanced-search disable-simple-search="false">
+				<advancedSearch:field-list disable-subtypes-checkbox="false" includeSubtypes="true">
+					<advancedSearch:field name="value" merge-mode="REMOVE"/>
+					<advancedSearch:field name="objectType" selected="true" operator="equals"/>
+					<advancedSearch:field name="attribute" selected="true" operator="equals"/>
+					<advancedSearch:field name="objectId" selected="true" operator="equals"/>
+					<advancedSearch:field name="objectType"/>
+					<advancedSearch:field name="catalogVersionId"/>
+					<advancedSearch:field name="catalogId"/>
+					<advancedSearch:field name="translationStatus" selected="true"/>
+					<advancedSearch:field name="approvalStatus" selected="true"/>
+					<advancedSearch:field name="target"/>
+					<advancedSearch:field name="proposedTranslationValue"/>
+					<advancedSearch:field name="manualTranslationValue"/>
+					<advancedSearch:field name="notes" operator="contains"/>
+					<advancedSearch:field name="translationCronJob"/>
+					<advancedSearch:field name="approveTranslationsCronJob"/>
+					<advancedSearch:field name="sourceLanguage"/>
+					<advancedSearch:field name="translatedLanguages"/>
+					<advancedSearch:field name="key"/>
+				</advancedSearch:field-list>
+			</advancedSearch:advanced-search>
+		</context>
+
+		<context component="collection-browser">
+			<collection-browser:collection-browser>
+				<collection-browser:available-molds>
+					<collection-browser:mold spring-bean="cxListViewCollectionBrowserMoldStrategy"/>
+				</collection-browser:available-molds>
+			</collection-browser:collection-browser>
+		</context>
+
+	</context>
+
+	<context type="CxTranslateAiModel">
+
+		<context component="simple-search">
+			<simpleSearch:simple-search>
+				<simpleSearch:field name="name"/>
+				<simpleSearch:field name="code"/>
+			</simpleSearch:simple-search>
+		</context>
+
+		<context component="base">
+			<y:base>
+				<y:labels>
+					<y:label>name</y:label>
+				</y:labels>
+			</y:base>
+		</context>
+		<context component="editor-area" merge-by="type">
+			<editorArea:editorArea>
+				<editorArea:essentials>
+					<editorArea:essentialSection name="hmc.essential">
+						<editorArea:attribute qualifier="code"/>
+						<editorArea:attribute qualifier="name"/>
+					</editorArea:essentialSection>
+				</editorArea:essentials>
+			</editorArea:editorArea>
+		</context>
+		<context component="listview">
+			<listView:list-view>
+				<listView:column qualifier="code"/>
+				<listView:column qualifier="name"/>
+			</listView:list-view>
+		</context>
+		<context component="advanced-search">
+			<advancedSearch:advanced-search>
+				<advancedSearch:field-list>
+					<advancedSearch:field name="code" selected="true"/>
+					<advancedSearch:field name="name" selected="true"/>
+				</advancedSearch:field-list>
+			</advancedSearch:advanced-search>
+		</context>
+	</context>
+
+	<context type="CxAiDeploymentConfig">
+
+		<context component="simple-search">
+			<simpleSearch:simple-search>
+				<simpleSearch:field name="name"/>
+				<simpleSearch:field name="code"/>
+				<simpleSearch:field name="destination"/>
+			</simpleSearch:simple-search>
+		</context>
+
+		<context component="base">
+			<y:base>
+				<y:labels>
+					<y:label>name</y:label>
+				</y:labels>
+			</y:base>
+		</context>
+		<context component="editor-area" merge-by="type">
+			<editorArea:editorArea>
+				<editorArea:essentials>
+					<editorArea:essentialSection name="hmc.essential">
+						<editorArea:attribute qualifier="code"/>
+						<editorArea:attribute qualifier="name"/>
+						<editorArea:attribute qualifier="destination"/>
+						<editorArea:attribute qualifier="deployments"/>
+					</editorArea:essentialSection>
+				</editorArea:essentials>
+			</editorArea:editorArea>
+		</context>
+		<context component="listview">
+			<listView:list-view>
+				<listView:column qualifier="code"/>
+				<listView:column qualifier="name"/>
+				<listView:column qualifier="destination"/>
+			</listView:list-view>
+		</context>
+		<context component="advanced-search">
+			<advancedSearch:advanced-search>
+				<advancedSearch:field-list>
+					<advancedSearch:field name="code" selected="true"/>
+					<advancedSearch:field name="name" selected="true"/>
+					<advancedSearch:field name="destination" selected="true"/>
+				</advancedSearch:field-list>
+			</advancedSearch:advanced-search>
+		</context>
+	</context>
+
+	<context type="CxTranslationServiceApi">
+
+		<context component="simple-search">
+			<simpleSearch:simple-search>
+				<simpleSearch:field name="name"/>
+				<simpleSearch:field name="code"/>
+			</simpleSearch:simple-search>
+		</context>
+
+		<context component="base">
+			<y:base>
+				<y:labels>
+					<y:label>code + "-" + name</y:label>
+				</y:labels>
+			</y:base>
+		</context>
+		<context component="editor-area" merge-by="type">
+			<editorArea:editorArea>
+				<editorArea:essentials>
+					<editorArea:essentialSection name="hmc.essential">
+						<editorArea:attribute qualifier="code"/>
+						<editorArea:attribute qualifier="name"/>
+					</editorArea:essentialSection>
+				</editorArea:essentials>
+			</editorArea:editorArea>
+		</context>
+		<context component="listview">
+			<listView:list-view>
+				<listView:column qualifier="code"/>
+				<listView:column qualifier="name"/>
+			</listView:list-view>
+		</context>
+		<context component="advanced-search">
+			<advancedSearch:advanced-search>
+				<advancedSearch:field-list>
+					<advancedSearch:field name="code" selected="true"/>
+					<advancedSearch:field name="name" selected="true"/>
+				</advancedSearch:field-list>
+			</advancedSearch:advanced-search>
+		</context>
+	</context>
+
+	<context type="CxAiTranslationServiceApi" parent="CxTranslationServiceApi">
+		<context component="editor-area" merge-by="type">
+			<editorArea:editorArea>
+				<editorArea:tab name="hmc.properties">
+					<editorArea:section name="hmc.properties">
+						<editorArea:attribute qualifier="endpointUrlSuffix"/>
+						<editorArea:attribute qualifier="deploymentConfiguration"/>
+						<editorArea:attribute qualifier="configurableParameters"/>
+						<editorArea:attribute qualifier="defaultParameterValues"/>
+                        <editorArea:attribute qualifier="usageMetricsPaths"/>
+						<editorArea:attribute qualifier="loggingLevel"/>
+					</editorArea:section>
+					<editorArea:section
+							name="cxtranslations.backoffice.CxAiTranslationServiceApi.section.interfacesettings">
+						<editorArea:attribute qualifier="requestTemplate"
+											  editor="com.hybris.cockpitng.editor.defaulttext">
+							<editorArea:editor-parameter>
+								<editorArea:name>rows</editorArea:name>
+								<editorArea:value>10</editorArea:value>
+							</editorArea:editor-parameter>
+						</editorArea:attribute>
+						<editorArea:attribute qualifier="responsePath"/>
+						<editorArea:attribute qualifier="customRequestBuilderBeanId"/>
+						<editorArea:attribute qualifier="customResponseReaderBeanId"/>
+					</editorArea:section>
+				</editorArea:tab>
+			</editorArea:editorArea>
+		</context>
+	</context>
+	
+	<context type="CxDeepLTranslationServiceApi" parent="CxTranslationServiceApi">
+		<context component="editor-area" merge-by="type">
+			<editorArea:editorArea>
+				<editorArea:tab name="hmc.properties">
+					<editorArea:section name="hmc.properties">
+						<editorArea:attribute qualifier="destination"/>
+						<editorArea:attribute qualifier="loggingLevel"/>
+					</editorArea:section>
+				</editorArea:tab>
+			</editorArea:editorArea>
+		</context>
+
+	</context>
+
+
+	<context type="CxTranslationServiceSettings">
+
+		<context component="simple-search">
+			<simpleSearch:simple-search>
+				<simpleSearch:field name="name"/>
+				<simpleSearch:field name="code"/>
+			</simpleSearch:simple-search>
+		</context>
+
+		<context component="base">
+			<y:base>
+				<y:labels>
+					<y:label>name</y:label>
+				</y:labels>
+			</y:base>
+		</context>
+		<context component="editor-area" merge-by="type">
+			<editorArea:editorArea>
+				<editorArea:essentials>
+					<editorArea:essentialSection name="hmc.essential">
+						<editorArea:attribute qualifier="code"/>
+						<editorArea:attribute qualifier="name"/>
+						<editorArea:attribute qualifier="isDefault"/>
+					</editorArea:essentialSection>
+				</editorArea:essentials>
+			</editorArea:editorArea>
+		</context>
+		<context component="listview">
+			<listView:list-view>
+				<listView:column qualifier="code"/>
+				<listView:column qualifier="name"/>
+				<listView:column qualifier="isDefault"/>
+			</listView:list-view>
+		</context>
+		<context component="advanced-search">
+			<advancedSearch:advanced-search>
+				<advancedSearch:field-list>
+					<advancedSearch:field name="code" selected="true"/>
+					<advancedSearch:field name="name" selected="true"/>
+					<advancedSearch:field name="isDefault" selected="true"/>
+				</advancedSearch:field-list>
+			</advancedSearch:advanced-search>
+		</context>
+	</context>
+
+	<context type="CxAiTranslationServiceSettings" parent="CxTranslationServiceSettings">
+		<context component="editor-area" merge-by="type">
+			<editorArea:editorArea>
+				<editorArea:essentials>
+					<editorArea:essentialSection name="hmc.essential">
+						<editorArea:attribute qualifier="code"/>
+						<editorArea:attribute qualifier="name"/>
+						<editorArea:attribute qualifier="isDefault"/>
+					</editorArea:essentialSection>
+				</editorArea:essentials>
+				<editorArea:tab name="hmc.properties">
+					<editorArea:section name="hmc.properties">
+						<editorArea:attribute qualifier="aiServiceApi"/>
+						<editorArea:attribute qualifier="aiModel"/>
+						<editorArea:attribute qualifier="parameterValues"/>
+						<editorArea:attribute qualifier="globalTranslationHints"
+											  editor="com.hybris.cockpitng.editor.defaulttext">
+							<editorArea:editor-parameter>
+								<editorArea:name>rows</editorArea:name>
+								<editorArea:value>10</editorArea:value>
+							</editorArea:editor-parameter>
+						</editorArea:attribute>
+						<editorArea:attribute qualifier="maxLanguagesInRequest"/>
+                        <editorArea:attribute qualifier="maxCharactersInRequest"/>
+                    </editorArea:section>
+                    <editorArea:section name="cxtranslations.usage.section">
+                        <editorArea:attribute qualifier="usageMetricsCost"/>
+                        <editorArea:attribute qualifier="usageInfo"/>
+                        <editorArea:attribute qualifier="totalCost" readonly="true"/>
+					</editorArea:section>
+				</editorArea:tab>
+			</editorArea:editorArea>
+		</context>
+	</context>
+
+	<context type="CxTranslateKeyBasedCredential" parent="AbstractCredential">
+		<context component="editor-area" merge-by="type">
+			<editorArea:editorArea>
+				<editorArea:essentials>
+					<editorArea:essentialSection name="hmc.essential">
+						<editorArea:attribute qualifier="keyName"/>
+						<editorArea:attribute qualifier="keyValue"/>
+						<editorArea:attribute qualifier="mode"/>
+					</editorArea:essentialSection>
+				</editorArea:essentials>
+			</editorArea:editorArea>
+		</context>
+	</context>
+
+	
+	<context type="CxSapTranslationHubServiceApi" parent="CxTranslationServiceApi">
+		<context component="editor-area" merge-by="type">
+			<editorArea:editorArea>
+				<editorArea:tab name="hmc.properties">
+					<editorArea:section name="hmc.properties">
+						<editorArea:attribute qualifier="destination"/>
+						<editorArea:attribute qualifier="loggingLevel"/>
+					</editorArea:section>
+				</editorArea:tab>
+			</editorArea:editorArea>
+		</context>
+	</context>
+
+	<context type="CxSapTranslationHubServiceSettings" parent="CxTranslationServiceSettings">
+		<context component="editor-area" merge-by="type">
+			<editorArea:editorArea>
+				<editorArea:essentials>
+					<editorArea:essentialSection name="hmc.essential">
+						<editorArea:attribute qualifier="code"/>
+						<editorArea:attribute qualifier="name"/>
+						<editorArea:attribute qualifier="sapTranslationHubServiceApi"/>
+						<editorArea:attribute qualifier="isDefault"/>
+					</editorArea:essentialSection>
+				</editorArea:essentials>
+				<editorArea:tab name="hmc.properties">
+					<editorArea:section name="hmc.properties">
+						<editorArea:attribute qualifier="model"/>
+						<editorArea:attribute qualifier="domain"/>
+						<editorArea:attribute qualifier="enableHtmlTagHandling"/>
+						<editorArea:attribute qualifier="directTextTranslationThresholdBytes"/>
+						<editorArea:attribute qualifier="maxXliffBatchSizeBytes"/>
+						<editorArea:attribute qualifier="globalTranslationHints"
+											  editor="com.hybris.cockpitng.editor.defaulttext">
+							<editorArea:editor-parameter>
+								<editorArea:name>rows</editorArea:name>
+								<editorArea:value>10</editorArea:value>
+							</editorArea:editor-parameter>
+						</editorArea:attribute>
+					</editorArea:section>
+				</editorArea:tab>
+			</editorArea:editorArea>
+		</context>
+	</context>
+
+	<context type="CxAzureTranslatorServiceApi" parent="CxTranslationServiceApi">
+		<context component="editor-area" merge-by="type">
+			<editorArea:editorArea>
+				<editorArea:tab name="hmc.properties">
+					<editorArea:section name="hmc.properties">
+						<editorArea:attribute qualifier="destination"/>
+						<editorArea:attribute qualifier="loggingLevel"/>
+					</editorArea:section>
+				</editorArea:tab>
+			</editorArea:editorArea>
+		</context>
+	</context>
+
+	<context type="CxAzureTranslatorServiceSettings" parent="CxTranslationServiceSettings">
+		<context component="editor-area" merge-by="type">
+			<editorArea:editorArea>
+				<editorArea:essentials>
+					<editorArea:essentialSection name="hmc.essential">
+						<editorArea:attribute qualifier="code"/>
+						<editorArea:attribute qualifier="name"/>
+						<editorArea:attribute qualifier="azureTranslatorServiceApi"/>
+						<editorArea:attribute qualifier="isDefault"/>
+					</editorArea:essentialSection>
+				</editorArea:essentials>
+				<editorArea:tab name="hmc.properties">
+					<editorArea:section name="hmc.properties">
+						<editorArea:attribute qualifier="translationMode"/>
+						<editorArea:attribute qualifier="category"/>
+						<editorArea:attribute qualifier="allowFallback"/>
+						<editorArea:attribute qualifier="enableHtmlTagHandling"/>
+						<editorArea:attribute qualifier="directTextTranslationThresholdBytes"/>
+						<editorArea:attribute qualifier="maxXliffBatchSizeBytes"/>
+						<editorArea:attribute qualifier="glossaries"
+											  editor="com.hybris.cockpitng.editor.extendedmultireferenceeditor"/>
+						<editorArea:attribute qualifier="globalTranslationHints"
+											  editor="com.hybris.cockpitng.editor.defaulttext">
+							<editorArea:editor-parameter>
+								<editorArea:name>rows</editorArea:name>
+								<editorArea:value>10</editorArea:value>
+							</editorArea:editor-parameter>
+						</editorArea:attribute>
+					</editorArea:section>
+				</editorArea:tab>
+			</editorArea:editorArea>
+		</context>
+	</context>
+
+	<context type="CxDeepLTranslationServiceSettings" parent="CxTranslationServiceSettings">
+		<context component="editor-area" merge-by="type">
+			<editorArea:editorArea>
+				<editorArea:essentials>
+					<editorArea:essentialSection name="hmc.essential">
+						<editorArea:attribute qualifier="code"/>
+						<editorArea:attribute qualifier="name"/>
+						<editorArea:attribute qualifier="deepLServiceApi"/>
+						<editorArea:attribute qualifier="isDefault"/>
+					</editorArea:essentialSection>
+				</editorArea:essentials>
+				<editorArea:tab name="hmc.properties">
+					<editorArea:section name="hmc.properties">
+						<editorArea:attribute qualifier="formality"/>
+						<editorArea:attribute qualifier="modelType"/>
+						<editorArea:attribute qualifier="glossaries"
+											  editor="com.hybris.cockpitng.editor.extendedmultireferenceeditor"/>
+						<editorArea:attribute qualifier="splitSentences"/>
+						<editorArea:attribute qualifier="preserveFormatting"/>
+						<editorArea:attribute qualifier="outlineDetection"/>
+						<editorArea:attribute qualifier="tagHandling"/>
+						<editorArea:attribute qualifier="ignoreTags"/>
+						<editorArea:attribute qualifier="nonSplittingTags"/>
+						<editorArea:attribute qualifier="splittingTags"/>
+					</editorArea:section>
+				</editorArea:tab>
+			</editorArea:editorArea>
+		</context>
+	</context>
+
+	<context type="CxTranslationCronJob" merge-by="type" parent="CronJob">
+		<context component="editor-area">
+			<editorArea:editorArea>
+				<editorArea:tab name="hmc.properties">
+					<editorArea:section name="hmc.properties">
+						<editorArea:attribute qualifier="sourceLanguage"/>
+						<editorArea:attribute qualifier="targetLanguages"/>
+						<editorArea:attribute qualifier="hint"/>
+						<editorArea:attribute qualifier="saveForApproval"/>
+						<editorArea:attribute qualifier="skipTranslated"/>
+						<editorArea:attribute qualifier="elementsToProcessCount"/>
+						<editorArea:attribute qualifier="items"/>
+						<editorArea:attribute qualifier="attributes"/>
+					</editorArea:section>
+					<editorArea:section name="cxtranslations.usage.section">
+						<editorArea:attribute qualifier="usageInfo"/>
+						<editorArea:attribute qualifier="totalCost"/>
+					</editorArea:section>
+				</editorArea:tab>
+			</editorArea:editorArea>
+		</context>
+
+		<context component="listview">
+			<listView:list-view>
+				<listView:column qualifier="sourceLanguage"/>
+				<listView:column qualifier="targetLanguages"/>
+				<listView:column qualifier="saveForApproval"/>
+				<listView:column qualifier="skipTranslated"/>
+				<listView:column qualifier="elementsToProcessCount"/>
+			</listView:list-view>
+		</context>
+
+		<context component="advanced-search">
+			<advancedSearch:advanced-search>
+				<advancedSearch:field-list>
+					<advancedSearch:field name="sourceLanguage" selected="true"/>
+					<advancedSearch:field name="targetLanguages" selected="true"/>
+					<advancedSearch:field name="hint" selected="true"/>
+					<advancedSearch:field name="saveForApproval"/>
+					<advancedSearch:field name="skipTranslated"/>
+					<advancedSearch:field name="elementsToProcessCount"/>
+				</advancedSearch:field-list>
+			</advancedSearch:advanced-search>
+		</context>
+
+	</context>
+
+	<context type="CxApproveTranslationsCronJob" merge-by="type" parent="CronJob">
+
+		<context component="editor-area">
+			<editorArea:editorArea>
+				<editorArea:tab name="hmc.properties">
+					<editorArea:section name="hmc.properties">
+						<editorArea:attribute qualifier="translationsToApprove"/>
+						<editorArea:attribute qualifier="elementsToProcessCount"/>
+					</editorArea:section>
+				</editorArea:tab>
+			</editorArea:editorArea>
+		</context>
+
+		<context component="advanced-search">
+			<advancedSearch:advanced-search>
+				<advancedSearch:field-list>
+					<advancedSearch:field name="translationsToApprove" selected="true"/>
+					<advancedSearch:field name="elementsToProcessCount"/>
+				</advancedSearch:field-list>
+			</advancedSearch:advanced-search>
+		</context>
+
+	</context>
+
+	<context type="CxLocalizedValueExcelImportCronJob" parent="CronJob">
+		<context component="editor-area">
+			<editorArea:editorArea>
+				<editorArea:tab name="hmc.properties">
+					<editorArea:section name="hmc.properties">
+						<editorArea:attribute qualifier="totalRows"/>
+						<editorArea:attribute qualifier="alreadyProcessedRows"/>
+						<editorArea:attribute qualifier="failedRows"/>
+					</editorArea:section>
+				</editorArea:tab>
+			</editorArea:editorArea>
+		</context>
+
+		<context component="advanced-search">
+			<advancedSearch:advanced-search>
+				<advancedSearch:field-list>
+					<advancedSearch:field name="totalRows" selected="true"/>
+					<advancedSearch:field name="alreadyProcessedRows" selected="true"/>
+					<advancedSearch:field name="failedRows" selected="true"/>
+				</advancedSearch:field-list>
+			</advancedSearch:advanced-search>
+		</context>
+
+	</context>
+
+	<context component="notification-area" source="excelImport" merge-by="source">
+		<na:notification-area>
+			<na:notifications eventType="excelImportProcessStarted" level="INFO">
+				<na:message>cxtranslations.excelimport.cronjobstarted</na:message>
+			</na:notifications>
+		</na:notification-area>
+	</context>
+
+
+	<context type="CxLocalizedObjectConfigCronJob" parent="CronJob" merge-by="type">
+		<context component="create-wizard">
+			<wz:flow id="CxLocalizedObjectConfigCronJobWizard" title="create.title(ctx.TYPE_CODE)" merge-mode="REPLACE">
+				<wz:prepare id="CxLocalizedObjectConfigCronJobPrepare" merge-mode="REPLACE">
+					<wz:initialize property="newCronJob" type="ctx.TYPE_CODE"/>
+				</wz:prepare>
+				<wz:step id="step1" label="name.your(ctx.TYPE_CODE)" merge-mode="REPLACE">
+					<wz:info label="cxtranslations.autoconfigure.info1" position="top"></wz:info>
+					<wz:content id="step1.content" merge-mode="REPLACE">
+						<wz:property-list root="newCronJob">
+							<wz:property qualifier="includedComposedTypes"/>
+							<wz:property qualifier="excludedComposedTypes"/>
+							<wz:property qualifier="excludedAttributes"/>
+							<wz:property qualifier="localizedObjectCategories"/>
+							<wz:property qualifier="mergeMode"/>
+							<wz:property qualifier="addAttributesOnlyWhenDataExists"/>
+							<wz:property qualifier="catalogVersions"/>
+						</wz:property-list>
+					</wz:content>
+					<wz:navigation id="step1.navigation">
+						<wz:cancel/>
+						<wz:done visible="true">
+							<wz:save property="newCronJob"/>
+						</wz:done>
+					</wz:navigation>
+				</wz:step>
+			</wz:flow>
+		</context>
+
+		<context component="editor-area">
+			<editorArea:editorArea>
+				<editorArea:tab name="hmc.properties">
+					<editorArea:section name="hmc.properties">
+						<editorArea:attribute qualifier="includedComposedTypes"/>
+						<editorArea:attribute qualifier="excludedComposedTypes"/>
+						<editorArea:attribute qualifier="excludedAttributes"/>
+						<editorArea:attribute qualifier="localizedObjectCategories"/>
+						<editorArea:attribute qualifier="mergeMode"/>
+						<editorArea:attribute qualifier="addAttributesOnlyWhenDataExists"/>
+						<editorArea:attribute qualifier="catalogVersions"/>
+						<editorArea:attribute qualifier="alreadyProcessedTypes" readonly="true"/>
+						<editorArea:attribute qualifier="failedTypes" readonly="true"/>
+					</editorArea:section>
+				</editorArea:tab>
+			</editorArea:editorArea>
+		</context>
+
+		<context component="listview">
+			<listView:list-view>
+				<listView:column qualifier="includedComposedTypes"/>
+				<listView:column qualifier="mergeMode"/>
+				<listView:column qualifier="alreadyProcessedTypes"/>
+				<listView:column qualifier="failedTypes"/>
+				<listView:column qualifier="addAttributesOnlyWhenDataExists"/>
+				<listView:column qualifier="catalogVersions"/>
+			</listView:list-view>
+		</context>
+
+	</context>
+
+	<context type="Product" merge-by="type">
+		<context component="listviewactions" merge-by="type">
+			<y:actions>
+				<y:group qualifier="translate" show-group-header="false" show-separator="true" position="55">
+					<y:action action-id="com.sap.cx.translations.backoffice.widgets.actions.aitranslate.external"
+							  property="pageable.typeCode"
+							  position="80">
+						<y:parameter>
+							<y:name>max.rows</y:name>
+							<y:value>3000</y:value>
+						</y:parameter>
+						<y:parameter>
+							<y:name>safety.threshold</y:name>
+							<y:value>1000</y:value>
+						</y:parameter>
+					</y:action>
+				</y:group>
+			</y:actions>
+		</context>
+
+		<context component="pcmbackoffice-listviewactions" module="pcmbackoffice" merge-by="module">
+			<y:actions>
+				<y:group qualifier="translate" show-group-header="false" show-separator="true" position="55">
+					<y:action action-id="com.sap.cx.translations.backoffice.widgets.actions.aitranslate.external"
+							  property="pageable.typeCode"
+							  position="80">
+						<y:parameter>
+							<y:name>max.rows</y:name>
+							<y:value>3000</y:value>
+						</y:parameter>
+						<y:parameter>
+							<y:name>safety.threshold</y:name>
+							<y:value>1000</y:value>
+						</y:parameter>
+					</y:action>
+				</y:group>
+			</y:actions>
+		</context>
+
+		<context component="pcmbackoffice-assortment-listviewactions" merge-by="type">
+			<y:actions>
+				<y:group qualifier="translate" show-group-header="false" show-separator="true" position="55">
+					<y:action action-id="com.sap.cx.translations.backoffice.widgets.actions.aitranslate.external"
+							  property="pageable.typeCode"
+							  position="80">
+						<y:parameter>
+							<y:name>max.rows</y:name>
+							<y:value>3000</y:value>
+						</y:parameter>
+						<y:parameter>
+							<y:name>safety.threshold</y:name>
+							<y:value>1000</y:value>
+						</y:parameter>
+					</y:action>
+				</y:group>
+			</y:actions>
+		</context>
+
+		
+
+	</context>
+
+	<context type="Category" merge-by="type">
+		<context component="listviewactions" merge-by="type">
+			<y:actions>
+				<y:group qualifier="translate" show-group-header="false" show-separator="true" position="55">
+					<y:action action-id="com.sap.cx.translations.backoffice.widgets.actions.aitranslate.external"
+							  property="pageable.typeCode"
+							  position="80">
+						<y:parameter>
+							<y:name>max.rows</y:name>
+							<y:value>3000</y:value>
+						</y:parameter>
+						<y:parameter>
+							<y:name>safety.threshold</y:name>
+							<y:value>1000</y:value>
+						</y:parameter>
+					</y:action>
+				</y:group>
+			</y:actions>
+		</context>
+	</context>
+
+	<context type="CMSItem" merge-by="type">
+		<context component="listviewactions" merge-by="type">
+			<y:actions>
+				<y:group qualifier="translate" show-group-header="false" show-separator="true" position="55">
+					<y:action action-id="com.sap.cx.translations.backoffice.widgets.actions.aitranslate.external"
+							  property="pageable.typeCode"
+							  position="80">
+						<y:parameter>
+							<y:name>max.rows</y:name>
+							<y:value>1000</y:value>
+						</y:parameter>
+						<y:parameter>
+							<y:name>safety.threshold</y:name>
+							<y:value>500</y:value>
+						</y:parameter>
+					</y:action>
+				</y:group>
+			</y:actions>
+		</context>
+	</context>
+
+	<context type="Unit" merge-by="type">
+		<context component="listviewactions" merge-by="type">
+			<y:actions>
+				<y:group qualifier="translate" show-group-header="false" show-separator="true" position="55">
+					<y:action action-id="com.sap.cx.translations.backoffice.widgets.actions.aitranslate.external"
+							  property="pageable.typeCode"
+							  position="80">
+						<y:parameter>
+							<y:name>max.rows</y:name>
+							<y:value>1000</y:value>
+						</y:parameter>
+						<y:parameter>
+							<y:name>safety.threshold</y:name>
+							<y:value>500</y:value>
+						</y:parameter>
+					</y:action>
+				</y:group>
+			</y:actions>
+		</context>
+	</context>
+
+	<context type="ClassificationAttributeValue" merge-by="type">
+		<context component="listviewactions" merge-by="type">
+			<y:actions>
+				<y:group qualifier="translate" show-group-header="false" show-separator="true" position="55">
+					<y:action action-id="com.sap.cx.translations.backoffice.widgets.actions.aitranslate.external"
+							  property="pageable.typeCode"
+							  position="80">
+						<y:parameter>
+							<y:name>max.rows</y:name>
+							<y:value>1000</y:value>
+						</y:parameter>
+						<y:parameter>
+							<y:name>safety.threshold</y:name>
+							<y:value>500</y:value>
+						</y:parameter>
+					</y:action>
+				</y:group>
+			</y:actions>
+		</context>
+	</context>
+
+	<context type="ClassificationAttribute" merge-by="type">
+		<context component="listviewactions" merge-by="type">
+			<y:actions>
+				<y:group qualifier="translate" show-group-header="false" show-separator="true" position="55">
+					<y:action action-id="com.sap.cx.translations.backoffice.widgets.actions.aitranslate.external"
+							  property="pageable.typeCode"
+							  position="80">
+						<y:parameter>
+							<y:name>max.rows</y:name>
+							<y:value>1000</y:value>
+						</y:parameter>
+						<y:parameter>
+							<y:name>safety.threshold</y:name>
+							<y:value>500</y:value>
+						</y:parameter>
+					</y:action>
+				</y:group>
+			</y:actions>
+		</context>
+	</context>
+
+	<context type="ClassificationAttributeUnit" merge-by="type">
+		<context component="listviewactions" merge-by="type">
+			<y:actions>
+				<y:group qualifier="translate" show-group-header="false" show-separator="true" position="55">
+					<y:action action-id="com.sap.cx.translations.backoffice.widgets.actions.aitranslate.external"
+							  property="pageable.typeCode"
+							  position="80">
+						<y:parameter>
+							<y:name>max.rows</y:name>
+							<y:value>1000</y:value>
+						</y:parameter>
+						<y:parameter>
+							<y:name>safety.threshold</y:name>
+							<y:value>500</y:value>
+						</y:parameter>
+					</y:action>
+				</y:group>
+			</y:actions>
+		</context>
+	</context>
+
+
+	<context type="CxTranslateGlossary">
+		<context component="base">
+			<y:base>
+				<y:labels>
+					<y:label>@labelService.getObjectLabel(sourceLanguage) + ' → ' + @labelService.getObjectLabel(targetLanguage)</y:label>
+				</y:labels>
+			</y:base>
+		</context>
+
+		<context component="editor-area" merge-by="type">
+			<editorArea:editorArea>
+				<editorArea:essentials>
+					<editorArea:essentialSection name="hmc.essential">
+						<editorArea:attribute qualifier="sourceLanguage"/>
+						<editorArea:attribute qualifier="targetLanguage"/>
+						<editorArea:attribute qualifier="externalGlossaryRef"/>
+						<editorArea:attribute qualifier="glossaryFormat"/>
+						<editorArea:attribute qualifier="media"/>
+					</editorArea:essentialSection>
+				</editorArea:essentials>
+			</editorArea:editorArea>
+		</context>
+
+		<context component="listview">
+			<listView:list-view>
+				<listView:column qualifier="sourceLanguage"/>
+				<listView:column qualifier="targetLanguage"/>
+				<listView:column qualifier="externalGlossaryRef"/>
+				<listView:column qualifier="glossaryFormat"/>
+				<listView:column qualifier="media"/>
+			</listView:list-view>
+		</context>
+
+		<context component="simple-search">
+			<simpleSearch:simple-search>
+				<simpleSearch:field name="sourceLanguage"/>
+				<simpleSearch:field name="targetLanguage"/>
+			</simpleSearch:simple-search>
+		</context>
+
+		<context component="advanced-search">
+			<advancedSearch:advanced-search>
+				<advancedSearch:field-list>
+					<advancedSearch:field name="sourceLanguage" selected="true"/>
+					<advancedSearch:field name="targetLanguage" selected="true"/>
+					<advancedSearch:field name="externalGlossaryRef"/>
+				</advancedSearch:field-list>
+			</advancedSearch:advanced-search>
+		</context>
+
+		<context component="collection-browser">
+			<collection-browser:collection-browser>
+				<collection-browser:available-molds>
+					<collection-browser:mold spring-bean="cxListViewCollectionBrowserMoldStrategy"/>
+				</collection-browser:available-molds>
+			</collection-browser:collection-browser>
+		</context>
+	</context>
+
+
+</config>

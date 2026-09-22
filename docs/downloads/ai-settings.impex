@@ -1,0 +1,147 @@
+# Update in the impex - required changes indicated by the <<CHANGE_ME>>:
+#   -macros related to OAUTH and URLs below
+#   -mapping of model to Deployment ID in CxAiDeploymentConfig
+
+UPDATE GenericItem[processor = de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor]; pk[unique = true]
+
+########################################
+# UPDATE THE <<CHANGE_ME>> BELOW
+########################################
+$oAuthClientId = <<CHANGE_ME>>
+$oAuthSecret = <<CHANGE_ME>>
+$oAuthUrl = <<CHANGE_ME>>
+$aiBaseUrl = https://change.me.sap.com
+########################################
+
+INSERT_UPDATE CxTranslateAiModel; code[unique = true]                  ; name
+                                ; amazon--titan-text-express           ; Amazon Titan Text Express
+                                ; amazon--titan-text-lite              ; Amazon Titan Text Lite
+                                ; anthropic--claude-3-haiku            ; Anthropic Claude 3 Haiku
+                                ; anthropic--claude-3-sonnet           ; Anthropic Claude 3 Sonnet
+                                ; anthropic--claude-3-opus             ; Anthropic Claude 3 Opus
+                                ; anthropic--claude-3.5-sonnet         ; Anthropic Claude 3.5 Sonnet
+                                ; anthropic--claude-3.7-sonnet         ; Anthropic Claude 3.7 Sonnet
+                                ; anthropic--claude-4-sonnet           ; Anthropic Claude 4 Sonnet
+                                ; anthropic--claude-4.5-haiku          ; Anthropic Claude 4.5 Haiku
+                                ; anthropic--claude-4.5-sonnet         ; Anthropic Claude 4.5 Sonnet
+                                ; cohere--command-a-reasoning          ; Cohere Command A Reasoning
+                                ; gemini-1.5-flash                     ; Gemini 1.5 Flash
+                                ; gemini-1.5-pro                       ; Gemini 1.5 Pro
+                                ; gemini-2.0-flash                     ; Gemini 2.0 Flash
+                                ; gemini-2.0-flash-lite                ; Gemini 2.0 Flash Lite
+                                ; gemini-2.5-flash                     ; Gemini 2.5 Flash
+                                ; gemini-2.5-flash-lite                ; Gemini 2.5 Flash Lite
+                                ; gemini-2.5-pro                       ; Gemini 2.5 Pro
+                                ; gpt-4.1                              ; GPT 4.1
+                                ; gpt-4.1-nano                         ; GPT 4.1 Nano
+                                ; gpt-4o                               ; GPT 4o
+                                ; gpt-4o-mini                          ; GPT 4o Mini
+                                ; gpt-5                                ; GPT 5
+                                ; gpt-5-mini                           ; GPT 5 Mini
+                                ; gpt-5-nano                           ; GPT 5 Nano
+                                ; ibm--granite-13b-chat                ; IBM Granite 13B Chat
+                                ; meta--llama3-70b-instruct            ; Meta Llama 3 70B Instruct
+                                ; meta--llama3.1-70b-instruct          ; Meta Llama 3.1 70B Instruct
+                                ; mistralai--mistral-large-instruct    ; Mistral Large Instruct
+                                ; mistralai--mistral-medium-instruct   ; Mistral Medium Instruct
+                                ; mistralai--mixtral-8x7b-instruct-v01 ; Mixtral 8x7B Instruct v0.1
+                                ; o3-mini                              ; o3 Mini
+                                ; sap-rpt-1-large                      ; SAP RPT 1 Large
+                                ; sap-rpt-1-small                      ; SAP RPT 1 Small
+                                ; sonar                                ; Sonar
+                                ; sonar-pro                            ; Sonar Pro
+
+
+
+
+
+
+INSERT_UPDATE DestinationTarget; id[unique = true];
+                               ; cxTranslateDefaultBtpAiTarget
+
+INSERT_UPDATE ConsumedOAuthCredential; id[unique = true]                  ; oauthurl   ; clientId       ; clientSecret
+                                     ; cxTranslateDefaultBtpAiCredentials ; $oAuthUrl ; $oAuthClientId ; $oAuthSecret
+
+INSERT_UPDATE ConsumedDestination; id[unique = true]                  ; credential(id)                     ; url        ; destinationTarget(id)
+                                 ; cxTranslateDefaultBtpAiDestination ; cxTranslateDefaultBtpAiCredentials ; $aiBaseUrl ; cxTranslateDefaultBtpAiTarget
+
+######################################################################################################################################################################################
+# UPDATE THE <<CHANGE_ME>> BELOW
+######################################################################################################################################################################################
+INSERT_UPDATE CxAiDeploymentConfig; code[unique = true]; name    ; destination(id)                    ; deployments(key(code), value)[map-delimiter = |, key2value-delimiter = ->]
+                                  ; default            ; Default ; cxTranslateDefaultBtpAiDestination ; "
+                                  amazon--titan-text-express-> change_me 
+                                  | amazon--titan-text-lite-> change_me 
+                                  | anthropic--claude-3-haiku-> change_me 
+                                  | anthropic--claude-3-sonnet-> change_me 
+                                  | anthropic--claude-3-opus-> change_me 
+                                  | anthropic--claude-3.5-sonnet-> change_me 
+                                  | anthropic--claude-3.7-sonnet-> change_me 
+                                  | anthropic--claude-4-sonnet-> change_me 
+                                  | anthropic--claude-4.5-haiku-> change_me 
+                                  | anthropic--claude-4.5-sonnet-> change_me 
+                                  | cohere--command-a-reasoning-> change_me 
+                                  | gemini-1.5-flash-> change_me 
+                                  | gemini-1.5-pro-> change_me 
+                                  | gemini-2.0-flash-> change_me 
+                                  | gemini-2.0-flash-lite-> change_me 
+                                  | gemini-2.5-flash-> change_me 
+                                  | gemini-2.5-flash-lite-> change_me 
+                                  | gemini-2.5-pro-> change_me 
+                                  | gpt-4.1-> change_me 
+                                  | gpt-4.1-nano-> change_me 
+                                  | gpt-4o-> change_me 
+                                  | gpt-4o-mini-> change_me 
+                                  | gpt-5-> change_me 
+                                  | gpt-5-mini-> change_me 
+                                  | gpt-5-nano-> change_me 
+                                  | ibm--granite-13b-chat-> change_me 
+                                  | meta--llama3-70b-instruct-> change_me 
+                                  | meta--llama3.1-70b-instruct-> change_me 
+                                  | mistralai--mistral-large-instruct-> change_me 
+                                  | mistralai--mistral-medium-instruct-> change_me 
+                                  | mistralai--mixtral-8x7b-instruct-v01-> change_me 
+                                  | o3-mini-> change_me 
+                                  | sap-rpt-1-large-> change_me 
+                                  | sap-rpt-1-small-> change_me 
+                                  | sonar-> change_me 
+| sonar-pro-> change_me"
+#######################################################################################################################################################################################
+
+
+INSERT_UPDATE CxAiTranslationServiceApi; code[unique = true]; name     ; endpointUrlSuffix                                                              ; responsePath                 ; configurableParameters; defaultParameterValues[map-delimiter = |, key2value-delimiter = ->]; deploymentConfiguration(code);
+                                       ; sapBtpAiOpenAiGpt5 ; Chat GPT ; /v2/inference/deployments/{deployment}/chat/completions?api-version=2024-10-21 ; $.choices[0].message.content ; reasoning_effort      ; reasoning_effort->minimal                                          ; default                      ;
+
+UPDATE CxAiTranslationServiceApi; code[unique = true]; requestTemplate
+                                ; sapBtpAiOpenAiGpt5 ; "{
+    ""model"": ""${model}"",
+    ""response_format"": { ""type"": ""json_object"" },
+
+    ""reasoning_effort"": ""${parameters.reasoning_effort}"",
+
+    ""messages"": [
+      {
+        ""content"": ""You are expert language translator API. Use 'feedback' response field to provide comment If there is ambiguity of meaning ,doubt about  style/form or errors/typos in input text. If the content is a html template where localized content is not hardcoded but taken from message bundles, then copy it 1:1 without translation.  If `translationToComplete` is provided then you ALWAYS MUST start with provided content (exactly, including any leading white spaces or other special characters). Try to copy exactly as much characters from existing translation as possible.  Then find the proper place in the source text and continue with translation. You can change part of text near the end in `existingTranslation` to provide proper translation on the boundary. NEVER forget to translate content that is after the provided existing translation!!! Take time to find the proper text to translate and use it. Preserve HTML tags and other markup or template macros.  The expected response schema (don't include schema itself in the response only main fields, don't include ```json marker): ${responseSchemaJson}"",
+        ""role"": ""system""
+      },
+      {
+        ""content"": ""${requestJson}"",
+        ""role"": ""user""
+      }
+    ]
+  }"
+
+
+INSERT_UPDATE CxAiTranslationServiceApi; code[unique = true]; usageMetricsPaths[map-delimiter = |, key2value-delimiter = ->];
+                                       ; sapBtpAiOpenAiGpt5 ; inputTokens->$.usage.prompt_tokens|outputTokens->$.usage.completion_tokens
+
+INSERT_UPDATE CxAiTranslationServiceSettings; code[unique = true]; name                      ; aiServiceApi(code) ; aiModel(code); isDefault[default = false]; maxLanguagesInRequest
+                                            ; gpt5               ; GPT-5 (complex texts)     ; sapBtpAiOpenAiGpt5 ; gpt-5        ; false                     ; 2
+                                            ; gpt5Mini           ; GPT-5 Mini (default)      ; sapBtpAiOpenAiGpt5 ; gpt-5-mini   ; true                      ; 2
+                                            ; gpt5Nano           ; GPT-5 Nano (simple texts) ; sapBtpAiOpenAiGpt5 ; gpt-5-nano   ; false                     ; 2
+
+
+UPDATE CxAiTranslationServiceSettings; code[unique = true]; usageMetricsCost[map-delimiter = |, key2value-delimiter = ->]
+                                     ; gpt5               ; inputTokens->0   | outputTokens-> 0
+                                     ; gpt5Mini           ; inputTokens->0   | outputTokens-> 0
+                                     ; gpt5Nano           ; inputTokens->0   | outputTokens-> 0

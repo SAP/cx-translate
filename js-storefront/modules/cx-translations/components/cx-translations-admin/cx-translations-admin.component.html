@@ -1,0 +1,133 @@
+<!--
+  ~ Copyright (c) 2026 SAP SE or an SAP affiliate company. All rights reserved.
+  -->
+<ng-container *ngIf="visible$ | async">
+  <button
+    class="btn btn-primary btn-block position-toggle"
+    type="button"
+    (click)="toggleView()"
+  >
+    <cx-icon [type]="(toggleView$ | async) ? iconTypes.CARET_DOWN : iconTypes.CARET_UP"></cx-icon>
+  </button>
+
+  <div
+    class="panel-wrapper"
+    *ngIf="combinedVisibility$ | async"
+  >
+    <div class="action-buttons">
+      <button
+        class="btn btn-secondary btn-block"
+        type="button"
+        (click)="toggleShowKeys()"
+      >
+        <span>{{ (showKeys$ | async) ? ('translations.show.labels' | cxTranslate) : ('translations.show.keys' | cxTranslate) }}</span>
+      </button>
+
+      <button
+        class="btn btn-primary btn-block"
+        type="button"
+        (click)="toggleStagedCatalogVersion()"
+      >
+        <span>{{
+          (previewCatalog$ | async) ? ('translations.show.online' | cxTranslate) : ('translations.edit.staged' | cxTranslate)
+        }}</span>
+      </button>
+
+      <button
+        class="btn btn-primary btn-block"
+        type="button"
+        (click)="publishTranslations()"
+        #publishButton
+      >
+        <span>{{ 'translations.publish' | cxTranslate }}</span>
+      </button>
+
+      <button
+        *ngIf="showUploadButton"
+        class="btn btn-primary btn-block"
+        type="button"
+        (click)="uploadTranslations()"
+        #uploadButton
+      >
+        <span>{{ 'translations.upload' | cxTranslate }}</span>
+      </button>
+    </div>
+
+    <div class="translation-edit-wrapper">
+      <span
+        *ngIf="previewCatalog$ | async"
+        class="warning h4"
+      >
+        <cx-icon
+          [type]="iconTypes.WARNING"
+          class="icon-sm"
+        ></cx-icon>
+        {{ 'translations.label.unpublished.preview' | cxTranslate }}
+      </span>
+
+      <form
+        *ngIf="previewCatalog$ | async"
+        class="edit-form"
+        (ngSubmit)="saveLabel()"
+        [formGroup]="form"
+      >
+        <div class="inputs-wrapper">
+          <label class="keyLabel">
+            <span class="label-content">{{ 'translations.label.key' | cxTranslate }}</span>
+
+            <input
+              type="hidden"
+              class="form-control"
+              name="key"
+              formControlName="key"
+            />
+
+            <ng-select
+              [inputAttrs]="{ required: 'true' }"
+              [searchable]="true"
+              [editableSearchTerm]="true"
+              [items]="(suggestions$ | async) ?? []"
+              (change)="onKeySuggestion($event)"
+              (search)="onSearch($event.term)"
+              (clear)="onClear()"
+              addTagText="{{ 'translations.key.addnew' | cxTranslate }}"
+              [addTag]="onAddNewKey"
+              dropdownPosition="top"
+              placeholder=""
+              appendTo=".suggestions-container"
+              id="key-suggestion"
+              #keySuggestions
+            >
+            </ng-select>
+
+            <div class="suggestions-container"></div>
+
+            <cx-form-errors [control]="$any(form).get('key')"></cx-form-errors>
+          </label>
+          <label>
+            <span class="label-content">{{ 'translations.label.value' | cxTranslate }}</span>
+            <textarea
+              class="form-control label-value"
+              name="value"
+              formControlName="value"
+              type="text"
+              required="true"
+              rows="3"
+            >
+            </textarea>
+            <cx-form-errors [control]="$any(form).get('value')"></cx-form-errors>
+          </label>
+        </div>
+        <div class="action-buttons">
+          <button
+            [disabled]="form.invalid"
+            class="btn btn-primary btn-block"
+            type="submit"
+          >
+            {{ 'translations.save' | cxTranslate }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</ng-container>

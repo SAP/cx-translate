@@ -1,0 +1,37 @@
+INSERT_UPDATE UserGroup; UID[unique = true]      ; groups(uid)[mode = append]; readableCatalogVersions(catalog(id), version) ; writableCatalogVersions(catalog(id), version);
+                       ; frontendTranslatorGroup ;                           ; $contentCatalog:Staged,$contentCatalog:Online ; $contentCatalog:Staged                       ;
+
+INSERT_UPDATE CMSFlexComponent; $contentCV[unique = true]; uid[unique = true]           ; name                            ; flexType                     ; &linkRef
+                              ;                          ; CxTranslationsAdminComponent ; CX Translations Admin Component ; CxTranslationsAdminComponent ; CxTranslationsAdminComponent
+
+INSERT_UPDATE CMSUserGroupRestriction; $contentCV[unique = true]; uid[unique = true]                         ; name                                                 ; userGroups(uid)    ; includeSubgroups; components(&linkRef)
+                                     ;                          ; CxTranslationsAdminGroupRestrictionASMUser ; CX Translations Admin Group Restriction for ASM user ; cmstranslatorgroup ; true            ; CxTranslationsAdminComponent
+
+INSERT_UPDATE CMSUserGroupRestriction; $contentCV[unique = true]; uid[unique = true]                                  ; name                                                          ; userGroups(uid)         ; includeSubgroups; components(&linkRef)
+                                     ;                          ; CxTranslationsAdminGroupRestrictionFrontendCustomer ; CX Translations Admin Group Restriction for frontend customer ; frontendTranslatorGroup ; true            ; CxTranslationsAdminComponent
+
+"#%afterEach: impex.getLastImportedItem().setCmsComponents(impex.getLastImportedItem().geCmsComponents().stream().distinct().toList());"
+UPDATE ContentSlot; $contentCV[unique = true]; uid[unique = true]; cmsComponents(uid, $contentCV)[mode = append];
+                  ;                          ; SiteLogoSlot      ; CxTranslationsAdminComponent                 ;
+
+# Access rights for frontendTranslatorGroup
+
+$START_USERRIGHTS ;                          ;                   ;                                              ;;;;;;
+Type           ; UID                    ; MemberOfGroups; Password; Target           ; read; change ; create; remove; change_perm
+UserGroup      ; frontendTranslatorGroup;               ;         ;                  ;     ;        ;       ;       ;
+
+# general
+               ;                        ;               ;         ; Item             ; +   ;        ;       ;       ;   ;
+               ;                        ;               ;         ; ItemSyncTimestamp; +   ;        ;       ;       ;   ;
+               ;                        ;               ;         ; SyncItemJob      ; +   ;        ;       ;       ;   ;
+               ;                        ;               ;         ; Type             ; +   ;        ;       ;       ;   ;
+
+# access rights for Products, Store, Site and Catalogs
+               ;                        ;               ;         ; Catalog          ; +   ;        ;       ;       ;   ;
+               ;                        ;               ;         ; CatalogVersion   ; +   ;        ;       ;       ;   ;
+               ;                        ;               ;         ; ContentCatalog   ; +   ; -      ; -     ; -     ; - ;
+
+# cms2 items
+               ;                        ;               ;         ; CxLocalizedLabel   ; +   ; +      ; +     ; -     ; - ;
+               ;                        ;               ;         ; CxLocalizedBundle  ; +   ; +      ; +     ; -     ; - ;
+$END_USERRIGHTS;;;;;

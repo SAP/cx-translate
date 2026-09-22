@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  ~ Copyright (c) 2024 SAP SE or an SAP affiliate company. All rights reserved
+  -->
+
+<items xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:noNamespaceSchemaLocation="items.xsd">
+
+	<itemtypes>
+
+		<itemtype code="CxLocalizedValueExcelImportCronJob" extends="CronJob" autocreate="true" generate="true">
+			<attributes>
+				<attribute qualifier="excelFile" type="Media">
+					<modifiers read="true" write="true" optional="false"/>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="totalRows" type="java.lang.Integer">
+					<modifiers read="true" write="true" optional="true"/>
+					<persistence type="property"/>
+					<defaultvalue>0</defaultvalue>
+				</attribute>
+				<attribute qualifier="alreadyProcessedRows" type="java.lang.Integer">
+					<modifiers read="true" write="true" optional="true"/>
+					<persistence type="property"/>
+					<defaultvalue>0</defaultvalue>
+				</attribute>
+				<attribute qualifier="failedRows" type="java.lang.Integer">
+					<modifiers read="true" write="true" optional="true"/>
+					<persistence type="property"/>
+					<defaultvalue>0</defaultvalue>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="CxLocalizedValueExcelImportJob" extends="ServicelayerJob">
+			<attributes>
+				<attribute qualifier="springId" type="java.lang.String" redeclare="true">
+					<persistence type="property"/>
+					<modifiers read="true" write="true" search="true" initial="true" optional="false"/>
+					<defaultvalue>"cxLocalizedValueExcelImportJob"</defaultvalue>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+	</itemtypes>
+</items>

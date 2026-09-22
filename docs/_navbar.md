@@ -1,0 +1,2 @@
+- **[Slack channel](https://sap.enterprise.slack.com/archives/C07NRQGRJ86)**
+- **[GitHub](https://github.com/SAP/cx-translate)**

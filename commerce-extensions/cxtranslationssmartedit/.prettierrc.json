@@ -1,0 +1,16 @@
+{
+    "tabWidth": 4,
+    "singleQuote": true,
+    "arrowParens": "always",
+    "bracketSameLine": true,
+    "printWidth": 100,
+    "trailingComma": "none",
+    "overrides": [
+        {
+            "files": "*.html",
+            "options": {
+                "parser": "angular"
+            }
+        }
+    ]
+}

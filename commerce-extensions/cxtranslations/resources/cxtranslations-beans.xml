@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ Copyright (c) 2023 SAP SE or an SAP affiliate company. All rights reserved.
+-->
+
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="beans.xsd">
+
+	<enum class="com.sap.cx.translations.labels.UsageType">
+		<value>FRONTEND</value>
+		<value>BACKEND</value>
+	</enum>
+
+	<bean class="com.sap.cx.translations.labels.CxLocalizedLabel">
+		<property name="bundle" type="java.lang.String"/>
+		<property name="key" type="java.lang.String"/>
+		<property name="value" type="java.lang.String"/>
+	</bean>
+
+	<!-- Metadata returned alongside the CMS translation tree (languages + available service settings) -->
+	<bean class="com.sap.cx.translations.cms.data.CxCmsLanguageEntry">
+		<property name="isocode" type="java.lang.String"/>
+		<!-- Session-localized display name (LanguageModel.getName()) -->
+		<property name="name" type="java.lang.String"/>
+	</bean>
+
+	<bean class="com.sap.cx.translations.cms.data.CxCmsServiceSettingsEntry">
+		<property name="code" type="java.lang.String"/>
+		<property name="name" type="java.lang.String"/>
+	</bean>
+
+	<bean class="com.sap.cx.translations.cms.data.CxCmsTranslationMetadata">
+		<property name="languages" type="java.util.List&lt;com.sap.cx.translations.cms.data.CxCmsLanguageEntry&gt;"/>
+		<property name="serviceSettings" type="java.util.List&lt;com.sap.cx.translations.cms.data.CxCmsServiceSettingsEntry&gt;"/>
+	</bean>
+
+	<!-- Top-level response wrapping the translation tree and its metadata -->
+	<bean class="com.sap.cx.translations.cms.data.CxCmsTranslationTreeResponse">
+		<property name="tree" type="com.sap.cx.translations.cms.data.CxCmsTranslationNode"/>
+		<property name="metadata" type="com.sap.cx.translations.cms.data.CxCmsTranslationMetadata"/>
+	</bean>
+
+	<!-- DTOs exposing the recursive CMS translation tree over OCC -->
+	<bean class="com.sap.cx.translations.cms.data.CxCmsTranslationNode">
+		<property name="uid" type="java.lang.String"/>
+		<property name="itemType" type="java.lang.String"/>
+		<property name="localizedValues" type="java.util.List&lt;com.sap.cx.translations.cms.data.CxCmsLocalizedValue&gt;"/>
+		<property name="translatedValues" type="java.util.List&lt;com.sap.cx.translations.cms.data.CxCmsLocalizedValue&gt;"/>
+		<property name="children" type="java.util.List&lt;com.sap.cx.translations.cms.data.CxCmsTranslationNode&gt;"/>
+	</bean>
+
+	<bean class="com.sap.cx.translations.cms.data.CxCmsLocalizedValue">
+		<!-- String representation of the underlying item PK (localized value / proposed translation) -->
+		<property name="pk" type="java.lang.String"/>
+		<property name="code" type="java.lang.String"/>
+		<property name="objectId" type="java.lang.String"/>
+		<property name="attribute" type="java.lang.String"/>
+		<property name="objectType" type="java.lang.String"/>
+		<!-- language iso code -> localized value -->
+		<property name="values" type="java.util.Map&lt;java.lang.String,java.lang.String&gt;"/>
+        <property name="inProgress" type="boolean"/>
+        <property name="status" type="java.lang.String"/>
+	</bean>
+
+	<!-- Request to start an AI translation cron job for selected localized values -->
+	<bean class="com.sap.cx.translations.cms.data.CxCmsTranslateRequest">
+		<!-- Keys (codes) of the CxLocalizedValues to translate -->
+		<property name="valueKeys" type="java.util.List&lt;java.lang.String&gt;"/>
+		<property name="sourceLanguage" type="java.lang.String"/>
+		<property name="targetLanguages" type="java.util.List&lt;java.lang.String&gt;"/>
+		<property name="hint" type="java.lang.String"/>
+		<!-- Optional code of the CxTranslationServiceSettings to use; the default is used when blank -->
+		<property name="serviceSettingsCode" type="java.lang.String"/>
+		<property name="saveForApproval" type="java.lang.Boolean"/>
+		<property name="skipTranslated" type="java.lang.Boolean"/>
+	</bean>
+
+	<!-- Result of starting a translation cron job -->
+	<bean class="com.sap.cx.translations.cms.data.CxCmsTranslationJob">
+		<property name="cronJobCode" type="java.lang.String"/>
+		<property name="valueCount" type="java.lang.Integer"/>
+	</bean>
+
+	<!-- Request to approve or reject proposed translations, identified by their item PKs -->
+	<bean class="com.sap.cx.translations.cms.data.CxCmsApproveRejectRequest">
+		<!-- PKs of the CxProposedTranslation items to approve / reject -->
+		<property name="pks" type="java.util.List&lt;java.lang.String&gt;"/>
+	</bean>
+
+	<!-- Result of an approve / reject operation -->
+	<bean class="com.sap.cx.translations.cms.data.CxCmsApproveRejectResult">
+		<property name="requested" type="java.lang.Integer"/>
+		<property name="succeeded" type="java.lang.Integer"/>
+		<property name="failed" type="java.lang.Integer"/>
+		<!-- PKs that could not be processed -->
+		<property name="failedPks" type="java.util.List&lt;java.lang.String&gt;"/>
+	</bean>
+
+</beans>

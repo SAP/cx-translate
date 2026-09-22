@@ -1,0 +1,21 @@
+<div class="cx-translations-decorator">
+    <!-- Frame highlighting the range of the decorated content on hover -->
+    <div class="cx-translations-decorator__frame">
+        &nbsp;
+        <ng-content></ng-content>
+
+        <!-- Overlay button shown when the component is selected -->
+        <button
+            *ngIf="active"
+            type="button"
+            class="cx-translations-decorator__btn"
+            title="Show CMS translations"
+            (click)="openTranslations($event)"
+        >
+            <span class="icon-globe"></span> Translations
+        </button>
+    </div>
+</div>
+
+<!-- Shared CMS translations popup (opened via openTranslations()) -->
+<cx-cms-translations-popup></cx-cms-translations-popup>

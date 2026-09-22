@@ -1,0 +1,167 @@
+.yw-modal-cxtranslations-retry {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+/* container padding */
+.yw-modal-cxtranslations-retry.cx-modal-content {
+    padding: 24px 28px;
+    box-sizing: border-box;
+}
+
+/* labels */
+.yw-modal-cxtranslations-retry .z-label {
+    padding: 0;
+    margin: 0;
+}
+
+.yw-modal-cxtranslations-retry .confirmation-context,
+.yw-modal-cxtranslations-retry .confirmation-msg {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--bo-text-color, #32363a);
+}
+
+/* --- BODY vertical rhythm (vlayout is table-based) --- */
+.yw-modal-cxtranslations-retry .cx-modal-body > table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.yw-modal-cxtranslations-retry .cx-modal-body > table > tbody > tr:not(:last-child) > td {
+    padding-bottom: 16px;
+}
+
+/* --- COUNT ROW: stop stretching and keep label+value together --- */
+.yw-modal-cxtranslations-retry .count-row {
+    width: auto;
+}
+
+/* hlayout renders a table; keep it compact */
+.yw-modal-cxtranslations-retry .count-row > table {
+    width: auto !important;
+    display: inline-table;          /* key: prevents "full width" stretching */
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.yw-modal-cxtranslations-retry .count-row > table > tbody > tr > td {
+    padding: 0;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+/* create consistent space between label and field */
+.yw-modal-cxtranslations-retry .count-row > table > tbody > tr > td:first-child {
+    padding-right: 12px;
+}
+
+.yw-modal-cxtranslations-retry .field-label {
+    color: var(--bo-label-color, #6a6d70);
+    font-size: 13px;
+}
+
+/* --- COUNT FIELD: force it to look like a real readonly input (no dashed underline) --- */
+.yw-modal-cxtranslations-retry .count-value {
+    width: 84px;
+}
+
+.yw-modal-cxtranslations-retry .count-value .z-textbox-input {
+    width: 84px !important;
+    height: 32px !important;
+    line-height: 32px !important;
+
+    text-align: center !important;
+    font-weight: 600 !important;
+
+    padding: 0 10px !important;
+    box-sizing: border-box !important;
+
+    border: 1px solid var(--bo-container-border-color, #d9d9d9) !important;
+    border-bottom: 1px solid var(--bo-container-border-color, #d9d9d9) !important; /* kill underline styles */
+    border-radius: 8px !important;
+
+    background: var(--bo-container-bg, #fff) !important;
+    box-shadow: none !important;
+}
+
+/* link */
+.yw-modal-cxtranslations-retry .override-link {
+    color: var(--sapLinkColor, #0a6ed1);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.yw-modal-cxtranslations-retry .override-link:hover {
+    text-decoration: underline;
+}
+
+/* footer */
+.yw-modal-cxtranslations-retry .cx-modal-controls {
+    padding-top: 16px;
+    border-top: 1px solid var(--bo-page-footer-border-color);
+    width: 100%;
+    text-align: right;
+}
+
+/* Some ZK themes insert separator elements; keep button spacing consistent */
+.yw-modal-cxtranslations-retry .cx-modal-controls .z-hbox-sep {
+    width: 8px;
+}
+
+/* ── Override-settings popup (top-level) ─────────────────────────── */
+
+.override-popup.z-popup {
+    padding: 0;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    width: auto !important;
+    max-width: none;
+}
+
+.override-popup-card {
+    width: 460px;
+    max-width: min(460px, calc(100vw - 48px));
+    padding: 18px 20px;
+    background: var(--bo-container-bg, #fff);
+    border: 1px solid var(--bo-container-border-color, #d9d9d9);
+    border-radius: 10px;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
+    box-sizing: border-box;
+}
+
+.override-popup-card .override-field {
+    margin-bottom: 10px;
+}
+
+.override-popup-card .override-field:last-child {
+    margin-bottom: 0;
+}
+
+.override-popup-card .override-field .field-label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--bo-label-color, #6a6d70);
+    font-size: 13px;
+}
+
+.override-popup-card .override-field .field-control {
+    width: 100%;
+    max-width: none;
+    min-height: 32px;
+}
+
+.override-popup-card .override-field .hint-area .z-textbox-input,
+.override-popup-card .override-field .hint-area.z-textbox {
+    width: 100%;
+    max-width: none;
+    min-height: 96px;
+    padding: 6px 8px;
+    box-sizing: border-box;
+    resize: vertical;
+}

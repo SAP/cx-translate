@@ -1,0 +1,678 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "translations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "detected_source_language": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SourceLanguage"
+              }
+            ],
+            "description": "The language detected in the source text. It reflects the value of the `source_lang` parameter, when specified."
+          },
+          "text": {
+            "description": "The translated text.",
+            "type": "string"
+          },
+          "billed_characters": {
+            "description": "Number of characters counted by DeepL for billing purposes. Only present if the show_billed_characters parameter is set to true.",
+            "type": "integer"
+          },
+          "model_type_used": {
+            "description": "Indicates the translation model used. Only present if model_type parameter is included in the request.",
+            "type": "string",
+            "example": "quality_optimized"
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas": {
+      "Context": {
+        "description": "The `context` parameter makes it possible to include additional context that can influence a translation but is not translated itself. \nThis additional context can potentially improve translation quality when translating short, low-context source texts such \nas product names on an e-commerce website, article headlines on a news website, or UI elements.\n\n\nFor example...\n  - When translating a product name, you might pass the product description as context. \n  - When translating a news article headline, you might pass the first few sentences or a summary of the article as context.\n\n\nFor best results, we recommend sending a few complete sentences of context in the same language as the source text. \nThere is no size limit for the `context` parameter itself, but the request body size limit of 128 KiB still applies to \nall text translation requests. \n\n\nIf you send a request with multiple `text` parameters, the `context` parameter will be applied to each one. \n\n\nCharacters included in the `context` parameter will not be counted toward billing (i.e. there is no additional \ncost for using the `context` parameter, and only characters sent in the text parameter(s) will be counted toward \nbilling for text translation even when the `context` parameter is included in a request).",
+        "type": "string"
+      },
+      "CreateMultilingualGlossaryParameters": {
+        "type": "object",
+        "required": [
+          "name",
+          "dictionaries"
+        ],
+        "properties": {
+          "name": {
+            "description": "Name to be associated with the glossary.",
+            "type": "string",
+            "example": "My Glossary"
+          },
+          "dictionaries": {
+            "description": "Dictionaries to populate the glossary with.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GlossaryDictionary"
+            }
+          }
+        }
+      },
+      "CreateGlossaryParameters": {
+        "type": "object",
+        "required": [
+          "name",
+          "source_lang",
+          "target_lang",
+          "entries",
+          "entries_format"
+        ],
+        "properties": {
+          "name": {
+            "description": "Name to be associated with the glossary.",
+            "type": "string",
+            "example": "My Glossary"
+          },
+          "source_lang": {
+            "$ref": "#/components/schemas/GlossarySourceLanguage"
+          },
+          "target_lang": {
+            "$ref": "#/components/schemas/GlossaryTargetLanguage"
+          },
+          "entries": {
+            "description": "The entries of the glossary. The entries have to be specified in the format provided by the `entries_format` parameter.",
+            "type": "string",
+            "example": "Hello\tGuten Tag"
+          },
+          "entries_format": {
+            "description": "The format in which the glossary entries are provided. Formats currently available:\n- `tsv` (default) - tab-separated values\n- `csv` - comma-separated values\n\nSee [Supported Glossary Formats](https://www.deepl.com/docs-api/glossaries/formats) for details about each format.",
+            "type": "string",
+            "enum": [
+              "tsv",
+              "csv"
+            ],
+            "example": "tsv",
+            "default": "tsv"
+          }
+        }
+      },
+      "DocumentTranslationError": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "detailed error message"
+          }
+        }
+      },
+      "DocumentKey": {
+        "type": "object",
+        "required": [
+          "document_key"
+        ],
+        "properties": {
+          "document_key": {
+            "description": "The document encryption key that was sent to the client when the document was uploaded to the API.",
+            "type": "string",
+            "example": "0CB0054F1C132C1625B392EADDA41CB754A742822F6877173029A6C487E7F60A"
+          }
+        }
+      },
+      "Formality": {
+        "description": "Sets whether the translated text should lean towards formal or informal language.\nThis feature currently only works for target languages\n`DE` (German),\n`FR` (French),\n`IT` (Italian),\n`ES` (Spanish),\n`NL` (Dutch),\n`PL` (Polish),\n`PT-BR` and `PT-PT` (Portuguese),\n`JA` (Japanese),\nand `RU` (Russian).\nLearn more about the plain/polite feature for Japanese [here](https://support.deepl.com/hc/en-us/articles/6306700061852-About-the-plain-polite-feature-in-Japanese).\nSetting this parameter with a target language that does not support formality will fail,\nunless one of the `prefer_...` options are used.\nPossible options are:\n  * `default` (default)\n  * `more` - for a more formal language\n  * `less` - for a more informal language\n  * `prefer_more` - for a more formal language if available, otherwise fallback to default formality\n  * `prefer_less` - for a more informal language if available, otherwise fallback to default formality",
+        "type": "string",
+        "enum": [
+          "default",
+          "more",
+          "less",
+          "prefer_more",
+          "prefer_less"
+        ],
+        "default": "default"
+      },
+      "GlossaryDictionary": {
+        "type": "object",
+        "description": "A dictionary contained in a multilingual glossary. Each dictionary contains the mapping of source terms to target language terms.",
+        "properties": {
+          "source_lang": {
+            "$ref": "#/components/schemas/GlossarySourceLanguage"
+          },
+          "target_lang": {
+            "$ref": "#/components/schemas/GlossaryTargetLanguage"
+          },
+          "entries": {
+            "$ref": "#/components/schemas/GlossaryEntries"
+          },
+          "entries_format": {
+            "$ref": "#/components/schemas/GlossaryEntriesFormat"
+          }
+        }
+      },
+      "GlossaryEntries": {
+        "type": "string",
+        "description": "The entries of the glossary. The entries have to be specified in the format provided by the `entries_format` parameter.",
+        "example": "Hello\tGuten Tag"
+      },
+      "GlossaryEntriesFormat": {
+        "description": "The format in which the glossary entries are provided. Formats currently available:\n- `tsv` (default) - tab-separated values\n- `csv` - comma-separated values\n\nSee [Supported Glossary Formats](https://www.deepl.com/docs-api/glossaries/formats) for details about each format.",
+        "type": "string",
+        "enum": [
+          "tsv",
+          "csv"
+        ],
+        "example": "tsv",
+        "default": "tsv"
+      },
+      "GlossaryEntryCount": {
+        "description": "The number of entries in the glossary.",
+        "type": "integer"
+      },
+      "GlossaryId": {
+        "type": "string",
+        "description": "A unique ID assigned to a glossary.",
+        "example": "def3a26b-3e84-45b3-84ae-0c0aaf3525f7"
+      },
+      "GlossaryName": {
+        "description": "Name associated with the glossary.",
+        "type": "string"
+      },
+      "GlossarySourceLanguage": {
+        "type": "string",
+        "description": "The language in which the source texts in the glossary are specified.",
+        "enum": [
+          "da",
+          "de",
+          "en",
+          "es",
+          "fr",
+          "it",
+          "ja",
+          "ko",
+          "nb",
+          "nl",
+          "pl",
+          "pt",
+          "ro",
+          "ru",
+          "sv",
+          "zh"
+        ],
+        "example": "en"
+      },
+      "GlossaryTargetLanguage": {
+        "type": "string",
+        "description": "The language in which the target texts in the glossary are specified.",
+        "enum": [
+          "da",
+          "de",
+          "en",
+          "es",
+          "fr",
+          "it",
+          "ja",
+          "ko",
+          "nb",
+          "nl",
+          "pl",
+          "pt",
+          "ro",
+          "ru",
+          "sv",
+          "zh"
+        ],
+        "example": "de"
+      },
+      "ModelType": {
+        "type": "string",
+        "description": "Specifies which DeepL model should be used for translation.\n\nPossible values are:\n* `latency_optimized` (default) - uses lower latency \u201cclassic\u201d translation models, which support all language pairs;\n  default value\n* `quality_optimized` - uses higher latency, improved quality \u201cnext-gen\u201d translation models, which support only a\n  subset of language pairs; if a language pair that is not supported by next-gen models is included in the\n  request, it will fail. Consider using prefer_quality_optimized instead.\n* `prefer_quality_optimized` - prioritizes use of higher latency, improved quality \u201cnext-gen\u201d translation models,\n  which support only a subset of DeepL languages; if a request includes a language pair not supported by\n  next-gen models, the request will fall back to latency_optimized classic models.",
+        "enum": [
+          "quality_optimized",
+          "prefer_quality_optimized",
+          "latency_optimized"
+        ]
+      },
+      "MonolingualGlossary": {
+        "type": "object",
+        "properties": {
+          "glossary_id": {
+            "$ref": "#/components/schemas/GlossaryId"
+          },
+          "name": {
+            "$ref": "#/components/schemas/GlossaryName"
+          },
+          "ready": {
+            "description": "Indicates if the newly created glossary can already be used in `translate` requests.\nIf the created glossary is not yet ready, you have to wait and check the `ready` status\nof the glossary before using it in a `translate` request.",
+            "type": "boolean"
+          },
+          "source_lang": {
+            "$ref": "#/components/schemas/GlossarySourceLanguage"
+          },
+          "target_lang": {
+            "$ref": "#/components/schemas/GlossaryTargetLanguage"
+          },
+          "creation_time": {
+            "description": "The creation time of the glossary in the ISO 8601-1:2019 format (e.g.: `2021-08-03T14:16:18.329Z`).",
+            "type": "string"
+          },
+          "entry_count": {
+            "$ref": "#/components/schemas/GlossaryEntryCount"
+          }
+        },
+        "example": {
+          "glossary_id": "def3a26b-3e84-45b3-84ae-0c0aaf3525f7",
+          "ready": true,
+          "name": "My Glossary",
+          "source_lang": "en",
+          "target_lang": "de",
+          "entry_count": 1
+        }
+      },
+      "MultilingualGlossary": {
+        "type": "object",
+        "properties": {
+          "glossary_id": {
+            "$ref": "#/components/schemas/GlossaryId"
+          },
+          "name": {
+            "$ref": "#/components/schemas/GlossaryName"
+          },
+          "dictionaries": {
+            "description": "List of dictionaries contained in this glossary.\nEach dictionary contains a source and target language, as well as pairs of source and target entries.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GlossaryDictionary"
+            }
+          },
+          "creation_time": {
+            "description": "The creation time of the glossary in the ISO 8601-1:2019 format (e.g.: `2021-08-03T14:16:18.329Z`).",
+            "type": "string"
+          }
+        },
+        "example": {
+          "glossary_id": "def3a26b-3e84-45b3-84ae-0c0aaf3525f7",
+          "name": "My Glossary",
+          "dictionaries": [
+            {
+              "source_lang": "en",
+              "target_lang": "de",
+              "entry_count": 1
+            }
+          ]
+        }
+      },
+      "MultilingualGlossaryEntries": {
+        "type": "object",
+        "properties": {
+          "source_lang": {
+            "$ref": "#/components/schemas/GlossarySourceLanguage"
+          },
+          "target_lang": {
+            "$ref": "#/components/schemas/GlossaryTargetLanguage"
+          },
+          "entries": {
+            "$ref": "#/components/schemas/GlossaryEntries"
+          },
+          "entries_format": {
+            "$ref": "#/components/schemas/GlossaryEntriesFormat"
+          }
+        }
+      },
+      "MultilingualGlossaryEntriesResponse": {
+        "type": "object",
+        "properties": {
+          "dictionaries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MultilingualGlossaryEntriesInformation"
+            }
+          }
+        }
+      },
+      "MultilingualGlossaryEntriesInformation": {
+        "type": "object",
+        "properties": {
+          "source_lang": {
+            "$ref": "#/components/schemas/GlossarySourceLanguage"
+          },
+          "target_lang": {
+            "$ref": "#/components/schemas/GlossaryTargetLanguage"
+          },
+          "entry_count": {
+            "$ref": "#/components/schemas/GlossaryEntryCount"
+          }
+        }
+      },
+      "OutlineDetectionOption": {
+        "description": "The automatic detection of the XML structure won't yield best results in all XML files. You can disable this automatic mechanism altogether by setting the `outline_detection` parameter to `false` and selecting the tags that should be considered structure tags. This will split sentences using the `splitting_tags` parameter.\n\n\nIn the example below, we achieve the same results as the automatic engine by disabling automatic detection with `outline_detection=0` and setting the parameters manually to `tag_handling=xml`, `split_sentences=nonewlines`,  and `splitting_tags=par,title`.\n * Example request:\n   ```\n   <document>\n     <meta>\n       <title>A document's title</title>\n     </meta>\n     <content>\n       <par>This is the first sentence. Followed by a second one.</par>\n       <par>This is the third sentence.</par>\n     </content>\n   </document>\n   ```\n * Example response:\n   ```\n   <document>\n     <meta>\n       <title>Der Titel eines Dokuments</title>\n     </meta>\n     <content>\n       <par>Das ist der erste Satz. Gefolgt von einem zweiten.</par>\n       <par>Dies ist der dritte Satz.</par>\n     </content>\n   </document>\n   ```\nWhile this approach is slightly more complicated, it allows for greater control over the structure of the translation output.",
+        "type": "boolean",
+        "default": true
+      },
+      "OutlineDetectionOptionStr": {
+        "description": "The automatic detection of the XML structure won't yield best results in all XML files. You can disable this automatic mechanism altogether by setting the `outline_detection` parameter to `0` and selecting the tags that should be considered structure tags. This will split sentences using the `splitting_tags` parameter.\n\n\nIn the example below, we achieve the same results as the automatic engine by disabling automatic detection with `outline_detection=0` and setting the parameters manually to `tag_handling=xml`, `split_sentences=nonewlines`,  and `splitting_tags=par,title`.\n * Example request:\n   ```\n   <document>\n     <meta>\n       <title>A document's title</title>\n     </meta>\n     <content>\n       <par>This is the first sentence. Followed by a second one.</par>\n       <par>This is the third sentence.</par>\n     </content>\n   </document>\n   ```\n * Example response:\n   ```\n   <document>\n     <meta>\n       <title>Der Titel eines Dokuments</title>\n     </meta>\n     <content>\n       <par>Das ist der erste Satz. Gefolgt von einem zweiten.</par>\n       <par>Dies ist der dritte Satz.</par>\n     </content>\n   </document>\n   ```\nWhile this approach is slightly more complicated, it allows for greater control over the structure of the translation output.",
+        "type": "string",
+        "enum": [
+          "0"
+        ]
+      },
+      "PatchMultilingualGlossaryParameters": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/GlossaryId"
+          },
+          "dictionaries": {
+            "description": "Dictionaries to edit the glossary with. Currently only supports 0 or 1 dictionaries in the array.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GlossaryDictionary"
+            }
+          }
+        }
+      },
+      "PreserveFormattingOption": {
+        "description": "Sets whether the translation engine should respect the original formatting, even if it would usually correct some aspects.\n\nThe formatting aspects affected by this setting include:\n * Punctuation at the beginning and end of the sentence\n * Upper/lower case at the beginning of the sentence",
+        "type": "boolean",
+        "default": false
+      },
+      "PreserveFormattingOptionStr": {
+        "description": "Sets whether the translation engine should respect the original formatting, even if it would usually correct some aspects. Possible values are:\n * `0` (default)\n * `1`\n\nThe formatting aspects affected by this setting include:\n * Punctuation at the beginning and end of the sentence\n * Upper/lower case at the beginning of the sentence",
+        "type": "string",
+        "enum": [
+          "0",
+          "1"
+        ],
+        "default": "0"
+      },
+      "ShowBilledCharacters": {
+        "description": "When true, the response will include the billed_characters parameter, giving the \nnumber of characters from the request that will be counted by DeepL for billing purposes.",
+        "type": "boolean"
+      },
+      "SplitSentencesOption": {
+        "description": "Sets whether the translation engine should first split the input into sentences. For text translations where \n`tag_handling` is not set to `html`, the default value is `1`, meaning the engine splits on punctuation and on newlines.\n\nFor text translations where `tag_handling=html`, the default value is `nonewlines`, meaning the engine splits on punctuation only, ignoring newlines.  \n\nThe use of `nonewlines` as the default value for text translations where `tag_handling=html` is new behavior that was implemented in November 2022, \nwhen HTML handling was moved out of beta. \n\nPossible values are: \n\n * `0` - no splitting at all, whole input is treated as one sentence\n * `1` (default when `tag_handling` is not set to `html`) - splits on punctuation and on newlines\n * `nonewlines` (default when `tag_handling=html`) - splits on punctuation only, ignoring newlines\n\nFor applications that send one sentence per text parameter, we recommend setting `split_sentences` to `0`, in order to prevent the engine from splitting the sentence unintentionally.\n\n\nPlease note that newlines will split sentences when `split_sentences=1`. We recommend cleaning files so they don't contain breaking sentences or setting the parameter `split_sentences` to `nonewlines`.",
+        "type": "string",
+        "enum": [
+          "0",
+          "1",
+          "nonewlines"
+        ],
+        "default": "1"
+      },
+      "SourceLanguage": {
+        "type": "string",
+        "description": "Language of the text to be translated. Options currently available:\n * `BG` - Bulgarian\n * `CS` - Czech\n * `DA` - Danish\n * `DE` - German\n * `EL` - Greek\n * `EN` - English\n * `ES` - Spanish\n * `ET` - Estonian\n * `FI` - Finnish\n * `FR` - French\n * `HU` - Hungarian\n * `ID` - Indonesian\n * `IT` - Italian\n * `JA` - Japanese\n * `KO` - Korean\n * `LT` - Lithuanian\n * `LV` - Latvian\n * `NB` - Norwegian (Bokm\u00e5l)\n * `NL` - Dutch\n * `PL` - Polish\n * `PT` - Portuguese (all Portuguese varieties mixed)\n * `RO` - Romanian\n * `RU` - Russian\n * `SK` - Slovak\n * `SL` - Slovenian\n * `SV` - Swedish\n * `TR` - Turkish\n * `UK` - Ukrainian\n * `ZH` - Chinese\n\nIf this parameter is omitted, the API will attempt to detect the language of the text and translate it.",
+        "enum": [
+          "BG",
+          "CS",
+          "DA",
+          "DE",
+          "EL",
+          "EN",
+          "ES",
+          "ET",
+          "FI",
+          "FR",
+          "HU",
+          "ID",
+          "IT",
+          "JA",
+          "KO",
+          "LT",
+          "LV",
+          "NB",
+          "NL",
+          "PL",
+          "PT",
+          "RO",
+          "RU",
+          "SK",
+          "SL",
+          "SV",
+          "TR",
+          "UK",
+          "ZH"
+        ],
+        "example": "EN"
+      },
+      "SourceLanguageText": {
+        "type": "string",
+        "description": "Language of the text to be translated. Options currently available:\n * `AR` - Arabic [1]\n * `BG` - Bulgarian\n * `CS` - Czech\n * `DA` - Danish\n * `DE` - German\n * `EL` - Greek\n * `EN` - English\n * `ES` - Spanish\n * `ET` - Estonian\n * `FI` - Finnish\n * `FR` - French\n * `HU` - Hungarian\n * `ID` - Indonesian\n * `IT` - Italian\n * `JA` - Japanese\n * `KO` - Korean\n * `LT` - Lithuanian\n * `LV` - Latvian\n * `NB` - Norwegian (Bokm\u00e5l)\n * `NL` - Dutch\n * `PL` - Polish\n * `PT` - Portuguese (all Portuguese varieties mixed)\n * `RO` - Romanian\n * `RU` - Russian\n * `SK` - Slovak\n * `SL` - Slovenian\n * `SV` - Swedish\n * `TR` - Turkish\n * `UK` - Ukrainian\n * `ZH` - Chinese\n\nIf this parameter is omitted, the API will attempt to detect the language of the text and translate it.\n\n[1] Please note that Arabic has not yet been added to the `/languages` endpoint because it does not \nyet support document translation; only text translation is supported for Arabic at this time. When \ndocument translation support is added for Arabic, we will a) remove this note and b) add Arabic to \nthe `/languages` endpoint.",
+        "enum": [
+          "AR",
+          "BG",
+          "CS",
+          "DA",
+          "DE",
+          "EL",
+          "EN",
+          "ES",
+          "ET",
+          "FI",
+          "FR",
+          "HU",
+          "ID",
+          "IT",
+          "JA",
+          "KO",
+          "LT",
+          "LV",
+          "NB",
+          "NL",
+          "PL",
+          "PT",
+          "RO",
+          "RU",
+          "SK",
+          "SL",
+          "SV",
+          "TR",
+          "UK",
+          "ZH"
+        ],
+        "example": "EN"
+      },
+      "TagHandlingOption": {
+        "description": "Sets which kind of tags should be handled. Options currently available:\n * `xml`: Enable XML tag handling; see [XML Handling](https://www.deepl.com/docs-api/xml).\n * `html`: Enable HTML tag handling; see [HTML Handling](https://www.deepl.com/docs-api/html).",
+        "type": "string",
+        "enum": [
+          "xml",
+          "html"
+        ]
+      },
+      "NonSplittingTagCommaSeparatedList": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TagCommaSeparatedList"
+          }
+        ],
+        "description": "Comma-separated list of XML tags which never split sentences.\n\n\nFor some XML files, finding tags with textual content and splitting sentences using those tags won't yield the best results. The following example shows the engine splitting sentences on `par` tags and proceeding to translate the parts separately, resulting in an incorrect translation:\n * Example request:\n```\n<par>The firm said it had been </par><par> conducting an internal investigation.</par>\n```\n * Example response:\n```\n<par>Die Firma sagte, es sei eine gute Idee gewesen.</par><par> Durchf\u00fchrung einer internen Untersuchung.</par>\n```\n\n\nAs this can lead to bad translations, this type of structure should either be avoided, or the `non_splitting_tags` parameter should be set. The following example shows the same call, with the parameter set to `par`:\n * Example request:\n```\n<par>The firm said it had been </par><par> conducting an internal investigation.</par>\n```\n * Example response:\n```\n<par>Die Firma sagte, dass sie</par><par> eine interne Untersuchung durchgef\u00fchrt</par><par> habe</par><par>.</par>\n```\n\n\nThis time, the sentence is translated as a whole. The XML tags are now considered markup and copied into the translated sentence. As the translation of the words \"had been\" has moved to another position in the German sentence, the two par tags are duplicated (which is expected here)."
+      },
+      "NonSplittingTagList": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TagList"
+          }
+        ],
+        "description": "List of XML tags which never split sentences.\n\n\nFor some XML files, finding tags with textual content and splitting sentences using those tags won't yield the best results. The following example shows the engine splitting sentences on `par` tags and proceeding to translate the parts separately, resulting in an incorrect translation:\n * Example request:\n```\n<par>The firm said it had been </par><par> conducting an internal investigation.</par>\n```\n * Example response:\n```\n<par>Die Firma sagte, es sei eine gute Idee gewesen.</par><par> Durchf\u00fchrung einer internen Untersuchung.</par>\n```\n\n\nAs this can lead to bad translations, this type of structure should either be avoided, or the `non_splitting_tags` parameter should be set. The following example shows the same call, with the parameter set to `par`:\n * Example request:\n```\n<par>The firm said it had been </par><par> conducting an internal investigation.</par>\n```\n * Example response:\n```\n<par>Die Firma sagte, dass sie</par><par> eine interne Untersuchung durchgef\u00fchrt</par><par> habe</par><par>.</par>\n```\n\n\nThis time, the sentence is translated as a whole. The XML tags are now considered markup and copied into the translated sentence. As the translation of the words \"had been\" has moved to another position in the German sentence, the two par tags are duplicated (which is expected here)."
+      },
+      "SplittingTagCommaSeparatedList": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TagCommaSeparatedList"
+          }
+        ],
+        "description": "Comma-separated list of XML tags which always cause splits.\n\n\nSee the example in the `outline_detection` parameter's description."
+      },
+      "SplittingTagList": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TagList"
+          }
+        ],
+        "description": "List of XML tags which always cause splits.\n\n\nSee the example in the `outline_detection` parameter's description."
+      },
+      "IgnoreTagCommaSeparatedList": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TagCommaSeparatedList"
+          }
+        ],
+        "description": "Comma-separated list of XML tags that indicate text not to be translated.\n\n\nUse this parameter to ensure that elements in the original text are not altered in the translation (e.g., trademarks, product names) and insert tags into your original text. In the following example, the `ignore_tags` parameter is set to `keep`:\n * Example request:\n   ```\n   Please open the page <keep>Settings</keep> to configure your system.\n   ```\n * Example response:\n   ```\n   Bitte \u00f6ffnen Sie die Seite <keep>Settings</keep> um Ihr System zu konfigurieren.\n   ```"
+      },
+      "IgnoreTagList": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TagList"
+          }
+        ],
+        "description": "List of XML tags that indicate text not to be translated.\n\n\nUse this parameter to ensure that elements in the original text are not altered in the translation (e.g., trademarks, product names) and insert tags into your original text. In the following example, the `ignore_tags` parameter is set to `keep`:\n * Example request:\n   ```\n   Please open the page <keep>Settings</keep> to configure your system.\n   ```\n * Example response:\n   ```\n   Bitte \u00f6ffnen Sie die Seite <keep>Settings</keep> um Ihr System zu konfigurieren.\n   ```"
+      },
+      "TagCommaSeparatedList": {
+        "description": "Comma-separated list of XML tags.",
+        "type": "string",
+        "example": "a,p,span"
+      },
+      "TagList": {
+        "description": "List of XML tags.",
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "example": [
+          "a",
+          "p",
+          "span"
+        ]
+      },
+      "TargetLanguage": {
+        "type": "string",
+        "description": "The language into which the text should be translated. Options currently available:\n * `BG` - Bulgarian\n * `CS` - Czech\n * `DA` - Danish\n * `DE` - German\n * `EL` - Greek\n * `EN` - English (unspecified variant for backward compatibility; please select `EN-GB` or `EN-US` instead)\n * `EN-GB` - English (British)\n * `EN-US` - English (American)\n * `ES` - Spanish\n * `ET` - Estonian\n * `FI` - Finnish\n * `FR` - French\n * `HU` - Hungarian\n * `ID` - Indonesian\n * `IT` - Italian\n * `JA` - Japanese\n * `KO` - Korean\n * `LT` - Lithuanian\n * `LV` - Latvian\n * `NB` - Norwegian (Bokm\u00e5l)\n * `NL` - Dutch\n * `PL` - Polish\n * `PT` - Portuguese (unspecified variant for backward compatibility; please select `PT-BR` or `PT-PT` instead)\n * `PT-BR` - Portuguese (Brazilian)\n * `PT-PT` - Portuguese (all Portuguese varieties excluding Brazilian Portuguese)\n * `RO` - Romanian\n * `RU` - Russian\n * `SK` - Slovak\n * `SL` - Slovenian\n * `SV` - Swedish\n * `TR` - Turkish\n * `UK` - Ukrainian\n * `ZH` - Chinese (unspecified variant for backward compatibility; please select `ZH-HANS` instead)\n * `ZH-HANS` - Chinese (simplified)",
+        "enum": [
+          "BG",
+          "CS",
+          "DA",
+          "DE",
+          "EL",
+          "EN-GB",
+          "EN-US",
+          "ES",
+          "ET",
+          "FI",
+          "FR",
+          "HU",
+          "ID",
+          "IT",
+          "JA",
+          "KO",
+          "LT",
+          "LV",
+          "NB",
+          "NL",
+          "PL",
+          "PT-BR",
+          "PT-PT",
+          "RO",
+          "RU",
+          "SK",
+          "SL",
+          "SV",
+          "TR",
+          "UK",
+          "ZH",
+          "ZH-HANS"
+        ],
+        "example": "DE"
+      },
+      "TargetLanguageText": {
+        "type": "string",
+        "description": "The language into which the text should be translated. Options currently available:\n * `AR` - Arabic [1]\n * `BG` - Bulgarian\n * `CS` - Czech\n * `DA` - Danish\n * `DE` - German\n * `EL` - Greek\n * `EN` - English (unspecified variant for backward compatibility; please select `EN-GB` or `EN-US` instead)\n * `EN-GB` - English (British)\n * `EN-US` - English (American)\n * `ES` - Spanish\n * `ET` - Estonian\n * `FI` - Finnish\n * `FR` - French\n * `HU` - Hungarian\n * `ID` - Indonesian\n * `IT` - Italian\n * `JA` - Japanese\n * `KO` - Korean\n * `LT` - Lithuanian\n * `LV` - Latvian\n * `NB` - Norwegian (Bokm\u00e5l)\n * `NL` - Dutch\n * `PL` - Polish\n * `PT` - Portuguese (unspecified variant for backward compatibility; please select `PT-BR` or `PT-PT` instead)\n * `PT-BR` - Portuguese (Brazilian)\n * `PT-PT` - Portuguese (all Portuguese variants excluding Brazilian Portuguese)\n * `RO` - Romanian\n * `RU` - Russian\n * `SK` - Slovak\n * `SL` - Slovenian\n * `SV` - Swedish\n * `TR` - Turkish\n * `UK` - Ukrainian\n * `ZH` - Chinese (unspecified variant for backward compatibility; please select `ZH-HANS` or `ZH-HANT` instead)\n * `ZH-HANS` - Chinese (simplified)\n * `ZH-HANT` - Chinese (traditional)\n\n [1] Please note that Arabic and traditional Chinese have not yet been added to the /languages \n endpoint because these languages do not yet support document translation; only text translation \n is supported for Arabic and traditional Chinese at this time. When document translation support \n is added for these languages, we will a) remove this note and b) add the languages to the /languages \n endpoint where appropriate.",
+        "enum": [
+          "AR",
+          "BG",
+          "CS",
+          "DA",
+          "DE",
+          "EL",
+          "EN-GB",
+          "EN-US",
+          "ES",
+          "ET",
+          "FI",
+          "FR",
+          "HU",
+          "ID",
+          "IT",
+          "JA",
+          "KO",
+          "LT",
+          "LV",
+          "NB",
+          "NL",
+          "PL",
+          "PT-BR",
+          "PT-PT",
+          "RO",
+          "RU",
+          "SK",
+          "SL",
+          "SV",
+          "TR",
+          "UK",
+          "ZH",
+          "ZH-HANS",
+          "ZH-HANT"
+        ],
+        "example": "DE"
+      },
+      "TargetLanguageWrite": {
+        "type": "string",
+        "description": "The language for the text improvement. Options currently available:\n * `de` - German\n * `en` - English (unspecified variant, defaults to `en-US`)\n * `en-GB` - English (British)\n * `en-US` - English (American)\n * `es` - Spanish\n * `fr` - French\n * `it` - Italian\n * `pt` - Portuguese (unspecified variant, defaults to `pt-PT`)\n * `pt-BR` - Portuguese (Brazilian)\n * `pt-PT` - Portuguese (all Portuguese variants excluding Brazilian Portuguese)",
+        "enum": [
+          "de",
+          "en",
+          "en-GB",
+          "en-US",
+          "fr",
+          "it",
+          "pt",
+          "pt-BR",
+          "pt-PT"
+        ],
+        "example": "de"
+      },
+      "WritingStyle": {
+        "type": "string",
+        "description": "Specify a style to rephrase your text in a way that fits your audience and goals.\nThe `prefer_` prefix allows falling back to the default style if the language does not yet support styles.",
+        "enum": [
+          "academic",
+          "business",
+          "casual",
+          "default",
+          "simple",
+          "prefer_academic",
+          "prefer_business",
+          "prefer_casual",
+          "prefer_simple"
+        ]
+      },
+      "WritingTone": {
+        "type": "string",
+        "description": "Specify the desired tone for your text.\nThe `prefer_` prefix allows falling back to the default tone if the language does not yet support tones.",
+        "enum": [
+          "confident",
+          "default",
+          "diplomatic",
+          "enthusiastic",
+          "friendly",
+          "prefer_confident",
+          "prefer_diplomatic",
+          "prefer_enthusiastic",
+          "prefer_friendly"
+        ]
+      }
+    }
+
+  }
+
+}

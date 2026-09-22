@@ -6,9 +6,12 @@
 
 CX Translate addresses real-world challenges related to managing and translating various types of textual content in SAP Commerce. It introduces database-side management for storefront labels and enables a unified translation process for data belonging to different Item Types, including those from Content and Product catalogs.
 
+The full documentation of the CX Translate tool can be found at [CX Translation Docsify documentation](https://sap.github.io/cx-translate/#/).
+
+
 ## Requirements and Setup
 
-*Insert a short description what is required to get your project running...*
+Refer to: [Adding CX Translate](https://sap.github.io/cx-translate/#/addingCXTranslate).
 
 ## Support, Feedback, Contributing
 

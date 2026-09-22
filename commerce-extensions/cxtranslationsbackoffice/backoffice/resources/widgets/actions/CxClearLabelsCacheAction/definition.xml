@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2024 SAP SE or an SAP affiliate company. All rights reserved.
+  -->
+<action-definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   id="com.sap.cx.translations.backoffice.widgets.actions.labels.clearcache"
+				   xsi:noNamespaceSchemaLocation="http://www.hybris.com/schema/cockpitng/action-definition.xsd">
+
+	<name>Clear labels cache action</name>
+	<description>Clear labels cache action.</description>
+	<author>hybris</author>
+	<version>1.0</version>
+
+	<iconUri>refresh</iconUri>
+	<actionClassName>com.sap.cx.translations.backoffice.actions.CxClearLabelsCacheAction</actionClassName>
+
+</action-definition>

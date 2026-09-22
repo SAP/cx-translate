@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2024 SAP SE or an SAP affiliate company. All rights reserved.
+  -->
+
+<widget xmlns="http://www.zkoss.org/2005/zul"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:n="http://www.zkoss.org/2005/zk/native"
+		xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
+		width="100%" height="1000px">
+	<style src="${wr}/aitranslatevalues.css"/>
+
+	<div class="cx-modal-content">
+
+		<vlayout spacing="20px" sclass="container">
+
+			<tablelayout columns="2" sclass="attributes-container">
+				<tablechildren>
+					<label value="${labels.items.count}" sclass="count-label"/>
+				</tablechildren>
+				<tablechildren>
+					<textbox id="count" sclass="count-value" readonly="true"/>
+				</tablechildren>
+
+				<tablechildren>
+					<hlayout spacing="0">
+						<label value="${labels.cxtranslations.translate.approval}" />
+						<span sclass="attribute-label-description" popup="approval-info-popup"
+							  tooltiptext="${labels.cxtranslations.translate.info}"/>
+					</hlayout>
+				</tablechildren>
+				<tablechildren>
+					<checkbox id="approval" checked="true"/>
+				</tablechildren>
+				<tablechildren>
+					<hlayout spacing="0">
+						<label value="${labels.cxtranslations.translate.skiptranslated}" />
+						<span sclass="attribute-label-description" popup="skiptranslated-info-popup"
+							  tooltiptext="${labels.cxtranslations.translate.skiptranslatedinfo}"/>
+					</hlayout>
+				</tablechildren>
+				<tablechildren>
+					<checkbox id="skipTranslated" checked="true"/>
+				</tablechildren>
+
+				<tablechildren>
+					<label value="${labels.translation.settings}" />
+				</tablechildren>
+				<tablechildren>
+					<combobox id="aiSettingsSelector" readonly="false">
+						<template name="model">
+							<comboitem label="${each.name}" value="${each.code}"/>
+						</template>
+					</combobox>
+				</tablechildren>
+
+				<tablechildren>
+					<label value="${labels.primary.language}" />
+				</tablechildren>
+				<tablechildren>
+					<combobox id="primaryLanguageSelector" readonly="false">
+						<template name="model">
+							<comboitem label="${each.name}" value="${each.isocode}"/>
+						</template>
+					</combobox>
+				</tablechildren>
+
+				<tablechildren>
+					<label value="${labels.secondary.language}" />
+				</tablechildren>
+				<tablechildren>
+					<div>
+						<chosenbox id="secondaryLanguageSelector">
+							<template name="model" var="item">
+								<label value="${each.name}"/>
+							</template>
+						</chosenbox>
+					</div>
+				</tablechildren>
+
+				<tablechildren colspan="2">
+					<div>
+						<label value="${labels.translation.hints}" sclass="textbox-label"/>
+						<textbox id="translationHint" height="100px" multiline="true" />
+					</div>
+				</tablechildren>
+
+			</tablelayout>
+
+			<hlayout sclass="cx-modal-controls">
+				<button id="cancelButton" autodisable="self" label="${labels.button.cancel}"/>
+				<button id="translateButton" sclass="yw-btn-primary" label="${labels.button.translate}"
+						disabled="true"/>
+			</hlayout>
+		</vlayout>
+	</div>
+
+	<popup id="approval-info-popup" sclass="yw-desc-tooltip">
+		<div>
+			<n:span>
+				${labels.cxtranslations.translate.info}
+			</n:span>
+		</div>
+	</popup>
+
+	<popup id="skiptranslated-info-popup" sclass="yw-desc-tooltip">
+		<div>
+			<n:span>
+				${labels.cxtranslations.translate.skiptranslatedinfo}
+			</n:span>
+		</div>
+	</popup>
+
+</widget>

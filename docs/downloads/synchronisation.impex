@@ -1,0 +1,5 @@
+UPDATE CatalogVersionSyncJob; code[unique = true]; rootTypes(code)[mode = append] ;
+                            ; $contentCatalogSyncJob           ; CxLocalizedBundle,CxLocalizedLabel ;
+
+INSERT_UPDATE SyncAttributeDescriptorConfig; syncJob(code)[default = synjobName][unique = true][path-delimiter = !]; attributeDescriptor(enclosingType(code), qualifier)[unique = true]; includedInSync; copyByValue[default = false]; presetValue; translateValue[default = false]; untranslatable[default = false]
+                                           ; $contentCatalogSyncJob                                                              ; CxLocalizedBundle:labels                                            ; false
