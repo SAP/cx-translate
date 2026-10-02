@@ -8,7 +8,6 @@ CX Translate addresses real-world challenges related to managing and translating
 
 The full documentation of the CX Translate tool can be found at [CX Translation Docsify documentation](https://sap.github.io/cx-translate/#/).
 
-
 ## Requirements and Setup
 
 Refer to: [Adding CX Translate](https://sap.github.io/cx-translate/#/addingCXTranslate).
