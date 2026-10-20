@@ -20,6 +20,7 @@ import de.hybris.platform.core.model.c2l.LanguageModel;
 import de.hybris.platform.servicelayer.model.ModelService;
 import org.apache.commons.collections4.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -56,9 +57,12 @@ public class CxDeepLTranslationStrategyImpl implements CxAiTranslationStrategy {
             }
             value.setProposedTranslationValue(deeplResponse.getTranslations().get(0).getText(), locale);
         });
+        value.setTranslatedLanguages(new ArrayList<>(value.getFilteredTargetLanguages()));
         value.setTranslationStatus(CxTranslationStatus.SUCCESS);
         modelService.save(value);
-
+        if (afterTranslation != null) {
+            afterTranslation.accept(value);
+        }
     }
 
     private CxTranslationsDeepLResponse translateSingleLanguage(final CxProposedTranslationModel value, final CxDeepLTranslationServiceSettingsModel deepLSettings, final Locale sourceLocale, final Locale targetLocale, final String context) {
